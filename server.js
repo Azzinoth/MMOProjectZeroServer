@@ -1,21 +1,22 @@
 var WebSocketServer = new require('ws');
 
-// подключенные клиенты
+// ???????????? ???????
 var clients = {};
 var humans = {};
 var id = -1;
 
-// WebSocket-сервер на порту 8081
+// WebSocket-?????? ?? ????? 8081
 var fieldClass = require('./fieldClass.js');
 var humanClass = require('./humanClass.js');
 var requestClass = require('./requestClass.js');
+var resource = require('./Resource.js')
 let gameBoardWidth = 2048;
 let gameBoardHeight = 2048;
-var fieldMatrix=new Array(2048);
+var fieldMatrix=new Array(gameBoardHeight);
 for (let i = 0; i<gameBoardHeight; i++){
-	fieldMatrix[i] = new Array(2048);
+	fieldMatrix[i] = new Array(gameBoardWidth);
 	for (let j = 0; j<gameBoardWidth; j++){
-		fieldMatrix[i][j] = new fieldClass.Field({movable : true});
+		fieldMatrix[i][j] = new fieldClass.Field({movable : true, column : i, row ; j});
 	}
 }
 MSG_TYPES = {
@@ -23,7 +24,8 @@ MSG_TYPES = {
     HUMAN_DATA : 1,
 	HUMAN_MOVE : 2,
 	HUMAN_MOVABLE : 3,
-	HUMAN_DELETE : 4
+	HUMAN_DELETE : 4,
+	GATHER : 5
    }
 
 var webSocketServer = new WebSocketServer.Server({
@@ -63,7 +65,6 @@ webSocketServer.on('connection', function(ws) {
 			if (isMovableCell(fromRow, toRow, fromColumn, toColumn)){
 				isMove = new requestClass.Request({type:MSG_TYPES.HUMAN_MOVABLE, request:true});
 				clients[ws.id].send(JSON.stringify(isMove));
-				humans[ws.id].type = MSG_TYPES.HUMAN_MOVE;
 				humans[ws.id].column=toColumn;
 				humans[ws.id].row=toRow;
 				isMove = new requestClass.Request({type:MSG_TYPES.HUMAN_MOVE, request:humans[ws.id]});
@@ -73,10 +74,33 @@ webSocketServer.on('connection', function(ws) {
 					}
 				}
 			}else{
-				isMove = new requestClass.Request({type:MSG_TYPES.HUMAN_MOVABLE, request:true});
+				isMove = new requestClass.Request({type:MSG_TYPES.HUMAN_MOVABLE, request:false});
 				clients[ws.id].send(JSON.stringify(isMove));
 			}
-		break;
+			break;
+        case MSG_TYPES.GATHER:
+            let fromColumn = humans[ws.id].column;
+            let fromRow = humans[ws.id].row;
+            let toColumn = json.request.column;
+            let toRow = json.request.row;
+            let idItem = json.request.idObject;
+            let isGather;
+            if (isGatheredCell(fromRow, fromColumn, toRow, toColumn, idItem)){
+                isGather = new requestClass.Request({type:MSG_TYPES.GATHER, request:true});
+                clients[ws.id].send(JSON.stringify(isGather));
+                humans[ws.id].column=toColumn;
+                humans[ws.id].row=toRow;
+                isGather = new requestClass.Request({type:MSG_TYPES.GATHER, request:fieldMatrix[toColumn][toRow]});
+                for (var key in clients) {
+                    if (+key!==ws.id){
+                        clients[key].send(JSON.stringify(isGather));
+                    }
+                }
+			}else{
+                isGather = new requestClass.Request({type:MSG_TYPES.GATHER, request:false});
+                clients[ws.id].send(JSON.stringify(isGather));
+			}
+        	break;
 	}
 });
 
@@ -97,4 +121,11 @@ function isMovableCell(fromRow, toRow, fromColumn, toColumn){
 	}else{
 		return false;
 	}
+}
+function isGatheredCell(fromRow, fromColumn, toRow, toColumn, idItem){
+    if (Math.abs(fromRow-toRow)<2&&Math.abs(fromColumn-toColumn)<2&&fieldMatrix[toColumn][toRow].idObject===idItem){
+        return fieldMatrix[toColumn][toRow].idObject=null;
+    }else{
+        return false;
+    }
 }
