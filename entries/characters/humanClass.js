@@ -1,15 +1,15 @@
 class Human {
-	constructor({id=-1, isPlayer = true, column = 10, row =  10, health = 3, strengh = 1}) {
+	constructor({id = null, isPlayer = true, column = 10, row = 10, health = 3, strength = 1}) {
 		this.id = id;
 		this.isPlayer = isPlayer;
 		this.size = 64;
 		this.column = column;
 		this.row = row;
 		this.health = health;
-		this.strengh = strengh;
+		this.strengh = strength;
 		this.isAlive = true;
-
 	}
+
 	move(direction){
 		switch(direction){
 			case 0:
@@ -43,4 +43,5 @@ class Human {
 		}
 	}
 }
-exports.Human=Human;
+
+module.exports = Human;

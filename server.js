@@ -1,32 +1,33 @@
-var WebSocketServer = new require('ws');
+const WebSocketServer = require('ws');
+const fieldClass = require('./utils/gameWorld/cell.js');
+const humanClass = require('./entries/characters/humanClass.js');
+const requestClass = require('./utils/requestClass.js');
+const resource = require('./utils/Resource.js');
 
-// ???????????? ???????
-var clients = {};
-var humans = {};
-var id = -1;
+let clients = {};
+let humans = {};
+let id = -1;
 
-// WebSocket-?????? ?? ????? 8081
-var fieldClass = require('./fieldClass.js');
-var humanClass = require('./humanClass.js');
-var requestClass = require('./requestClass.js');
-var resource = require('./Resource.js')
 let gameBoardWidth = 2048;
 let gameBoardHeight = 2048;
-var fieldMatrix=new Array(gameBoardHeight);
-for (let i = 0; i<gameBoardHeight; i++){
+let fieldMatrix=new Array(gameBoardHeight);
+
+for (let i = 0; i < gameBoardHeight; i++) {
 	fieldMatrix[i] = new Array(gameBoardWidth);
-	for (let j = 0; j<gameBoardWidth; j++){
-		fieldMatrix[i][j] = new fieldClass.Field({movable : true, column : i, row ; j});
+
+	for (let j = 0; j < gameBoardWidth; j++){
+		fieldMatrix[i][j] = new fieldClass.Field({movable: true, column: i, row: j});
 	}
 }
+
 MSG_TYPES = {
-    SESSION_ID : 0,
-    HUMAN_DATA : 1,
-	HUMAN_MOVE : 2,
-	HUMAN_MOVABLE : 3,
-	HUMAN_DELETE : 4,
-	GATHER : 5
-   }
+	SESSION_ID: 'SESSION_ID',
+	HUMAN_DATA: 'HUMAN_DATA',
+	HUMAN_MOVE: 'HUMAN_MOVE',
+	HUMAN_MOVABLE: 'HUMAN_MOVABLE',
+	HUMAN_DELETE: 'HUMAN_DELETE',
+	GATHER: 'GATHER'
+};
 
 var webSocketServer = new WebSocketServer.Server({
   port: 8081
@@ -113,8 +114,8 @@ webSocketServer.on('connection', function(ws) {
 		}
 		delete humans[ws.id];
 	});
-
 });
+
 function isMovableCell(fromRow, toRow, fromColumn, toColumn){
 	if (Math.abs(fromRow-toRow)<2&&Math.abs(fromColumn-toColumn)<2){
 		return fieldMatrix[toColumn][toRow].movable;
@@ -122,6 +123,7 @@ function isMovableCell(fromRow, toRow, fromColumn, toColumn){
 		return false;
 	}
 }
+
 function isGatheredCell(fromRow, fromColumn, toRow, toColumn, idItem){
     if (Math.abs(fromRow-toRow)<2&&Math.abs(fromColumn-toColumn)<2&&fieldMatrix[toColumn][toRow].idObject===idItem){
         return fieldMatrix[toColumn][toRow].idObject=null;

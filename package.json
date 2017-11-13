@@ -1,0 +1,23 @@
+{
+  "name": "mmo-project-zero-server",
+  "version": "1.0.0",
+  "description": "Server for MMO RPG browser game",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Azzinoth/MMOProjectZeroServer.git"
+  },
+  "author": "Vladimir Gachkovsky <v.gachkovsky@gmail.com>",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Azzinoth/MMOProjectZeroServer/issues"
+  },
+  "homepage": "https://github.com/Azzinoth/MMOProjectZeroServer#readme",
+  "dependencies": {
+    "lodash": "^4.17.4"
+  }
+}
