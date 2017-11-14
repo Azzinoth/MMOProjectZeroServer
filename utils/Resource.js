@@ -1,4 +1,4 @@
-function Resource({id = -1, type = null}) {
+function Resource({id = null, type = null}) {
   this.id = id;
   this.type = type;
 }

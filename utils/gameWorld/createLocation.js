@@ -1,12 +1,12 @@
-const _ = require('lodash');
-const Cell = require('./cell');
+const range = require('lodash').range;
+const Cell = require('./Cell');
 
 const defaultLocationWidth = 2048;
 const defaultLocationHeight = 2048;
 
 function createLocation(width = defaultLocationWidth, height = defaultLocationHeight) {
-  return _.range(0, height).map(column => {
-    return _.range(0, width).map(row => new Cell({ movable: true, column, row }));
+  return range(height).map(column => {
+    return range(width).map(row => new Cell({ movable: true, column, row }));
   });
 }
 

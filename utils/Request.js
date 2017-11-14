@@ -1,4 +1,4 @@
-function Request({type = -1, request = null}) {
+function Request({type = null, request = null}) {
   this.type = type;
   this.request = request;
 }

@@ -1,4 +1,4 @@
-class Human {
+class Person {
 	constructor({id = null, isPlayer = true, column = 10, row = 10, health = 3, strength = 1}) {
 		this.id = id;
 		this.isPlayer = isPlayer;
@@ -44,4 +44,4 @@ class Human {
 	}
 }
 
-module.exports = Human;
+module.exports = Person;
