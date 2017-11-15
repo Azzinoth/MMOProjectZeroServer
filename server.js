@@ -46,6 +46,7 @@ MSG_TYPES = {
 const webSocketServer = new WebSocketServer.Server({
   port: 8081
 });
+
 webSocketServer.on('connection', function(ws) {
 	idHuman++;
 	idInventory++;
@@ -214,20 +215,9 @@ function addStack (idHuman, idItem, size){
 	let array={};
 	let inventory = inventories[humans[idHuman].idInventory];
 	idStack++;
-	let newStack;
 	for (let i = 0; i<inventory.stacks.length; i++){
-		if (inventory.stacks[i] ===null){
-			if (size<=items[idItem].stackSize){
-				newStack = new stack.Stack({id:idStack, idItem:idItem, size:size});
-				
-			}else{
-				newStack = new stack.Stack({id:idStack, idItem:idItem, size:items[idItem].stackSize});
-			}
-			inventory.stacks[i] =newStack;
-			array[inventory.stacks.length-1] = newStack;	
-			return array;
-		}else
-		if (inventory.stacks[i].idItem===idItem&&items[idItem].stackSize>inventory.stacks[i].size){
+		console.log(inventory.stacks[i]);
+		if (inventory.stacks[i]!==undefined&&inventory.stacks[i]!==null&&inventory.stacks[i].idItem===idItem&&items[idItem].stackSize>inventory.stacks[i].size){
 			let quantity = inventory.stacks[i].size+size - items[idItem].stackSize;
 			if (quantity<=0){
 				inventory.stacks[i].size += size;
@@ -240,7 +230,23 @@ function addStack (idHuman, idItem, size){
 			}
 		}
 	}
-
+	let newStack;
+	for (let i = 0; i<inventory.stacks.length; i++){
+		if (inventory.stacks[i] ===undefined||inventory.stacks[i] === null){
+			if (size<=items[idItem].stackSize){
+				newStack = new stack.Stack({id:idStack, idItem:idItem, size:size});
+				inventory.stacks[i] =newStack;
+				array[i] = newStack;	
+				return array;
+			}else{
+				newStack = new stack.Stack({id:idStack, idItem:idItem, size:items[idItem].stackSize});
+				inventory.stacks[i] =newStack;
+				array[i] = newStack;
+				size -= items[idItem].stackSize;
+			}
+			
+		}
+	}
 	return array;
 }
 
@@ -248,21 +254,19 @@ function swapStack (idHuman, indexFrom, indexTo){
 	let array={};
 	let inventory = inventories[humans[idHuman].idInventory];
 	
-	let idItem = inventory.stacks[indexFrom].idItem;	
+	let idItem = inventory.stacks[indexFrom].idItem;
 	if (inventory.stacks[indexFrom].idItem!==undefined){
 		if (indexTo===-1){			
 			delete stacks[inventory.stacks[indexFrom].id];
 			inventory.stacks[indexFrom] = null;
 			array[indexFrom] = null;			
-		}else if (inventory.stacks[indexTo]===undefined){
+		}else if (inventory.stacks[indexTo]===undefined||inventory.stacks[indexTo]===null){
 			array[indexTo]=inventory.stacks[indexFrom];
 			inventory.stacks[indexTo]= inventory.stacks[indexFrom];
-			console.log(inventory.stacks[indexTo]);
 			inventory.stacks[indexFrom] = null;
-			console.log(inventory.stacks[indexTo]);
 			array[indexFrom] = null;
 		}else if (inventory.stacks[indexTo].idItem===idItem&&inventory.stacks[indexTo].size<items[idItem].stackSize){
-			let quantity = items[idItem].stackSize - inventory.stacks[indexTo].size + inventory.stacks[indexFrom].size
+			let quantity = items[idItem].stackSize - (inventory.stacks[indexTo].size + inventory.stacks[indexFrom].size);
 			if (quantity>0){
 				inventory.stacks[indexTo].size += inventory.stacks[indexFrom].size;
 				inventory.stacks[indexFrom]=null;
