@@ -15,15 +15,19 @@ Ingredient.prototype = IngredientProto;
 // ******* CRAFTRECIPE *******
 
 var CraftRecipeProto = {
-    craftRecipeId : -1,
+    id : -1,
+    craftedItemId: -1,
     name : "",
-    ingredients : null
+    ingredients : null,
+    outputAmount : 0,
 }
 
-function CraftRecipe(id, name, ingredients) {
-    this.craftRecipeId = id;
+function CraftRecipe(id, craftedItemId, name, ingredients, outputAmount) {
+    this.id = id;
+    this.craftedItemId = craftedItemId;
     this.name = name;
     this.ingredients = ingredients;
+    this.outputAmount = outputAmount;
 }
 
 CraftRecipe.prototype = CraftRecipeProto;
@@ -31,13 +35,13 @@ CraftRecipe.prototype = CraftRecipeProto;
 
 // ******* CATEGORY *******
 var CategoryProto = {
-    categoryId : -1,
+    id : -1,
     name : "",
     craftRecipes : null
 }
 
 function Category(id, name, craftRecipes) {
-    this.categoryId = id;
+    this.id = id;
     this.name = name;
     this.craftRecipes = craftRecipes;
 }

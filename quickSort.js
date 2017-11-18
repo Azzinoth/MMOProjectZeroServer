@@ -5,6 +5,10 @@ function QuickSort(arr){
 				let tmp = arr[j];
 				arr[j] = arr[i];
 				arr[i] = tmp;
+			}else if(arr[i].size===arr[j].size&&i>j){
+                let tmp = arr[j];
+                arr[j] = arr[i];
+                arr[i] = tmp;
 			}
 		}
    }

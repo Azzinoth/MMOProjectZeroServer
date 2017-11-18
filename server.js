@@ -8,12 +8,15 @@
 	MAP_OBJECT : 6,
 	ERROR : 7,
 	INVENTORY_CHANGE : 8,
-	CRAFT : 9
+	CRAFT : 9,
+    ITEMS_LIST : 10,
+    PLACE_ON_MAP : 11,
+	SYSTEM_MESSAGE : 12
 }
 
 const WebSocketServer = new require('ws');
 const distanceVeiw = 20;
-// ???????????? ???????
+
 let clients = {};
 let humans = {};
 let inventories = {};
@@ -23,7 +26,7 @@ let mapItems = {};
 let idHuman = 0;
 let idInventory = 0;
 let idStack = 0;
-// WebSocket-?????? ?? ????? 8081
+
 const requestField = require('./request.js');
 const field = require('./field.js');
 const human = require('./human.js');
@@ -35,7 +38,7 @@ const craft = require('./craftRecipe.js');
 const quickSort = require('./quickSort.js')
 const gameBoardWidth = 50;
 const gameBoardHeight = 50;
-let fieldMatrix=new Array(gameBoardHeight);
+let fieldMatrix = new Array(gameBoardHeight);
 for (let i = 0; i<gameBoardHeight; i++){
 	fieldMatrix[i] = new Array(gameBoardWidth);
 	for (let j = 0; j<gameBoardWidth; j++){
@@ -46,22 +49,24 @@ for (let i = 0; i<gameBoardHeight; i++){
 		}
 	}
 }
-mapItems[1] = new mapItem.MapItem({id:1, type:'rock', size:5});
-mapItems[2] = new mapItem.MapItem({id:2, type:'wood', size:5});
-items[1] = new item.Item({id:1, type:'rock', stackSize:20});
-items[2] = new item.Item({id:2, type:'wood', stackSize:20});
+mapItems[1] = new mapItem.MapItem({id:1, name:'rock', size:5});
+mapItems[2] = new mapItem.MapItem({id:2, name:'wood', size:5});
+items[1] = new item.Item({id:1, name:'stone', type:'resource', stackSize:20});
+items[2] = new item.Item({id:2, name:'wood', type:'resource', stackSize:20});
+items[3] = new item.Item({id:3, name:'woodWall', type:'buildingPart', stackSize:20});
+items[4] = new item.Item({id:4, name:'stoneWall', type:'buildingPart', stackSize:20});
 
 let arrayIngridients = new Array(new craft.Ingredient(2, 6));
-let craftRecipe1 = new craft.CraftRecipe(1, "Wood wall", arrayIngridients);
+let craftRecipe1 = new craft.CraftRecipe(1, 3, "Wood wall", arrayIngridients, 1);
 let arrayIngridients2 = new Array(new craft.Ingredient(1, 15));
-let craftRecipe2 = new craft.CraftRecipe(2, "Stone wall", arrayIngridients2);
+let craftRecipe2 = new craft.CraftRecipe(2, 4, "Stone wall", arrayIngridients2, 1);
 let categories = new craft.Category(1, "Building", new Array(craftRecipe1, craftRecipe2));
 let craftList = new craft.CraftList(new Array(categories));
 const webSocketServer = new WebSocketServer.Server({
   port: 8081
 });
-
 webSocketServer.on('connection', function(ws) {
+
 	idHuman++;
 	idInventory++;
 	ws.id = idHuman;
@@ -72,7 +77,8 @@ webSocketServer.on('connection', function(ws) {
 	inventories[idInventory] = new inventory.Inventory({id:idInventory, size:24});
 	humans[idHuman] = new human.Human({id:idHuman, idInventory:idInventory, isPlayer:true, column:10, row:10, health:3, strengh:1});
 	humans[idHuman].craftList = craftList;
-
+    clients[ws.id].send(JSON.stringify(new requestField.Request({type:MSG_TYPES.ITEMS_LIST, request:items})));
+    let myInventoryId = humans[ws.id].idInventory;
 	let myRequest;
 	for (let key in clients) {
 		if (+key!==idHuman){
@@ -149,11 +155,11 @@ webSocketServer.on('connection', function(ws) {
 			let changedInventory;
 			
             if (isGatheredCell(fromRow, fromColumn, toRow, toColumn)){				
-				let reqStacks = addStack(ws.id, idItem, 6);
+				let reqStacks = addStack(inventories[myInventoryId], idItem, 6);
 				if (reqStacks!=null){
-					let reqInventory = {idInventory:humans[ws.id].idInventory, stacks:reqStacks, length:Object.getOwnPropertyNames(reqStacks).length};
-					changedInventory = new requestField.Request({type:MSG_TYPES.INVENTORY_CHANGE, request:reqInventory});
-					clients[ws.id].send(JSON.stringify(changedInventory));
+					delete reqStacks.isFull;
+                    let request = requestInventory (myInventoryId, reqStacks, Object.getOwnPropertyNames(reqStacks).length);
+					clients[ws.id].send(JSON.stringify(request));
 					
 					isGather = new requestField.Request({type:MSG_TYPES.GATHER, request:true});
 					clients[ws.id].send(JSON.stringify(isGather));		
@@ -184,21 +190,19 @@ webSocketServer.on('connection', function(ws) {
 		case MSG_TYPES.INVENTORY_CHANGE:{
 			let indexFrom = json.request[0];
 			let indexTo = json.request[1];
-			let swaps = swapStack (ws.id, indexFrom, indexTo);	
-			let reqInventory = {idInventory:humans[ws.id].idInventory, stacks:swaps, length:Object.getOwnPropertyNames(swaps).length};
-			let changedInventory = new requestField.Request({type:MSG_TYPES.INVENTORY_CHANGE, request:reqInventory});
-			clients[ws.id].send(JSON.stringify(changedInventory));
+			let swaps = swapStack (ws.id, indexFrom, indexTo);
+            let request = requestInventory (myInventoryId, swaps, Object.getOwnPropertyNames(swaps).length);
+			clients[ws.id].send(JSON.stringify(request));
 		}
 		break;
 		case MSG_TYPES.CRAFT:{
-			let craftId = json.request;
+			let craftId = +json.request;
 			let categ = humans[ws.id].craftList.categories;
 			for (let i =0; i<categ.length; i++){			
 				for(let j=0; j<categ[i].craftRecipes.length; j++){
-					if (categ[i].craftRecipes[j].craftRecipeId===+craftId){	
-						let invent = deleteInventoryItems(categ[i].craftRecipes[j].ingredients, ws.id);
-						let changedInventory = {idInventory:humans[ws.id].idInventory, stacks:invent, length:Object.getOwnPropertyNames(invent).length};
-						let request = new requestField.Request({type:MSG_TYPES.INVENTORY_CHANGE, request:changedInventory});
+					if (categ[i].craftRecipes[j].id===craftId){
+						let invent = craftItem(categ[i].craftRecipes[j], ws.id);
+                        let request = requestInventory (myInventoryId, invent, Object.getOwnPropertyNames(invent).length);
 						clients[ws.id].send(JSON.stringify(request));
 					}
 				}
@@ -206,6 +210,33 @@ webSocketServer.on('connection', function(ws) {
 			
 		}
 		break;
+        case MSG_TYPES.PLACE_ON_MAP:{
+            let itemId = json.request[0];
+            if (items[itemId].type!=='buildingPart') break;
+            let column = json.request[1][0];
+            let row = json.request[1][1];
+			if (isBuilderCell(column, row)){
+				let stacks = findItems(itemId, 1, inventories[myInventoryId]);
+				if (stacks!==null){
+					for	(let key in stacks){
+						if (stacks[key].size>1){
+                            inventories[myInventoryId].stacks[key].size -=1;
+                        }else{
+							inventories[myInventoryId].stacks[key]=null;
+							stacks[key] = null;
+                        }
+					}
+                    fieldMatrix[column][row].movable = false;
+                    fieldMatrix[column][row].idObject = itemId;
+                    let request = [fieldMatrix[column][row]];
+                    clients[ws.id].send(JSON.stringify(new requestField.Request({type:MSG_TYPES.MAP_OBJECT, request:request})));
+
+                    request = requestInventory(myInventoryId, stacks, Object.getOwnPropertyNames(stacks).length);
+                    clients[ws.id].send(JSON.stringify(request));
+				}
+			}
+        }
+            break;
 	}
 });
 
@@ -222,6 +253,33 @@ webSocketServer.on('connection', function(ws) {
 	});
 
 });
+function requestInventory(idInventory, stacks, lenthStacks){
+    let reqInventory = {idInventory:idInventory, stacks:stacks, length:lenthStacks};
+    return new requestField.Request({type:MSG_TYPES.INVENTORY_CHANGE, request:reqInventory});
+
+}
+function findItems(idItem, size, inventory){
+	let result = {};
+	for (let i =0; i<inventory.stacks.length; i++){
+		if(inventory.stacks[i]!==undefined&&inventory.stacks[i]!==null&&inventory.stacks[i].idItem===idItem){
+			if (inventory.stacks[i].size>=size){
+                result[i] = inventory.stacks[i];
+                return result;
+			}else{
+                size -= inventory.stacks[i].size;
+                result[i] = inventory.stacks[i];
+			}
+        }
+    }
+    return null;
+}
+function isBuilderCell(column, row){
+    if (fieldMatrix[column][row].idObject===undefined||fieldMatrix[column][row].idObject===null){
+        return true;
+    }else{
+        return false;
+    }
+}
 function isMovableCell(fromRow, toRow, fromColumn, toColumn){
 	if (Math.abs(fromRow-toRow)<2&&Math.abs(fromColumn-toColumn)<2){
 		return fieldMatrix[toColumn][toRow].movable;
@@ -238,10 +296,12 @@ function isGatheredCell(fromRow, fromColumn, toRow, toColumn){
         return false;
     }
 }
-function addStack (idHuman, idItem, size){
-	let array={};
-	let inventory = inventories[humans[idHuman].idInventory];
+function addStack (inventory, idItem, size){
+	let array = new Object();
+    array.isFull = false;
+	//let inventory = inventories[humans[idHuman].idInventory];
 	idStack++;
+
 	for (let i = 0; i<inventory.stacks.length; i++){
 		if (inventory.stacks[i]!==undefined&&inventory.stacks[i]!==null&&inventory.stacks[i].idItem===idItem&&items[idItem].stackSize>inventory.stacks[i].size){
 			let quantity = inventory.stacks[i].size+size - items[idItem].stackSize;
@@ -261,8 +321,8 @@ function addStack (idHuman, idItem, size){
 		if (inventory.stacks[i] ===undefined||inventory.stacks[i] === null){
 			if (size<=items[idItem].stackSize){
 				newStack = new stack.Stack({id:idStack, idItem:idItem, size:size});
-				inventory.stacks[i] =newStack;
-				array[i] = newStack;	
+				inventory.stacks[i] = newStack;
+				array[i] = newStack;
 				return array;
 			}else{
 				newStack = new stack.Stack({id:idStack, idItem:idItem, size:items[idItem].stackSize});
@@ -273,6 +333,7 @@ function addStack (idHuman, idItem, size){
 			
 		}
 	}
+    array[isFull] = true;
 	return array;
 }
 
@@ -331,31 +392,29 @@ function visibleObjects (startColumn, startRow, distance){
 	}
 	return arrayObjects;
 }
-function deleteInventoryItems(arrayIngr, idHuman){
+function craftItem(recipe, idHuman){
 	let stacks = inventories[humans[idHuman].idInventory].stacks;
 	let tmpStacks = [stacks.length];
 	let isEnought = false;
 	let isFullTmpStack = false;
 	let result = {};
 	let isBreak;
-	for (let i = 0; i<arrayIngr.length; i++){
+	for (let i = 0; i<recipe.ingredients.length; i++){
 		let indexStack = [];
 		for (let j = 0; j<stacks.length; j++){
 			if (!isFullTmpStack)tmpStacks[j] = stacks[j];
-			if (stacks[j]!==undefined && stacks[j]!==null && stacks[j].idItem===arrayIngr[i].itemId){
+			if (stacks[j]!==undefined && stacks[j]!==null && stacks[j].idItem===recipe.ingredients[i].itemId){
 				indexStack.push(stacks[j]);
 			}
 		}
 		isFullTmpStack = true;
 		new quickSort.QuickSort(indexStack);
-		let price = arrayIngr[i].amount;
+		let price = recipe.ingredients[i].amount;
 		isBreak = false;
 		for(let j =0; j<indexStack.length;j++){
 			for(k=0; k<tmpStacks.length;k++){
 				if (tmpStacks[k]!==undefined && tmpStacks[k]!==null && indexStack[j].id===tmpStacks[k].id){
-						console.log(tmpStacks[k].size);
-					if (price<tmpStacks[k].size){	
-						console.log('two' + price);					
+					if (price<tmpStacks[k].size){
 						tmpStacks[k].size -= price;
 						isEnought = true;
 						result[k] = tmpStacks[k];
@@ -370,7 +429,6 @@ function deleteInventoryItems(arrayIngr, idHuman){
 					}else{
 						
 						price -= tmpStacks[k].size;
-						console.log('one' + price);
 						tmpStacks[k] = null;
 						result[k] = tmpStacks[k];
 						
@@ -381,6 +439,27 @@ function deleteInventoryItems(arrayIngr, idHuman){
 		}
 		if (!isEnought) return result = {};
 	}
+
+	// for(let i = 0; i<tmpStacks.length; i++) {
+    	// if (tmpStacks[i]===undefined || tmpStacks[i]===null){
+     //        idStack++;
+     //        tmpStacks[i] = new stack.Stack ({id:idStack, idItem:recipe.craftedItemId, size:items[recipe.craftedItemId].stackSize});
+     //        result[i] = tmpStacks[i];
+     //        isInventoryFull = false;
+     //        break;
+	// 	}
+	// }
+	let tmpInventory = new inventory.Inventory({id:humans[idHuman].idInventory, size:inventories[humans[idHuman].idInventory].size});
+    tmpInventory.stacks =tmpStacks ;
+    let tmp = addStack(tmpInventory, recipe.craftedItemId, recipe.outputAmount);
+    delete tmpInventory;
+    if (tmp.isFull)return result = {};
+    for (let key in tmp){
+    	if (key!=='isFull'){
+			tmpStacks[key] = tmp[key];
+            result[key] = tmp[key];
+        }
+    }
 	inventories[humans[idHuman].idInventory].stacks = tmpStacks;
 	return result;
 }
