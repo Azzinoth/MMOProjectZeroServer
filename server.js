@@ -1,4 +1,17 @@
-﻿const WebSocketServer = new require('ws');
+﻿MSG_TYPES = {
+    SESSION_ID : 0,
+    HUMAN_DATA : 1,
+	HUMAN_MOVE : 2,
+	HUMAN_UPDATE : 3,
+	HUMAN_DELETE : 4,
+	GATHER : 5,
+	MAP_OBJECT : 6,
+	ERROR : 7,
+	INVENTORY_CHANGE : 8,
+	CRAFT : 9
+}
+
+const WebSocketServer = new require('ws');
 const distanceVeiw = 20;
 // ???????????? ???????
 let clients = {};
@@ -18,6 +31,8 @@ const item = require('./item.js');
 const mapItem = require('./mapItem.js');
 const stack = require('./stack.js');
 const inventory = require('./inventory.js');
+const craft = require('./craftRecipe.js');
+const quickSort = require('./quickSort.js')
 const gameBoardWidth = 50;
 const gameBoardHeight = 50;
 let fieldMatrix=new Array(gameBoardHeight);
@@ -31,18 +46,17 @@ for (let i = 0; i<gameBoardHeight; i++){
 		}
 	}
 }
-MSG_TYPES = {
-    SESSION_ID : 0,
-    HUMAN_DATA : 1,
-	HUMAN_MOVE : 2,
-	HUMAN_UPDATE : 3,
-	HUMAN_DELETE : 4,
-	GATHER : 5,
-	MAP_OBJECT : 6,
-	ERROR : 7,
-	INVENTORY_CHANGE : 8
-   }
+mapItems[1] = new mapItem.MapItem({id:1, type:'rock', size:5});
+mapItems[2] = new mapItem.MapItem({id:2, type:'wood', size:5});
+items[1] = new item.Item({id:1, type:'rock', stackSize:20});
+items[2] = new item.Item({id:2, type:'wood', stackSize:20});
 
+let arrayIngridients = new Array(new craft.Ingredient(2, 6));
+let craftRecipe1 = new craft.CraftRecipe(1, "Wood wall", arrayIngridients);
+let arrayIngridients2 = new Array(new craft.Ingredient(1, 15));
+let craftRecipe2 = new craft.CraftRecipe(2, "Stone wall", arrayIngridients2);
+let categories = new craft.Category(1, "Building", new Array(craftRecipe1, craftRecipe2));
+let craftList = new craft.CraftList(new Array(categories));
 const webSocketServer = new WebSocketServer.Server({
   port: 8081
 });
@@ -57,11 +71,8 @@ webSocketServer.on('connection', function(ws) {
 	
 	inventories[idInventory] = new inventory.Inventory({id:idInventory, size:24});
 	humans[idHuman] = new human.Human({id:idHuman, idInventory:idInventory, isPlayer:true, column:10, row:10, health:3, strengh:1});
-	
-	mapItems[1] = new mapItem.MapItem({id:1, type:'rock', size:5});
-	mapItems[2] = new mapItem.MapItem({id:2, type:'wood', size:5});
-	items[1] = new item.Item({id:1, type:'rock', stackSize:20});
-	items[2] = new item.Item({id:2, type:'wood', stackSize:20});
+	humans[idHuman].craftList = craftList;
+
 	let myRequest;
 	for (let key in clients) {
 		if (+key!==idHuman){
@@ -179,6 +190,22 @@ webSocketServer.on('connection', function(ws) {
 			clients[ws.id].send(JSON.stringify(changedInventory));
 		}
 		break;
+		case MSG_TYPES.CRAFT:{
+			let craftId = json.request;
+			let categ = humans[ws.id].craftList.categories;
+			for (let i =0; i<categ.length; i++){			
+				for(let j=0; j<categ[i].craftRecipes.length; j++){
+					if (categ[i].craftRecipes[j].craftRecipeId===+craftId){	
+						let invent = deleteInventoryItems(categ[i].craftRecipes[j].ingredients, ws.id);
+						let changedInventory = {idInventory:humans[ws.id].idInventory, stacks:invent, length:Object.getOwnPropertyNames(invent).length};
+						let request = new requestField.Request({type:MSG_TYPES.INVENTORY_CHANGE, request:changedInventory});
+						clients[ws.id].send(JSON.stringify(request));
+					}
+				}
+			}
+			
+		}
+		break;
 	}
 });
 
@@ -216,7 +243,6 @@ function addStack (idHuman, idItem, size){
 	let inventory = inventories[humans[idHuman].idInventory];
 	idStack++;
 	for (let i = 0; i<inventory.stacks.length; i++){
-		console.log(inventory.stacks[i]);
 		if (inventory.stacks[i]!==undefined&&inventory.stacks[i]!==null&&inventory.stacks[i].idItem===idItem&&items[idItem].stackSize>inventory.stacks[i].size){
 			let quantity = inventory.stacks[i].size+size - items[idItem].stackSize;
 			if (quantity<=0){
@@ -252,9 +278,14 @@ function addStack (idHuman, idItem, size){
 
 function swapStack (idHuman, indexFrom, indexTo){
 	let array={};
+	if (indexFrom===indexTo) return array
 	let inventory = inventories[humans[idHuman].idInventory];
-	
-	let idItem = inventory.stacks[indexFrom].idItem;
+	let idItem;
+	if(inventory.stacks[indexFrom]!==null&&inventory.stacks[indexFrom]!==undefined){ 
+		idItem = inventory.stacks[indexFrom].idItem;
+	}else{
+		return;
+	}
 	if (inventory.stacks[indexFrom].idItem!==undefined){
 		if (indexTo===-1){			
 			delete stacks[inventory.stacks[indexFrom].id];
@@ -299,4 +330,57 @@ function visibleObjects (startColumn, startRow, distance){
 		}
 	}
 	return arrayObjects;
+}
+function deleteInventoryItems(arrayIngr, idHuman){
+	let stacks = inventories[humans[idHuman].idInventory].stacks;
+	let tmpStacks = [stacks.length];
+	let isEnought = false;
+	let isFullTmpStack = false;
+	let result = {};
+	let isBreak;
+	for (let i = 0; i<arrayIngr.length; i++){
+		let indexStack = [];
+		for (let j = 0; j<stacks.length; j++){
+			if (!isFullTmpStack)tmpStacks[j] = stacks[j];
+			if (stacks[j]!==undefined && stacks[j]!==null && stacks[j].idItem===arrayIngr[i].itemId){
+				indexStack.push(stacks[j]);
+			}
+		}
+		isFullTmpStack = true;
+		new quickSort.QuickSort(indexStack);
+		let price = arrayIngr[i].amount;
+		isBreak = false;
+		for(let j =0; j<indexStack.length;j++){
+			for(k=0; k<tmpStacks.length;k++){
+				if (tmpStacks[k]!==undefined && tmpStacks[k]!==null && indexStack[j].id===tmpStacks[k].id){
+						console.log(tmpStacks[k].size);
+					if (price<tmpStacks[k].size){	
+						console.log('two' + price);					
+						tmpStacks[k].size -= price;
+						isEnought = true;
+						result[k] = tmpStacks[k];
+						isBreak=true;
+						break;
+					}else if (price===tmpStacks[k].size){
+						tmpStacks[k] = null;
+						isEnought = true;
+						result[k] = tmpStacks[k];
+						isBreak=true;
+						break;
+					}else{
+						
+						price -= tmpStacks[k].size;
+						console.log('one' + price);
+						tmpStacks[k] = null;
+						result[k] = tmpStacks[k];
+						
+					}
+				}
+			}
+			if (isBreak) break;
+		}
+		if (!isEnought) return result = {};
+	}
+	inventories[humans[idHuman].idInventory].stacks = tmpStacks;
+	return result;
 }

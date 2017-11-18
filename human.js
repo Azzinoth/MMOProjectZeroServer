@@ -11,7 +11,7 @@ class Human {
 		this.health = health;
 		this.strengh = strengh;
 		this.isAlive = true;
-
+		this.isAlive = null;
 	}
 }
 exports.Human = Human;
