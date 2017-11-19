@@ -1,4 +1,4 @@
-class Human {
+class Character {
 	constructor({id=-1, idInventory =0, isPlayer = true, column = 10, row =  10, top = row*64, left = column*64, health = 3, strengh = 1}) {
 		this.id = id;
 		this.idInventory = idInventory;
@@ -11,7 +11,7 @@ class Human {
 		this.health = health;
 		this.strengh = strengh;
 		this.isAlive = true;
-		this.isAlive = null;
+		this.craftList = null;
 	}
 }
-exports.Human = Human;
+module.exports = Character;

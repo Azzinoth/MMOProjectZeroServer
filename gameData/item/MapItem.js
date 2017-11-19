@@ -6,4 +6,4 @@ class MapItem {
     }
 }
 
-exports.MapItem = MapItem;
+module.exports = MapItem;

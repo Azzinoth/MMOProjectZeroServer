@@ -6,4 +6,4 @@ class Item {
 		this.stackSize = stackSize;
     }
 }
-exports.Item = Item;
+module.exports = Item;

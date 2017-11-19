@@ -5,4 +5,4 @@ class Inventory{
 		this.stacks = new Array(size);
 	}
 }
-exports.Inventory=Inventory;
+module.exports=Inventory;

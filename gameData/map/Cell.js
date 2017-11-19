@@ -1,4 +1,4 @@
-class Field {
+class Cell {
 	constructor({movable = true, column = null, row = null}) {
 		this.column = column;
 		this.row = row;
@@ -7,4 +7,4 @@ class Field {
 	}
 }
 
-exports.Field = Field;
+module.exports = Cell;
