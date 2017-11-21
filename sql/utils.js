@@ -19,4 +19,19 @@ function getId(whatId){
 		}
 	}		
 }
+
+function createTable(db, tableName, tableArguments){
+    db.serialize(function(){
+        db.run("CREATE TABLE "+tableName+" ("+tableArguments+");");
+    });
+}
+
+function insert(db, tableName, tableArguments){
+    db.serialize(function(){
+        db.run("INSERT INTO "+tableName+" VALUES"+" ("+tableArguments+");");
+    });
+}
+function closeDb(db){
+    db.close();
+}
 exports.getId = getId;
