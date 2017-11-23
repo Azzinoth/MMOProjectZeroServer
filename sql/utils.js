@@ -1,7 +1,7 @@
 let db;
 let sqlite3 = require('sqlite3').verbose();
 const dataName = './sql/tables/dataBase.db';
-function createTable(tableName, tableArguments, callBack=undefined){
+function createTable(tableName, tableArguments, callBack){
 	db = new sqlite3.Database(dataName);
     db.serialize(function(){
         db.run("CREATE TABLE "+tableName+" ("+tableArguments+");", function(){			
@@ -13,26 +13,43 @@ function createTable(tableName, tableArguments, callBack=undefined){
 	db.close();
 }
 
-function insert(tableName, tableArguments, value){
-	db = new sqlite3.Database(dataName);
-    db.serialize(function(){
-        let result = db.run("INSERT INTO "+tableName+" ("+tableArguments+") VALUES"+" ("+value+");");		
+function insert(tableName, tableArguments, value, callBack){
+    return new Promise(function(resolve, reject) {
+        db = new sqlite3.Database(dataName);
+        db.serialize(function () {
+            db.run("INSERT INTO " + tableName + " (" + tableArguments + ") VALUES" + " (" + value + ");", function () {
+                let id = this.lastID;
+                if (callBack !== undefined) {
+
+                    callBack(id);
+
+                }
+                resolve(id);
+            });
+        });
+        db.close();
     });
-	db.close();
 }
 
 function selectAll(tableName, callBack){
-	db = new sqlite3.Database(dataName);
-	db.serialize(function(){
-	    db.all("SELECT * FROM "+tableName, function(err, row){
-		   if (err!==null){
-			   console.log(err);
-			   return;
-		   }
-		callBack(row, tableName);
-	   });
-	});
-	db.close();
+	return new Promise(function(resolve, reject) {
+        db = new sqlite3.Database(dataName);
+        db.serialize(function () {
+            db.all("SELECT * FROM " + tableName, function (err, row) {
+                if (err !== null) {
+                    console.log(err);
+                    reject(err);
+                    return;
+                }
+                if (callBack !== undefined) {
+                    callBack(row, tableName);
+
+                }
+                resolve("result");
+            });
+        });
+        db.close();
+    });
 }
 function getId(tableName, tableArguments){
 	

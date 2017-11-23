@@ -2,13 +2,13 @@
 var IngredientProto = {
     itemId : -1,
     amount : -1,
-	
+
 }
 
 function Ingredient(itemId, amount) {
     this.itemId = itemId;
     this.amount = amount;
-	this.recipeId = recipeId;
+
 }
 
 Ingredient.prototype = IngredientProto;
@@ -20,7 +20,7 @@ var CraftRecipeProto = {
     id : -1,
     craftedItemId: -1,
     name : "",
-    ingredients : [],
+    ingredients : new Array(),
     outputAmount : 0,
 	categoryName : null
 

@@ -22,12 +22,26 @@ function fillData(sqlUtils){
 	sqlUtils.selectAll('items', callBackTable);
 	sqlUtils.selectAll('mapItems', callBackTable);
 	sqlUtils.selectAll('mapCells', callBackTable);
-	sqlUtils.selectAll('recipes', callBackTable);
-	sqlUtils.selectAll('ingredients', callBackTable);
-	sqlUtils.selectAll('inventories', callBackTable);
-	sqlUtils.selectAll('characterRecipes', callBackTable);
-	sqlUtils.selectAll('characters', callBackTable);	
-	sqlUtils.selectAll('stacks', callBackTable);
+    sqlUtils.selectAll('stacks', callBackTable);
+	sqlUtils.selectAll('craftRecipes', callBackTable)
+    .then(
+        result=>
+            sqlUtils.selectAll('ingredients', callBackTable)
+	).then(
+        result=>
+            sqlUtils.selectAll('inventories', callBackTable)
+	).then(
+        result=>
+			sqlUtils.selectAll('characterRecipes', callBackTable)
+	).then(
+        result=>
+			sqlUtils.selectAll('characters', callBackTable)
+	);
+
+
+
+
+
 
 }
 function getMap(){
@@ -77,12 +91,12 @@ function callBackTable(tableRows, tableName){
 		break;
 		case 'ingredients':
 			for (let i =0; i<tableRows.length; i++){
-				recipes[tableRows[i].recipeId].ingredients.push(new CraftRecipe.Ingredient(2, 3));
+                recipeList[tableRows[i].recipeId].ingredients.push(new CraftRecipe.Ingredient(2, 3));
 			}
 		break;
-		case 'recipes':
+		case 'craftRecipes':
 			for (let i =0; i<tableRows.length; i++){
-				recipeList[tableRows[i].id] = new CraftRecipe.CraftRecipe(tableRows[i].id, tableRows[i].craftItemId, tableRows[i].name, tableRows[i].outputAmount, tableRows[i].categoryName);
+				recipeList[tableRows[i].id] = new CraftRecipe.CraftRecipe(tableRows[i].id, tableRows[i].craftItemId, tableRows[i].name, new Array(), tableRows[i].outputAmount, tableRows[i].categoryName);
 			}
 		break;
 	}
