@@ -1,7 +1,7 @@
 ﻿//const webSocketServer = require('./config');
 const messageHandler = require('./handler/messageHandler');
 const closeHandler = require('./handler/closeHandler');
-const data = require ('../gameData/data');
+//const data = require ('../gameData/data');
 const sqlUtils = require ('../sql/utils');
 const initialize = require ('./initializeClient');
 const WebSocketServer = new require('ws');
@@ -10,10 +10,12 @@ const webSocketServer = new WebSocketServer.Server({
 	port: 8081
 });
 
-function server(){
-	data.fillData();
+function server(data){
+	//data.fillData();
 	
 	webSocketServer.on('connection', function(ws) {
+		sqlUtils.insert('inventories', 'size', '24');
+		sqlUtils.insert('characters', 'idInventory, isPlayer, column, row, health, strength', '1, 1, 10, 10, 3, 1');
 		let idCharacter = sqlUtils.getId('character');
 		let idInventory = sqlUtils.getId('inventory');
 		ws.id = idCharacter;

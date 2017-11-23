@@ -1,12 +1,14 @@
 // ******* INGREDIENT *******
 var IngredientProto = {
     itemId : -1,
-    amount : -1
+    amount : -1,
+	
 }
 
 function Ingredient(itemId, amount) {
     this.itemId = itemId;
     this.amount = amount;
+	this.recipeId = recipeId;
 }
 
 Ingredient.prototype = IngredientProto;
@@ -18,49 +20,24 @@ var CraftRecipeProto = {
     id : -1,
     craftedItemId: -1,
     name : "",
-    ingredients : null,
+    ingredients : [],
     outputAmount : 0,
+	categoryName : null
+
 }
 
-function CraftRecipe(id, craftedItemId, name, ingredients, outputAmount) {
+function CraftRecipe(id, craftedItemId, name, ingredients, outputAmount, categoryName) {
     this.id = id;
     this.craftedItemId = craftedItemId;
     this.name = name;
     this.ingredients = ingredients;
     this.outputAmount = outputAmount;
+	this.categoryName = null;
+
 }
 
 CraftRecipe.prototype = CraftRecipeProto;
 // ******* CRAFTRECIPE END *******
 
-// ******* CATEGORY *******
-var CategoryProto = {
-    id : -1,
-    name : "",
-    craftRecipes : null
-}
-
-function Category(id, name, craftRecipes) {
-    this.id = id;
-    this.name = name;
-    this.craftRecipes = craftRecipes;
-}
-
-Category.prototype = CategoryProto;
-// ******* CATEGORY END *******
-
-// ******* CRAFT LIST *******
-var CraftListProto = {
-    categories : null
-}
-
-function CraftList(categories) {
-    this.categories = categories;
-}
-
-CraftList.prototype = CraftListProto;
-// ******* CRAFT LIST END *******
 exports.Ingredient = Ingredient;
 exports.CraftRecipe = CraftRecipe;
-exports.Category = Category;
-exports.CraftList = CraftList;

@@ -13,12 +13,12 @@ const {
 } = require('../constants').messageTypes;
 
 function initializeClient(clients, idCharacter, inventories, characters, craftList, idInventory, items, cellsMap){
-
+	
 	
 	clients[idCharacter].send(JSON.stringify(new Request({type:SESSION_ID, request:idCharacter})));
 	
 	inventories[idInventory] = new Inventory({id:idInventory, size:24});
-	characters[idCharacter] = new Character({id:idCharacter, idInventory:idInventory, isPlayer:true, column:10, row:10, health:3, strengh:1});
+	characters[idCharacter] = new Character({id:characterId, idInventory:idInventory, isPlayer:true, column:10, row:10, health:3, strength:1});
 	characters[idCharacter].craftList = craftList;
     clients[idCharacter].send(JSON.stringify(new Request({type:ITEMS_LIST, request:items})));
     let myInventoryId = characters[idCharacter].idInventory;

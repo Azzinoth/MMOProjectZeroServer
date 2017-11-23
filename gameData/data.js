@@ -5,7 +5,7 @@ let inventories = {};
 let items = {};
 let mapItems = {};
 let cellsMap;
-let craftList;
+let recipeList={};
 
 
 const width = 48;
@@ -13,31 +13,79 @@ const height = 48;
 const MapItem = require('./item/MapItem');
 const Item = require('./item/Item');
 const CraftRecipe = require('./craft/CraftRecipe');
+const Character = require('./person/Character');
+const Cell = require('./map/Cell');
+const Stack = require('./inventory/Stack');
 
-
-function fillData(){
+function fillData(sqlUtils){
 	
-	mapItems[1] = new MapItem({id:1, name:'rock', size:5});
-	mapItems[2] = new MapItem({id:2, name:'wood', size:5});
-	items[1] = new Item({id:1, name:'stone', type:'resource', stackSize:20});
-	items[2] = new Item({id:2, name:'wood', type:'resource', stackSize:20});
-	items[3] = new Item({id:3, name:'woodWall', type:'buildingPart', stackSize:20});
-	items[4] = new Item({id:4, name:'stoneWall', type:'buildingPart', stackSize:20});
+	sqlUtils.selectAll('items', callBackTable);
+	sqlUtils.selectAll('mapItems', callBackTable);
+	sqlUtils.selectAll('mapCells', callBackTable);
+	sqlUtils.selectAll('recipes', callBackTable);
+	sqlUtils.selectAll('ingredients', callBackTable);
+	sqlUtils.selectAll('inventories', callBackTable);
+	sqlUtils.selectAll('characterRecipes', callBackTable);
+	sqlUtils.selectAll('characters', callBackTable);	
+	sqlUtils.selectAll('stacks', callBackTable);
 
-	let arrayIngridients = new Array(new CraftRecipe.Ingredient(2, 6));
-	let craftRecipe1 = new CraftRecipe.CraftRecipe(1, 3, "Wood wall", arrayIngridients, 1);
-	let arrayIngridients2 = new Array(new CraftRecipe.Ingredient(1, 15));
-	let craftRecipe2 = new CraftRecipe.CraftRecipe(2, 4, "Stone wall", arrayIngridients2, 1);
-	let categories = new CraftRecipe.Category(1, "Building", new Array(craftRecipe1, craftRecipe2));
-	craftList = new CraftRecipe.CraftList(new Array(categories));	
-	const createLocation = require('./map/createLocation');
-	cellsMap = createLocation(height, width);	
 }
 function getMap(){
 	return cellsMap;
 }
 function getCraftList(){
 	return craftList;
+}
+function callBackTable(tableRows, tableName){
+	switch(tableName){
+		case 'items':
+			for (let i =0; i<tableRows.length; i++){
+				items[tableRows[i].id] = new Item({id:tableRows[i].id, name:tableRows[i].name, type:tableRows[i].type, stackSize:tableRows[i].stackSize});
+			}
+		break;
+		case 'mapItems':
+			for (let i =0; i<tableRows.length; i++){
+				mapItems[tableRows[i].id] = new MapItem({id:tableRows[i].id, name:tableRows[i].name, size:tableRows[i].size});
+			}
+		break;
+		case 'mapCells':
+			let tmpMapCells = new Array(2304).fill([]);
+			for (let i =0; i<tableRows.length; i++){	
+				tmpMapCells[tableRows[i].column][tableRows[i].row] = new Cell({movable : tableRows[i].isMovable==1?true:false, column : tableRows[i].column, row : tableRows[i].row});
+			}
+			cellsMap = tmpMapCells
+		break;
+		case 'characters':
+			for (let i =0; i<tableRows.length; i++){
+				characters[tableRows[i].id] = new Character({id:tableRows[i].id, idInventory:tableRows[i].idInventory, isPlayer:tableRows[i].isPlayer==1?true:false, column:tableRows[i].column, row:tableRows[i].row, health:tableRows[i].health, strength:tableRows[i].strength});
+			}
+		break;
+		case 'inventories':
+			for (let i =0; i<tableRows.length; i++){
+				inventories[tableRows[i].id] = new Inventory({id:tableRows[i].id, size:tableRows[i].size});
+			}
+		break;
+		case 'characterRecipes':
+			for (let i =0; i<tableRows.length; i++){
+				characters[tableRows[i].characterId].craftRecipesId.push(tableRows[i].recipeId);
+			}
+		break;
+		case 'stacks':
+			for (let i =0; i<tableRows.length; i++){
+				stacks[tableRows[i].id] = new Stack({id:tableRows[i].id, itemId:tableRows[i].itemId, size:tableRows[i].size});
+			}
+		break;
+		case 'ingredients':
+			for (let i =0; i<tableRows.length; i++){
+				recipes[tableRows[i].recipeId].ingredients.push(new CraftRecipe.Ingredient(2, 3));
+			}
+		break;
+		case 'recipes':
+			for (let i =0; i<tableRows.length; i++){
+				recipeList[tableRows[i].id] = new CraftRecipe.CraftRecipe(tableRows[i].id, tableRows[i].craftItemId, tableRows[i].name, tableRows[i].outputAmount, tableRows[i].categoryName);
+			}
+		break;
+	}
 }
 exports.fillData = fillData;
 exports.clients = clients;
@@ -48,3 +96,4 @@ exports.items = items;
 exports.mapItems = mapItems;
 exports.getCraftList = getCraftList;
 exports.getMap = getMap;
+//exports.callBack = callBack;

@@ -1,5 +1,5 @@
 class Character {
-	constructor({id=-1, idInventory =0, isPlayer = true, column = 10, row =  10, top = row*64, left = column*64, health = 3, strengh = 1}) {
+	constructor({id=-1, idInventory =0, isPlayer = true, column = 10, row =  10, top = row*64, left = column*64, health = 3, strength = 1}) {
 		this.id = id;
 		this.idInventory = idInventory;
 		this.isPlayer = isPlayer;
@@ -9,9 +9,9 @@ class Character {
 		this.top = top;
 		this.left = left;
 		this.health = health;
-		this.strengh = strengh;
+		this.strength = strength;
 		this.isAlive = true;
-		this.craftList = null;
+		this.craftRecipesId = [];
 	}
 }
 module.exports = Character;
