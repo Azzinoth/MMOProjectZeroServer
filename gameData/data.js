@@ -1,7 +1,7 @@
 let clients = {};
 let characters = {};
 let inventories = {};
-//let stacks = {};
+let stacks = {};
 let items = {};
 let mapItems = {};
 let cellsMap;
@@ -16,15 +16,25 @@ const CraftRecipe = require('./craft/CraftRecipe');
 const Character = require('./person/Character');
 const Cell = require('./map/Cell');
 const Stack = require('./inventory/Stack');
+const Inventory = require('./inventory/Inventory');
+const toDataBase = require ('../sql/gameDataToDataBase');
 
 function fillData(sqlUtils){
-	
-	sqlUtils.selectAll('items', callBackTable);
-	sqlUtils.selectAll('mapItems', callBackTable);
-	sqlUtils.selectAll('mapCells', callBackTable);
-    sqlUtils.selectAll('stacks', callBackTable);
-	sqlUtils.selectAll('craftRecipes', callBackTable)
-    .then(
+    sqlUtils.initDB();
+	sqlUtils.selectAll('items', callBackTable)
+	.then(
+		result=>
+	sqlUtils.selectAll('mapItems', callBackTable)
+	).then(
+		result=>
+	sqlUtils.selectAll('mapCells', callBackTable)
+	).then(
+		result=>
+    sqlUtils.selectAll('stacks', callBackTable)
+	).then(
+		result=>
+		sqlUtils.selectAll('craftRecipes', callBackTable)
+	).then(
         result=>
             sqlUtils.selectAll('ingredients', callBackTable)
 	).then(
@@ -34,21 +44,16 @@ function fillData(sqlUtils){
         result=>
 			sqlUtils.selectAll('characterRecipes', callBackTable)
 	).then(
-        result=>
-			sqlUtils.selectAll('characters', callBackTable)
+        result=>{
+			sqlUtils.selectAll('characters', callBackTable),
+			toDataBase(sqlUtils, clients,characters, inventories, stacks, items, mapItems, cellsMap, recipeList)
+            sqlUtils.closeDB();
+        }
 	);
-
-
-
-
-
 
 }
 function getMap(){
 	return cellsMap;
-}
-function getCraftList(){
-	return craftList;
 }
 function callBackTable(tableRows, tableName){
 	switch(tableName){
@@ -108,6 +113,5 @@ exports.inventories = inventories;
 //exports.stacks = stacks;
 exports.items = items;
 exports.mapItems = mapItems;
-exports.getCraftList = getCraftList;
 exports.getMap = getMap;
 //exports.callBack = callBack;

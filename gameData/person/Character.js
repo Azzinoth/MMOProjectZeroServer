@@ -1,7 +1,7 @@
 class Character {
-	constructor({id=-1, idInventory =0, isPlayer = true, column = 10, row =  10, top = row*64, left = column*64, health = 3, strength = 1}) {
+	constructor({id=-1, inventoryId =0, isPlayer = true, column = 10, row =  10, top = row*64, left = column*64, health = 3, strength = 1}) {
 		this.id = id;
-		this.idInventory = idInventory;
+		this.inventoryId = inventoryId;
 		this.isPlayer = isPlayer;
 		this.size = 64;
 		this.column = column;

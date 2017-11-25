@@ -1,12 +1,16 @@
 const server = require ('./network/server');
 const data = require ('./gameData/data');
+//const Cell = require ('./gameData/map/Cell');
 const sqlUtils = require ('./sql/utils');
+// sqlUtils.initDB();
+//sqlUtils.drop('mapCells');
 // sqlUtils.drop('stacks');
 // sqlUtils.drop('inventories');
 // sqlUtils.drop('ingredients');
 // sqlUtils.drop('craftRecipes');
 // sqlUtils.drop('characterRecipes');
-// sqlUtils.drop('characters');
+//  sqlUtils.drop('characters');
+
 // sqlUtils.drop('items');
 // sqlUtils.createTable('items', 'id INTEGER primary key autoincrement, name TEXT, type TEXT, stackSize INTEGER', function(){
 // 	sqlUtils.insert('items', 'name, type, stackSize', '\'wood\', \'resource\', 20');
@@ -24,22 +28,24 @@ const sqlUtils = require ('./sql/utils');
 //
 //
 // sqlUtils.createTable('mapCells', 'column INTEGER, row INTEGER, movable INTEGER, objectId INTEGER', function(){
+//     let array = [];
 //     for (let i =0; i<48; i++){
 //         for (let j =0; j<48; j++){
 //             if (Math.random()<0.25){
-//                 sqlUtils.insert('mapCells', 'column, row, movable, objectId', i+', '+j+', 0, 1');
+//                 array.push(new Cell({column: i, row:j, movable: false, objectId:1}));
 //             }else if (Math.random()>=0.25&&Math.random()<0.5){
-//                 sqlUtils.insert('mapCells', 'column, row, movable, objectId', i+', '+j+', 0, 2');
+//                 array.push(new Cell({column: i, row:j, movable: false, objectId:2}));
 //             }else{
-//                 sqlUtils.insert('mapCells', 'column, row, movable, objectId', i+', '+j+', 1, null');
+//                 array.push(new Cell({column: i, row:j, movable: true, objectId:null}));
 //             }
 //         }
 //     }
+//     sqlUtils.insertAll('mapCells', array);
 // });
+//sqlUtils.selectAll('mapCells')
 
-
-// sqlUtils.createTable('stacks', 'id INTEGER primary key autoincrement, itemId INTEGER, size INTEGER');
-// sqlUtils.createTable('inventories', 'id INTEGER primary key autoincrement, size INTEGER, stackId INTEGER');
+// sqlUtils.createTable('stacks', 'id INTEGER primary key autoincrement, itemId INTEGER, size INTEGER , idInventory INTEGER');
+// sqlUtils.createTable('inventories', 'id INTEGER primary key autoincrement, size INTEGER');
 //
 // sqlUtils.createTable('ingredients', 'itemId INTEGER, amount INTEGER, recipeId INTEGER', function(){
 // 	sqlUtils.insert('ingredients', 'itemId, amount, recipeId', '1, 4, 1');
@@ -55,7 +61,7 @@ const sqlUtils = require ('./sql/utils');
 //
 //
 // sqlUtils.createTable('characterRecipes', 'characterId INTEGER, recipeId INTEGER');
-// sqlUtils.createTable('characters', 'id INTEGER primary key autoincrement, idInventory INTEGER, isPlayer INTEGER, column INTEGER, row INTEGER, top INTEGER, left INTEGER, health INTEGER, strength INTEGER');
-
+// sqlUtils.createTable('characters', 'id INTEGER primary key autoincrement, inventoryId INTEGER, isPlayer INTEGER, column INTEGER, row INTEGER, top INTEGER, left INTEGER, health INTEGER, strength INTEGER');
+// sqlUtils.closeDB();
 data.fillData(sqlUtils);
 server(data);

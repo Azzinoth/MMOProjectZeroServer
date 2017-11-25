@@ -14,29 +14,30 @@ function server(data){
 	//data.fillData();
 	
 	webSocketServer.on('connection', function(ws) {
-
+        sqlUtils.initDB();
 		sqlUtils.insert('inventories', 'size', '24')
-			.then( idInventory=>
-			console.log(idInventory),
-			sqlUtils.insert('characters', 'idInventory, isPlayer, column, row, health, strength', id+', 1, 10, 10, 3, 1')
-				.then( idCharacter=>
-				console.log(idCharacter),
-
-				ws.id = idCharacter,
-				data.clients[idCharacter] = ws,
+			.then( inventoryId=>{
+			console.log(inventoryId),
+			sqlUtils.insert('characters', 'idInventory, isPlayer, column, row, health, strength', inventoryId+', 1, 10, 10, 3, 1'),
+            sqlUtils.closeDB()
+				.then( characterId=>{
+				console.log(characterId),
+				ws.id = characterId,
+				data.clients[characterId] = ws,
 				console.log("new connection " + ws.id),
-				initialize(data.clients, idCharacter, data.inventories, data.characters, data.getCraftList(), idInventory, data.items, data.getMap()),
+				initialize(data.clients, characterId, data.inventories, data.characters, inventoryId, data.items, data.getMap()),
 
 
 				ws.on('message', function(message){
-					messageHandler(message, data.clients, data.characters, idCharacter, data.inventories, data.getMap(), data.items);
+					messageHandler(message, data.clients, data.characters, characterId, data.inventories, data.getMap(), data.items);
 				}),
 
 				ws.on('close', function(){
-					closeHandler(data.clients, data.characters, data.inventories, idCharacter);
-				}),
-   			 )
-    	)
+					closeHandler(data.clients, data.characters, data.inventories, characterId);
+				})
+
+			});
+		});
     });
 }
 module.exports = server;

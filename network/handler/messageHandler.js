@@ -106,7 +106,7 @@ function messageHandler (message, clients, characters, personId, inventories, ce
 					request = new Request({type:MAP_OBJECT, request:tmpArray});
 					sender.sendToAll(clients, request);
 				}else{
-					request = new Request({type:ERROR, request:001});
+					request = new Request({type:ERROR, request:'001'});
 					clients[personId].send(JSON.stringify(request));
 				}
 			}else{

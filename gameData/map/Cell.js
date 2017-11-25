@@ -1,9 +1,9 @@
 class Cell {
-	constructor({movable = true, column = null, row = null}) {
+	constructor({movable = true, column = null, row = null, objectId = null}) {
 		this.column = column;
 		this.row = row;
 		this.movable = movable;
-		this.idObject = null;
+		this.objectId = objectId;
 	}
 }
 

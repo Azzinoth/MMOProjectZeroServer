@@ -1,3 +1,3 @@
 const utils = require('./utils');
-
-module.exports = {utils, initDb};
+const toDataBase = require('./gameDataToDataBase.js');
+module.exports = {utils, toDataBase};
