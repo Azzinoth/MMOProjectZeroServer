@@ -3,7 +3,10 @@ const {
 } = require('../../constants').messageTypes;
 const Request = require('../Request');
 
-function closeHandler(clients,characters,inventories, idCharacter){
+function closeHandler(data, idCharacter){
+    clients = data.clients;
+    characters = data.characters;
+    inventories = data.inventories;
 	console.log('connection closed ' + idCharacter);
 	delete clients[idCharacter];
 	delete inventories[characters[idCharacter].idInventory];

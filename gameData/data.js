@@ -6,6 +6,7 @@ let items = {};
 let mapItems = {};
 let cellsMap;
 let recipeList={};
+let identificators ={};
 
 
 const width = 48;
@@ -21,8 +22,11 @@ const toDataBase = require ('../sql/gameDataToDataBase');
 
 function fillData(sqlUtils){
     sqlUtils.initDB();
-	sqlUtils.selectAll('items', callBackTable)
+    sqlUtils.selectAll('identificators', callBackTable)
 	.then(
+		 result=>
+	sqlUtils.selectAll('items', callBackTable)
+	).then(
 		result=>
 	sqlUtils.selectAll('mapItems', callBackTable)
 	).then(
@@ -46,17 +50,54 @@ function fillData(sqlUtils){
 	).then(
         result=>{
 			sqlUtils.selectAll('characters', callBackTable),
-			toDataBase(sqlUtils, clients,characters, inventories, stacks, items, mapItems, cellsMap, recipeList)
-            sqlUtils.closeDB();
+			toDataBase(sqlUtils, clients,characters, inventories, stacks, items, mapItems, cellsMap, recipeList),
+            sqlUtils.closeDB()
         }
 	);
 
+}
+function getId(dataName){
+	switch (dataName){
+		case 'character':
+            identificators[characterId]++;
+            return identificators[characterId];
+			break;
+        case 'inventory':{
+            identificators[inventoryId]++;
+            return identificators[inventoryId];
+        }
+            break;
+        case 'stack':
+            identificators[stackId]++;
+            return identificators[stackId];
+            break;
+        case 'item':
+            identificators[itemId]++;
+            return identificators[itemId];
+            break;
+        case 'mapItem':
+            identificators[mapItemId]++;
+            return identificators[mapItemId];
+            break;
+        case 'recipe':
+            identificators[recipeId]++;
+            return identificators[recipeId];
+            break;
+	}
 }
 function getMap(){
 	return cellsMap;
 }
 function callBackTable(tableRows, tableName){
 	switch(tableName){
+        case 'identificators':
+            identificators[characterId] = tableRows[0].characterId;
+            identificators[inventoryId] = tableRows[0].inventoryId;
+            identificators[stackId] = tableRows[0].stackId;
+            identificators[itemId] = tableRows[0].itemId;
+            identificators[mapItemId] = tableRows[0].mapItemId;
+            identificators[recipeId] = tableRows[0].recipeId;
+		break;
 		case 'items':
 			for (let i =0; i<tableRows.length; i++){
 				items[tableRows[i].id] = new Item({id:tableRows[i].id, name:tableRows[i].name, type:tableRows[i].type, stackSize:tableRows[i].stackSize});
@@ -67,12 +108,16 @@ function callBackTable(tableRows, tableName){
 				mapItems[tableRows[i].id] = new MapItem({id:tableRows[i].id, name:tableRows[i].name, size:tableRows[i].size});
 			}
 		break;
-		case 'mapCells':
-			let tmpMapCells = new Array(2304).fill([]);
+		case 'mapCells':{
+			let tmpMapCells = new Array(48);
+			for (let i=0;i<48;i++){
+                tmpMapCells[i] = new Array(48);
+            }
 			for (let i =0; i<tableRows.length; i++){	
-				tmpMapCells[tableRows[i].column][tableRows[i].row] = new Cell({movable : tableRows[i].isMovable==1?true:false, column : tableRows[i].column, row : tableRows[i].row});
+				tmpMapCells[tableRows[i].column][tableRows[i].row] = new Cell({movable : tableRows[i].movable==1?true:false, column : tableRows[i].column, row : tableRows[i].row, objectId:tableRows[i].objectId});
 			}
 			cellsMap = tmpMapCells
+        }
 		break;
 		case 'characters':
 			for (let i =0; i<tableRows.length; i++){
@@ -96,22 +141,23 @@ function callBackTable(tableRows, tableName){
 		break;
 		case 'ingredients':
 			for (let i =0; i<tableRows.length; i++){
-                recipeList[tableRows[i].recipeId].ingredients.push(new CraftRecipe.Ingredient(2, 3));
+                recipeList[tableRows[i].recipeId].ingredients.push(new CraftRecipe.Ingredient(tableRows[i].itemId, tableRows[i].amount));
 			}
 		break;
 		case 'craftRecipes':
 			for (let i =0; i<tableRows.length; i++){
-				recipeList[tableRows[i].id] = new CraftRecipe.CraftRecipe(tableRows[i].id, tableRows[i].craftItemId, tableRows[i].name, new Array(), tableRows[i].outputAmount, tableRows[i].categoryName);
+				recipeList[tableRows[i].id] = new CraftRecipe.CraftRecipe(tableRows[i].id, tableRows[i].craftedItemId, tableRows[i].name, new Array(), tableRows[i].outputAmount, tableRows[i].categoryName);
 			}
 		break;
 	}
 }
-exports.fillData = fillData;
 exports.clients = clients;
 exports.characters = characters;
 exports.inventories = inventories;
-//exports.stacks = stacks;
 exports.items = items;
 exports.mapItems = mapItems;
+exports.recipeList=recipeList;
 exports.getMap = getMap;
+exports.getId = getId;
+exports.fillData = fillData;
 //exports.callBack = callBack;

@@ -1,101 +1,118 @@
 const Stack = require('./Stack');
 
-function findItems(idItem, size, inventory){
+function findItems(itemId, size, inventory, stacks){
 	let result = {};
 	for (let i =0; i<inventory.stacks.length; i++){
-		if(inventory.stacks[i]!==undefined&&inventory.stacks[i]!==null&&inventory.stacks[i].idItem===idItem){
-			if (inventory.stacks[i].size>=size){
-                result[i] = inventory.stacks[i];
+		if(inventory.stacks[i]!==null&&stacks[inventory.stacks[i]].itemId===itemId){
+			if (stacks[inventory.stacks[i]].size>=size){
+                result[i] = stacks[inventory.stacks[i]];
                 return result;
 			}else{
-                size -= inventory.stacks[i].size;
-                result[i] = inventory.stacks[i];
+                size -= stacks[inventory.stacks[i]].size;
+                result[i] = stacks[inventory.stacks[i]];
 			}
         }
     }
     return null;
 }
 
-function addStack (inventory, idItem, size, items){
+function addStack (data, toDataBase, inventory, stacks, itemId, size, items){
 	let array = new Object();
     array.isFull = false;
 	//let inventory = inventories[humans[idHuman].idInventory];
-	let sqlUtils = require('../../sql/utils')
-	let idStack = sqlUtils.getId('stack');
+
 	for (let i = 0; i<inventory.stacks.length; i++){
-		if (inventory.stacks[i]!==undefined&&inventory.stacks[i]!==null&&inventory.stacks[i].idItem===idItem&&items[idItem].stackSize>inventory.stacks[i].size){
-			let quantity = inventory.stacks[i].size+size - items[idItem].stackSize;
+		//for (let key in stacks){
+		let stackId = inventory.stacks[i];
+		if (inventory.stacks[i]!==null&&stacks[stackId].itemId==itemId&&items[itemId].stackSize>stacks[stackId].size){
+			let quantity = stacks[stackId].size+size - items[itemId].stackSize;
 			if (quantity<=0){
-				inventory.stacks[i].size += size;
-				array[i] = inventory.stacks[i];
+				stacks[stackId].size += size;
+				array[i] = stacks[stackId];
 				return array;
 			}else {
-				inventory.stacks[i].size = items[idItem].stackSize;
+				stacks[stackId].size = items[itemId].stackSize;
 				size = quantity;
-				array[i] = inventory.stacks[i];
+				array[i] = stacks[stackId];
 			}
 		}
+       // }
 	}
 	let newStack;
+    let newStackId;
 	for (let i = 0; i<inventory.stacks.length; i++){
-		if (inventory.stacks[i] ===undefined||inventory.stacks[i] === null){
-			if (size<=items[idItem].stackSize){
-				newStack = new Stack({id:idStack, idItem:idItem, size:size});
-				inventory.stacks[i] = newStack;
-				array[i] = newStack;
-				return array;
-			}else{
-				newStack = new Stack({id:idStack, idItem:idItem, size:items[idItem].stackSize});
-				inventory.stacks[i] =newStack;
-				array[i] = newStack;
-				size -= items[idItem].stackSize;
-			}
-			
-		}
+        //for (let key in stacks) {
+        //let stackId = inventory.stacks[i];
+            if (inventory.stacks[i] === null) {
+                if (size <= items[itemId].stackSize) {
+                    newStackId = data.getId('stack');
+                    newStack = new Stack({id: newStackId, itemId: itemId, size: size});
+                    inventory.stacks[i] = newStackId;
+                    stacks[newStackId] = newStack;
+                    array[i] = newStack;
+                    return array;
+                } else {
+                    newStackId = data.getId('stack');
+                    newStack = new Stack({id: newStackId, itemId: itemId, size: items[itemId].stackSize});
+                    inventory.stacks[i] = newStackId;
+                    stacks[newStackId]=newStack;
+                    array[i] = newStack;
+                    size -= items[itemId].stackSize;
+                }
+
+            }
+       // }
+        toDataBase.addData('stacks', newStack);
 	}
     array.isFull = true;
 	return array;
 }
 
-function swapStack (inventory, idHuman, indexFrom, indexTo, items){
+function swapStack (toDataBase, inventory, stacks, idHuman, indexFrom, indexTo, items){
 	let array={};
-	if (indexFrom===indexTo) return array
+	if (indexFrom===indexTo) return array;
 	//let inventory = inventories[humans[idHuman].idInventory];
-	let idItem;
-	if(inventory.stacks[indexFrom]!==null&&inventory.stacks[indexFrom]!==undefined){ 
-		idItem = inventory.stacks[indexFrom].idItem;
+	let itemId;
+	if(inventory.stacks[indexFrom]!==null){
+        itemId = stacks[inventory.stacks[indexFrom]].itemId;
 	}else{
 		return;
 	}
-	if (inventory.stacks[indexFrom].idItem!==undefined){
+	if (stacks[inventory.stacks[indexFrom]].itemId!==undefined){
 		if (indexTo===-1){			
 			//delete stacks[inventory.stacks[indexFrom].id];
 			inventory.stacks[indexFrom] = null;
-			array[indexFrom] = null;			
-		}else if (inventory.stacks[indexTo]===undefined||inventory.stacks[indexTo]===null){
-			array[indexTo]=inventory.stacks[indexFrom];
+			array[indexFrom] = null;
+            toDataBase.deleteData('stacks',stacks[inventory.stacks[indexFrom]]);
+            delete stacks[inventory.stacks[indexFrom]];
+		}else if (inventory.stacks[indexTo]===null){
+			array[indexTo]=stacks[inventory.stacks[indexFrom]];
 			inventory.stacks[indexTo]= inventory.stacks[indexFrom];
 			inventory.stacks[indexFrom] = null;
 			array[indexFrom] = null;
-		}else if (inventory.stacks[indexTo].idItem===idItem&&inventory.stacks[indexTo].size<items[idItem].stackSize){
-			let quantity = items[idItem].stackSize - (inventory.stacks[indexTo].size + inventory.stacks[indexFrom].size);
+            toDataBase.deleteData('stacks',stacks[inventory.stacks[indexFrom]]);
+            delete stacks[inventory.stacks[indexFrom]];
+		}else if (stacks[inventory.stacks[indexTo]].itemId===itemId&&stacks[inventory.stacks[indexTo]].size<items[itemId].stackSize){
+			let quantity = items[itemId].stackSize - (stacks[inventory.stacks[indexTo]].size + stacks[inventory.stacks[indexFrom]].size);
 			if (quantity>0){
-				inventory.stacks[indexTo].size += inventory.stacks[indexFrom].size;
+                stacks[inventory.stacks[indexTo]].size += stacks[inventory.stacks[indexFrom]].size;
 				inventory.stacks[indexFrom]=null;
-				array[indexTo] = inventory.stacks[indexTo];
+				array[indexTo] = stacks[inventory.stacks[indexTo]];
 				array[indexFrom] = null;
+                toDataBase.deleteData('stacks',stacks[inventory.stacks[indexFrom]]);
+                delete stacks[inventory.stacks[indexFrom]];
 			}else{
-				inventory.stacks[indexTo].size = items[idItem].stackSize;
-				inventory.stacks[indexFrom].size = Math.abs(quantity);
-				array[indexTo] = inventory.stacks[indexTo];
-				array[indexFrom] = inventory.stacks[indexFrom];
+                stacks[inventory.stacks[indexTo]].size = items[itemId].stackSize;
+                stacks[inventory.stacks[indexFrom]].size = Math.abs(quantity);
+				array[indexTo] = stacks[inventory.stacks[indexTo]];
+				array[indexFrom] = stacks[inventory.stacks[indexFrom]];
 			}	
-		} else if (inventory.stacks[indexTo].idItem!==idItem){
+		} else if (stacks[inventory.stacks[indexTo]].itemId!==itemId){
 			let tmp = inventory.stacks[indexTo];
 			inventory.stacks[indexTo] = inventory.stacks[indexFrom];
 			inventory.stacks[indexFrom] = tmp;
-			array[indexTo] = inventory.stacks[indexTo];
-			array[indexFrom] = inventory.stacks[indexFrom];
+			array[indexTo] = stacks[inventory.stacks[indexTo]];
+			array[indexFrom] = stacks[inventory.stacks[indexFrom]];
 		}		
 	}
 	return array;

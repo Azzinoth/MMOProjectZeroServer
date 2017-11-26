@@ -1,19 +1,19 @@
 const Inventory = require('../inventory/Inventory') ;
 const bubbleSort = require('../../utils/bubbleSort');
 const stackUtils = require('../inventory/stackUtils');
-function craftItem(inventory, recipe, characterId, items){
-	let stacks = inventory.stacks;
-	let tmpStacks = [stacks.length];
+function craftItem(data, inventory, stacks, recipe, characterId, items){
+	let stacksId = inventory.stacks;
+	let tmpStacks = [stacksId.length];
 	let isEnought = false;
 	let isFullTmpStack = false;
 	let result = {};
 	let isBreak;
 	for (let i = 0; i<recipe.ingredients.length; i++){
 		let indexStack = [];
-		for (let j = 0; j<stacks.length; j++){
-			if (!isFullTmpStack)tmpStacks[j] = stacks[j];
-			if (stacks[j]!==undefined && stacks[j]!==null && stacks[j].idItem===recipe.ingredients[i].itemId){
-				indexStack.push(stacks[j]);
+		for (let j = 0; j<stacksId.length; j++){
+			if (!isFullTmpStack)tmpStacks[j] = stacks[stacksId[j]];
+			if (stacksId[j]!==null && stacks[stacksId[j]].itemId===recipe.ingredients[i].itemId){
+				indexStack.push(stacks[stacksId[j]]);
 			}
 		}
 		isFullTmpStack = true;
@@ -49,9 +49,9 @@ function craftItem(inventory, recipe, characterId, items){
 		if (!isEnought) return result = {};
 	}
 
-	let tmpInventory = new Inventory({id:inventory.idInventory, size:inventory.size});
+	let tmpInventory = new Inventory({id:inventory.inventoryId, size:inventory.size});
     tmpInventory.stacks =tmpStacks ;
-    let tmp = stackUtils.addStack(tmpInventory, recipe.craftedItemId, recipe.outputAmount, items);
+    let tmp = stackUtils.addStack(data, tmpInventory, recipe.craftedItemId, recipe.outputAmount, items);
     delete tmpInventory;
     if (tmp.isFull)return result = {};
     for (let key in tmp){

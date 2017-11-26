@@ -32,7 +32,7 @@ function CraftRecipe(id, craftedItemId, name, ingredients, outputAmount, categor
     this.name = name;
     this.ingredients = ingredients;
     this.outputAmount = outputAmount;
-	this.categoryName = null;
+	this.categoryName = categoryName;
 
 }
 

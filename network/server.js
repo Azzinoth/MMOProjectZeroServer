@@ -10,30 +10,32 @@ const webSocketServer = new WebSocketServer.Server({
 	port: 8082
 });
 
-function server(data){
+function server(data, toDataBase){
 	//data.fillData();
 	
 	webSocketServer.on('connection', function(ws) {
         sqlUtils.initDB();
-		sqlUtils.insert('inventories', 'size', '24')
-			.then( inventoryId=>{
-			console.log(inventoryId),
-			sqlUtils.insert('characters', 'idInventory, isPlayer, column, row, health, strength', inventoryId+', 1, 10, 10, 3, 1'),
-            sqlUtils.closeDB()
-				.then( characterId=>{
-				console.log(characterId),
+
+        let inventoryId = data.getId('inventory');
+        let characterId = data.getId('character');
+		sqlUtils.insert('inventories', 'id, size', inventoryId+', 24')
+			.then( result=>{
+			sqlUtils.insert('characters', 'id, inventoryId, isPlayer, column, row, health, strength', characterId+', '+inventoryId+', 1, 10, 10, 3, 1')
+			.then( result=>{
+
+				sqlUtils.closeDB(),
 				ws.id = characterId,
 				data.clients[characterId] = ws,
 				console.log("new connection " + ws.id),
-				initialize(data.clients, characterId, data.inventories, data.characters, inventoryId, data.items, data.getMap()),
+				initialize(data, characterId, inventoryId),
 
 
 				ws.on('message', function(message){
-					messageHandler(message, data.clients, data.characters, characterId, data.inventories, data.getMap(), data.items);
+					messageHandler(data, toDataBase, message, characterId);
 				}),
 
 				ws.on('close', function(){
-					closeHandler(data.clients, data.characters, data.inventories, characterId);
+					closeHandler(data, characterId);
 				})
 
 			});

@@ -1,5 +1,5 @@
 function isBuilderCell(cellsMap, column, row){
-    if (cellsMap[column][row].idObject===undefined||cellsMap[column][row].idObject===null){
+    if (cellsMap[column][row].objectId===undefined||cellsMap[column][row].objectId===null){
         return true;
     }else{
         return false;
@@ -13,8 +13,8 @@ function isMovableCell(cellsMap, fromRow, toRow, fromColumn, toColumn){
 	}
 }
 function isGatheredCell(cellsMap, fromRow, fromColumn, toRow, toColumn){
-    if (Math.abs(fromRow-toRow)<2&&Math.abs(fromColumn-toColumn)<2&&cellsMap[toColumn][toRow].idObject!==null){
-		cellsMap[toColumn][toRow].idObject=null;
+    if (Math.abs(fromRow-toRow)<2&&Math.abs(fromColumn-toColumn)<2&&cellsMap[toColumn][toRow].objectId!==null){
+		cellsMap[toColumn][toRow].objectId=null;
 		cellsMap[toColumn][toRow].movable = true;
 		return true;
     }else{

@@ -1,7 +1,7 @@
 class Stack{
-	constructor({id=-1, idItem=-1, size=-1}){
+	constructor({id=-1, itemId=-1, size=-1}){
 		this.id=id;
-		this.idItem=idItem;
+		this.itemId=itemId;
 		this.size=size;
 		
 	}
