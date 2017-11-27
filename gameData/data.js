@@ -18,9 +18,9 @@ const Character = require('./person/Character');
 const Cell = require('./map/Cell');
 const Stack = require('./inventory/Stack');
 const Inventory = require('./inventory/Inventory');
-const toDataBase = require ('../sql/gameDataToDataBase');
 
-function fillData(sqlUtils){
+
+function fillData(sqlUtils,toData){
     sqlUtils.initDB();
     sqlUtils.selectAll('identificators', callBackTable)
 	.then(
@@ -50,40 +50,41 @@ function fillData(sqlUtils){
 	).then(
         result=>{
 			sqlUtils.selectAll('characters', callBackTable),
-			toDataBase(sqlUtils, clients,characters, inventories, stacks, items, mapItems, cellsMap, recipeList),
             sqlUtils.closeDB()
         }
 	);
 
 }
 function getId(dataName){
+	let id = null;
 	switch (dataName){
 		case 'character':
-            identificators[characterId]++;
-            return identificators[characterId];
+            identificators.characterId++;
+            id = identificators.characterId;
 			break;
         case 'inventory':{
-            identificators[inventoryId]++;
-            return identificators[inventoryId];
+            identificators.inventoryId++;
+            id = identificators.inventoryId;
         }
             break;
         case 'stack':
-            identificators[stackId]++;
-            return identificators[stackId];
+            identificators.stackId++;
+            id = identificators.stackId;
             break;
         case 'item':
-            identificators[itemId]++;
-            return identificators[itemId];
+            identificators.itemId++;
+            id = identificators.itemId;
             break;
         case 'mapItem':
-            identificators[mapItemId]++;
-            return identificators[mapItemId];
+            identificators.mapItemId++;
+            id = identificators.mapItemId;
             break;
         case 'recipe':
-            identificators[recipeId]++;
-            return identificators[recipeId];
+            identificators.recipeId++;
+            id = identificators.recipeId;
             break;
 	}
+	return id;
 }
 function getMap(){
 	return cellsMap;
@@ -91,12 +92,12 @@ function getMap(){
 function callBackTable(tableRows, tableName){
 	switch(tableName){
         case 'identificators':
-            identificators[characterId] = tableRows[0].characterId;
-            identificators[inventoryId] = tableRows[0].inventoryId;
-            identificators[stackId] = tableRows[0].stackId;
-            identificators[itemId] = tableRows[0].itemId;
-            identificators[mapItemId] = tableRows[0].mapItemId;
-            identificators[recipeId] = tableRows[0].recipeId;
+            identificators.characterId = tableRows[0].characterId;
+            identificators.inventoryId = tableRows[0].inventoryId;
+            identificators.stackId = tableRows[0].stackId;
+            identificators.itemId = tableRows[0].itemId;
+            identificators.mapItemId = tableRows[0].mapItemId;
+            identificators.recipeId = tableRows[0].recipeId;
 		break;
 		case 'items':
 			for (let i =0; i<tableRows.length; i++){
@@ -136,7 +137,7 @@ function callBackTable(tableRows, tableName){
 		break;
 		case 'stacks':
 			for (let i =0; i<tableRows.length; i++){
-				stacks[tableRows[i].id] = new Stack({id:tableRows[i].id, itemId:tableRows[i].itemId, size:tableRows[i].size});
+				stacks[tableRows[i].id] = new Stack({id:tableRows[i].id, itemId:tableRows[i].itemId, size:tableRows[i].size, inventoryId:tableRows[i].inventoryId});
 			}
 		break;
 		case 'ingredients':
@@ -157,7 +158,8 @@ exports.inventories = inventories;
 exports.items = items;
 exports.mapItems = mapItems;
 exports.recipeList=recipeList;
+exports.stacks = stacks;
+exports.identificators=identificators;
 exports.getMap = getMap;
 exports.getId = getId;
 exports.fillData = fillData;
-//exports.callBack = callBack;

@@ -10,7 +10,7 @@ const webSocketServer = new WebSocketServer.Server({
 	port: 8082
 });
 
-function server(data, toDataBase){
+function server(data){
 	//data.fillData();
 	
 	webSocketServer.on('connection', function(ws) {
@@ -31,7 +31,7 @@ function server(data, toDataBase){
 
 
 				ws.on('message', function(message){
-					messageHandler(data, toDataBase, message, characterId);
+					messageHandler(data, message, characterId);
 				}),
 
 				ws.on('close', function(){

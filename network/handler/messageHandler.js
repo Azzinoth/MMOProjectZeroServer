@@ -24,7 +24,7 @@ const {
 	SYSTEM_MESSAGE
 } = require('../../constants').messageTypes;
 
-function messageHandler (data, toDataBase, message, personId){
+function messageHandler (data, message, personId){
     let clients = data.clients;
     let characters = data.characters;
     let inventories = data.inventories;
@@ -96,7 +96,7 @@ function messageHandler (data, toDataBase, message, personId){
 			let changedInventory;
 			
             if (cellUtils.isGatheredCell(cellsMap, row, column, toRow, toColumn)){				
-				let reqStacks = stackUtils.addStack(data, toDataBase, inventories[characters[personId].inventoryId], stacks, itemId, 6, items);
+				let reqStacks = stackUtils.addStack(data, inventories[characters[personId].inventoryId], stacks, itemId, 6, items);
 				if (reqStacks!=null){
 					delete reqStacks.isFull;
                     request = requestInventory (characters[personId].inventoryId, reqStacks, Object.getOwnPropertyNames(reqStacks).length);
@@ -132,7 +132,7 @@ function messageHandler (data, toDataBase, message, personId){
 		case INVENTORY_CHANGE:{
 			let indexFrom = json.request[0];
 			let indexTo = json.request[1];
-			let swaps = stackUtils.swapStack (toDataBasem, inventories[characters[personId].inventoryId], stacks, personId, indexFrom, indexTo, items);
+			let swaps = stackUtils.swapStack (inventories[characters[personId].inventoryId], stacks, personId, indexFrom, indexTo, items);
             request = requestInventory (characters[personId].inventoryId, swaps, Object.getOwnPropertyNames(swaps).length);
 			clients[personId].send(JSON.stringify(request));
 		}
@@ -143,7 +143,7 @@ function messageHandler (data, toDataBase, message, personId){
 
 			for(let i=0; i<craftRecipes.length; i++){
 				if (craftRecipes[i]===craftId){
-					let invent = craftItem(data, inventories[characters[personId].inventoryId], data.recipeList[craftRecipes[i]], personId, items);
+					let invent = craftItem(data, inventories[characters[personId].inventoryId], stacks, data.recipeList[craftRecipes[i]], personId, items);
 					request = requestInventory (characters[personId].inventoryId, invent, Object.getOwnPropertyNames(invent).length);
 					clients[personId].send(JSON.stringify(request));
 				}
@@ -158,14 +158,14 @@ function messageHandler (data, toDataBase, message, personId){
             column = json.request[1][0];
             row = json.request[1][1];
 			if (cellUtils.isBuilderCell(cellsMap, column, row)){
-				let stacks = stackUtils.findItems(itemId, 1, inventories[characters[personId].inventoryId], stacks);
-				if (stacks!==null){
-					for	(let key in stacks){
-						if (stacks[key].size>1){
+				let findStacks = stackUtils.findItems(itemId, 1, inventories[characters[personId].inventoryId], stacks);
+				if (findStacks!==null){
+					for	(let key in findStacks){
+						if (findStacks[key].size>1){
                             inventories[characters[personId].inventoryId].stacks[key].size -=1;
                         }else{
 							inventories[characters[personId].inventoryId].stacks[key]=null;
-							stacks[key] = null;
+                            findStacks[key] = null;
                         }
 					}
                     cellsMap[column][row].movable = false;
@@ -174,7 +174,7 @@ function messageHandler (data, toDataBase, message, personId){
 					request = new Request({type:MAP_OBJECT, request:result});
 					sender.sendToAll(clients, request);
 
-                    request = requestInventory(characters[personId].inventoryId, stacks, Object.getOwnPropertyNames(stacks).length);
+                    request = requestInventory(characters[personId].inventoryId, findStacks, Object.getOwnPropertyNames(findStacks).length);
                     clients[personId].send(JSON.stringify(request));
 				}
 			}

@@ -17,9 +17,10 @@ const toDataBase = require ('./sql/gameDataToDataBase');
 sqlUtils.deleteTable('inventories');
 sqlUtils.deleteTable('characters');
 sqlUtils.deleteTable('stacks');
+// sqlUtils.deleteTable('identificators');
 sqlUtils.closeDB();
 // sqlUtils.createTable('identificators', 'characterId INTEGER, itemId INTEGER, mapItemId INTEGER, recipeId INTEGER, inventoryId INTEGER, stackId INTEGER', function(){
-//     sqlUtils.insert('identificators', 'characterId, itemId, mapItemId, recipeId, inventoryId, stackId','20, 20, 20, 20, 20, 20');
+    //sqlUtils.insert('identificators', 'characterId, itemId, mapItemId, recipeId, inventoryId, stackId','20, 20, 20, 20, 20, 20');
 // });
 // sqlUtils.createTable('items', 'id INTEGER primary key, name TEXT, type TEXT, stackSize INTEGER', function(){
 // 	sqlUtils.insert('items', 'id, name, type, stackSize', data.getId('item')+', \'wood\', \'resource\', 20');
@@ -70,7 +71,8 @@ sqlUtils.closeDB();
 // sqlUtils.createTable('characterRecipes', 'characterId INTEGER, recipeId INTEGER');
 // sqlUtils.createTable('characters', 'id INTEGER primary key, inventoryId INTEGER, isPlayer INTEGER, column INTEGER, row INTEGER, top INTEGER, left INTEGER, health INTEGER, strength INTEGER');
 // sqlUtils.closeDB();
-toDataBase.toDataBase(sqlUtils);
 
-data.fillData(sqlUtils);
-server(data, toDataBase);
+//
+data.fillData(sqlUtils, toDataBase);
+toDataBase.toDataBase(sqlUtils, data);
+server(data);

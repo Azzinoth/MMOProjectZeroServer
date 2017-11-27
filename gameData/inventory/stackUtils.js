@@ -16,9 +16,9 @@ function findItems(itemId, size, inventory, stacks){
     return null;
 }
 
-function addStack (data, toDataBase, inventory, stacks, itemId, size, items){
-	let array = new Object();
-    array.isFull = false;
+function addStack (data, inventory, stacks, itemId, size, items){
+	let array = {};
+    //array.isFull = false;
 	//let inventory = inventories[humans[idHuman].idInventory];
 
 	for (let i = 0; i<inventory.stacks.length; i++){
@@ -46,14 +46,14 @@ function addStack (data, toDataBase, inventory, stacks, itemId, size, items){
             if (inventory.stacks[i] === null) {
                 if (size <= items[itemId].stackSize) {
                     newStackId = data.getId('stack');
-                    newStack = new Stack({id: newStackId, itemId: itemId, size: size});
+                    newStack = new Stack({id: newStackId, itemId: itemId, size: size, inventoryId:inventory.id});
                     inventory.stacks[i] = newStackId;
                     stacks[newStackId] = newStack;
                     array[i] = newStack;
                     return array;
                 } else {
                     newStackId = data.getId('stack');
-                    newStack = new Stack({id: newStackId, itemId: itemId, size: items[itemId].stackSize});
+                    newStack = new Stack({id: newStackId, itemId: itemId, size: items[itemId].stackSize, inventoryId:inventory.id});
                     inventory.stacks[i] = newStackId;
                     stacks[newStackId]=newStack;
                     array[i] = newStack;
@@ -62,13 +62,13 @@ function addStack (data, toDataBase, inventory, stacks, itemId, size, items){
 
             }
        // }
-        toDataBase.addData('stacks', newStack);
+
 	}
-    array.isFull = true;
+    //array.isFull = true;
 	return array;
 }
 
-function swapStack (toDataBase, inventory, stacks, idHuman, indexFrom, indexTo, items){
+function swapStack (inventory, stacks, idHuman, indexFrom, indexTo, items){
 	let array={};
 	if (indexFrom===indexTo) return array;
 	//let inventory = inventories[humans[idHuman].idInventory];
@@ -83,14 +83,12 @@ function swapStack (toDataBase, inventory, stacks, idHuman, indexFrom, indexTo, 
 			//delete stacks[inventory.stacks[indexFrom].id];
 			inventory.stacks[indexFrom] = null;
 			array[indexFrom] = null;
-            toDataBase.deleteData('stacks',stacks[inventory.stacks[indexFrom]]);
             delete stacks[inventory.stacks[indexFrom]];
 		}else if (inventory.stacks[indexTo]===null){
 			array[indexTo]=stacks[inventory.stacks[indexFrom]];
 			inventory.stacks[indexTo]= inventory.stacks[indexFrom];
 			inventory.stacks[indexFrom] = null;
 			array[indexFrom] = null;
-            toDataBase.deleteData('stacks',stacks[inventory.stacks[indexFrom]]);
             delete stacks[inventory.stacks[indexFrom]];
 		}else if (stacks[inventory.stacks[indexTo]].itemId===itemId&&stacks[inventory.stacks[indexTo]].size<items[itemId].stackSize){
 			let quantity = items[itemId].stackSize - (stacks[inventory.stacks[indexTo]].size + stacks[inventory.stacks[indexFrom]].size);
@@ -99,7 +97,6 @@ function swapStack (toDataBase, inventory, stacks, idHuman, indexFrom, indexTo, 
 				inventory.stacks[indexFrom]=null;
 				array[indexTo] = stacks[inventory.stacks[indexTo]];
 				array[indexFrom] = null;
-                toDataBase.deleteData('stacks',stacks[inventory.stacks[indexFrom]]);
                 delete stacks[inventory.stacks[indexFrom]];
 			}else{
                 stacks[inventory.stacks[indexTo]].size = items[itemId].stackSize;
