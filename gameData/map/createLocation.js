@@ -1,5 +1,5 @@
-const gameBoardWidth = 48;
-const gameBoardHeight = 48;
+const gameBoardWidth = 48*3;
+const gameBoardHeight = 48*3;
 const Cell = require('./Cell')
 function createLocation(height=gameBoardHeight, width=gameBoardWidth){
 	let cellsMap = new Array(height);

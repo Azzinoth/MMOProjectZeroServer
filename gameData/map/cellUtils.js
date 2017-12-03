@@ -12,10 +12,11 @@ function isMovableCell(cellsMap, fromRow, toRow, fromColumn, toColumn){
 		return false;
 	}
 }
-function isGatheredCell(cellsMap, fromRow, fromColumn, toRow, toColumn){
-    if (Math.abs(fromRow-toRow)<2&&Math.abs(fromColumn-toColumn)<2&&cellsMap[toColumn][toRow].objectId!==null){
-		cellsMap[toColumn][toRow].objectId=null;
-		cellsMap[toColumn][toRow].movable = true;
+function isGatheredCell(cellsMap, fromRow, fromColumn, toRow, toColumn, mapItems){
+    let objectId = cellsMap[toColumn][toRow].objectId;
+    if (Math.abs(fromRow-toRow)<2&&Math.abs(fromColumn-toColumn)<2&&objectId!==null&&mapItems[objectId].type==='resource'){
+		// cellsMap[toColumn][toRow].objectId=null;
+		// cellsMap[toColumn][toRow].movable = true;
 		return true;
     }else{
         return false;

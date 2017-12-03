@@ -3,8 +3,8 @@ const Character = require('../gameData/person/Character');
 const Request = require('./Request');
 const surroundObjects = require('../gameData/person/utils/surroundObjects');
 const viewDistance = 20;
-const width = 48;
-const height = 48;
+const width = 48*3;
+const height = 48*3;
 const {
 	SESSION_ID,
     HUMAN_DATA,

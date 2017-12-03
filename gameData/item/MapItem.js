@@ -1,8 +1,9 @@
 class MapItem {
-    constructor({id = -1, type = null, size = 10}) {
+    constructor({id = -1, type = null, objectId=null}) {
         this.id = id;
         this.type = type;
-		this.size = size;
+		this.size = 6;
+        this.objectId = objectId;
     }
 }
 

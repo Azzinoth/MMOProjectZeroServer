@@ -9,8 +9,8 @@ let recipeList={};
 let identificators ={};
 
 
-const width = 48;
-const height = 48;
+const width = 48*3;
+const height = 48*3;
 const MapItem = require('./item/MapItem');
 const Item = require('./item/Item');
 const CraftRecipe = require('./craft/CraftRecipe');
@@ -106,16 +106,17 @@ function callBackTable(tableRows, tableName){
 		break;
 		case 'mapItems':
 			for (let i =0; i<tableRows.length; i++){
-				mapItems[tableRows[i].id] = new MapItem({id:tableRows[i].id, name:tableRows[i].name, size:tableRows[i].size});
+				mapItems[tableRows[i].id] = new MapItem({id:tableRows[i].id, name:tableRows[i].name, size:tableRows[i].size, objectId:tableRows[i].objectId});
 			}
 		break;
 		case 'mapCells':{
-			let tmpMapCells = new Array(48);
-			for (let i=0;i<48;i++){
-                tmpMapCells[i] = new Array(48);
+			let tmpMapCells = new Array(width);
+			for (let i=0;i<width;i++){
+                tmpMapCells[i] = new Array(width);
+                // tmpMapCells[i] = new Array();
             }
 			for (let i =0; i<tableRows.length; i++){	
-				tmpMapCells[tableRows[i].column][tableRows[i].row] = new Cell({movable : tableRows[i].movable==1?true:false, column : tableRows[i].column, row : tableRows[i].row, objectId:tableRows[i].objectId});
+				tmpMapCells[tableRows[i].column][tableRows[i].row]=new Cell({movable : tableRows[i].movable==1?true:false, column : tableRows[i].column, row : tableRows[i].row, objectId:tableRows[i].objectId});
 			}
 			cellsMap = tmpMapCells
         }

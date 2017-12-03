@@ -18,7 +18,7 @@ sqlUtils.deleteTable('inventories');
 sqlUtils.deleteTable('characters');
 sqlUtils.deleteTable('stacks');
 // sqlUtils.deleteTable('identificators');
-sqlUtils.closeDB();
+// sqlUtils.closeDB();
 // sqlUtils.createTable('identificators', 'characterId INTEGER, itemId INTEGER, mapItemId INTEGER, recipeId INTEGER, inventoryId INTEGER, stackId INTEGER', function(){
     //sqlUtils.insert('identificators', 'characterId, itemId, mapItemId, recipeId, inventoryId, stackId','20, 20, 20, 20, 20, 20');
 // });
@@ -30,28 +30,55 @@ sqlUtils.closeDB();
 // });
 //
 //
-// sqlUtils.createTable('mapItems', 'id INTEGER primary key, type TEXT, size INTEGER', function(){
-//     sqlUtils.insert('mapItems', 'id, type, size', data.getId('mapItem')+', \'rock\', 5');
-//     sqlUtils.insert('mapItems', 'id, type, size', data.getId('mapItem')+', \'tree\', 5');
-// });
+//sqlUtils.createTable('mapItems', 'id INTEGER primary key, type TEXT, objectId INTEGER', function(){
+//     var fs = require('fs');
+//     fs.readFile('MapItemObjects.json', function (err, data) {
+//         if (err) {
+//             throw err;
+//         }
+//         let object = JSON.parse(data.toString());
+//
+//         for (let i = 0; i < object.length; i++) {
+//             if (object[i].objectId!==-1) {
+//                 sqlUtils.insert('mapItems', 'id, type, objectId', object[i].id + ',  \'' + object[i].type + '\',  ' + object[i].objectId);
+//             }
+//
+//             // for (let j = 0; j < object[i].obstacles.length; j++) {
+//             //     mapObjects[mapObjects.length - 1].obstacles.push(object[i].obstacles[j]);
+//             // }
+//         }
+//     });
+//});
 // //
 // //
 // sqlUtils.createTable('mapCells', 'column INTEGER, row INTEGER, movable INTEGER, objectId INTEGER', function(){
-//     let array = [];
-//     for (let i =0; i<48; i++){
-//         for (let j =0; j<48; j++){
-//             if (Math.random()<0.25){
-//                 array.push(new Cell({column: i, row:j, movable: false, objectId:1}));
-//             }else if (Math.random()>=0.25&&Math.random()<0.5){
-//                 array.push(new Cell({column: i, row:j, movable: false, objectId:2}));
-//             }else{
+//     var fs = require('fs');
+//     fs.readFile('myMap.map', function (err, data) {
+//         if (err) {
+//             throw err;
+//         }
+//         let array = [];
+//         let isPush;
+//         let map = JSON.parse(data.toString());
+//         for (let i =0; i<48*3; i++) {
+//             for (let j =0; j<48*3; j++) {
+//                 isPush = true;
+//                 for (let k=0; k<map.length; k++){
+//                     if (map[k].cell.column==i&&map[k].cell.row==j&&map[k].type.objectId !== -1) {
+//                         array.push(new Cell({column: map[k].cell.column, row:map[k].cell.row, movable: false, objectId:map[k].type.id}));
+//                         isPush = false;
+//                     }
+//                 }
+//                 if (isPush)
 //                 array.push(new Cell({column: i, row:j, movable: true, objectId:null}));
 //             }
 //         }
-//     }
-//     sqlUtils.insertAll('mapCells', array);
-// });
 //
+//         sqlUtils.insertAll('mapCells', array);
+//     });
+//
+// });
+
 // sqlUtils.createTable('stacks', 'id INTEGER primary key, itemId INTEGER, size INTEGER , inventoryId INTEGER');
 // sqlUtils.createTable('inventories', 'id INTEGER primary key, size INTEGER');
 //

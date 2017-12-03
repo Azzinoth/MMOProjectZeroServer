@@ -6,8 +6,8 @@ const craftItem = require('../../gameData/craft/craftItem');
 const cellUtils = require('../../gameData/map/cellUtils');
 const sender = require('../sender');
 const viewDistance = 20;
-const width = 48;
-const height = 48;
+const width = 48*3;
+const height = 48*3;
 const {
 	SESSION_ID,
     HUMAN_DATA,
@@ -31,6 +31,7 @@ function messageHandler (data, message, personId){
     let stacks = data.stacks;
     let cellsMap = data.getMap();
     let items = data.items;
+    let mapItems = data.mapItems;
 	let json = JSON.parse(message);
 	let column;
 	let row;
@@ -91,14 +92,18 @@ function messageHandler (data, message, personId){
             row = characters[personId].row;
             let toColumn = json.request.column;
             let toRow = json.request.row;
-            let itemId = cellsMap[toColumn][toRow].objectId;
-            let isGather;
-			let changedInventory;
+            // let isGather;
+			// let changedInventory;
 			
-            if (cellUtils.isGatheredCell(cellsMap, row, column, toRow, toColumn)){				
+            if (cellUtils.isGatheredCell(cellsMap, row, column, toRow, toColumn, mapItems)){
+                let mapItemId = cellsMap[toColumn][toRow].objectId;
+                let itemId = mapItems[mapItemId].objectId;
+
 				let reqStacks = stackUtils.addStack(data, inventories[characters[personId].inventoryId], stacks, itemId, 6, items);
 				if (reqStacks!=null){
-					delete reqStacks.isFull;
+                    cellsMap[toColumn][toRow].objectId=null;
+                    cellsMap[toColumn][toRow].movable=true;
+					//delete reqStacks.isFull;
                     request = requestInventory (characters[personId].inventoryId, reqStacks, Object.getOwnPropertyNames(reqStacks).length);
 					clients[personId].send(JSON.stringify(request));
 					
@@ -180,6 +185,7 @@ function messageHandler (data, message, personId){
 			}
         }
             break;
+
 	}
 }
 module.exports = messageHandler;
