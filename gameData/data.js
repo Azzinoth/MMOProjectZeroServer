@@ -101,12 +101,12 @@ function callBackTable(tableRows, tableName){
 		break;
 		case 'items':
 			for (let i =0; i<tableRows.length; i++){
-				items[tableRows[i].id] = new Item({id:tableRows[i].id, name:tableRows[i].name, type:tableRows[i].type, stackSize:tableRows[i].stackSize});
+				items[tableRows[i].id] = new Item({id:tableRows[i].id, type:tableRows[i].type, type:tableRows[i].type, stackSize:tableRows[i].stackSize});
 			}
 		break;
 		case 'mapItems':
 			for (let i =0; i<tableRows.length; i++){
-				mapItems[tableRows[i].id] = new MapItem({id:tableRows[i].id, name:tableRows[i].name, size:tableRows[i].size, objectId:tableRows[i].objectId});
+				mapItems[tableRows[i].id] = new MapItem({id:tableRows[i].id, type:tableRows[i].type, size:tableRows[i].size, objectId:tableRows[i].objectId});
 			}
 		break;
 		case 'mapCells':{

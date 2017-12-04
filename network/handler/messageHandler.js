@@ -171,7 +171,7 @@ function messageHandler (data, message, personId){
                         }else{
 							inventories[characters[personId].inventoryId].stacks[key]=null;
                             findStacks[key] = null;
-                        }
+						}
 					}
                     cellsMap[column][row].movable = false;
                     cellsMap[column][row].objectId = itemId;
