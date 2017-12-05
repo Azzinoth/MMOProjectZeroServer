@@ -3,6 +3,8 @@ const data = require ('./gameData/data');
 const Cell = require ('./gameData/map/Cell');
 const sqlUtils = require ('./sql/utils');
 const toDataBase = require ('./sql/gameDataToDataBase');
+const send = require('./network/sender');
+const mainLoop = require ('./loop');
   sqlUtils.initDB();
 // sqlUtils.drop('mapCells');
 //  sqlUtils.drop('stacks');
@@ -100,6 +102,9 @@ sqlUtils.deleteTable('stacks');
 // sqlUtils.closeDB();
 
 //
+
 data.fillData(sqlUtils, toDataBase);
 toDataBase.toDataBase(sqlUtils, data);
+mainLoop(data);
+send.setData(data);
 server(data);

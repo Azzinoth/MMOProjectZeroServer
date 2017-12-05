@@ -38,10 +38,11 @@ setInterval(function(){
             result=>
         sqlUtils.insertAll('characterRecipes', data.characterRecipes)).then(
     result=>
-        sqlUtils.updateAllById('cellsMap', data.cellsMap)).then(
-    result=>
-        sqlUtils.closeDB()
-    );
+        sqlUtils.updateAllById('cellsMap', data.cellsMap));
+    //     .then(
+    // result=>
+    //     sqlUtils.closeDB()
+    // );
         // sqlUtils.updateAllById('characters', charactersUpdate)).then(
         //     result=>
         //         sqlUtils.updateAllById('inventories', inventoriesUpdate)).then(

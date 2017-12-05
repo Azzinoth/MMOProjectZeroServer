@@ -1,7 +1,7 @@
 const Inventory = require('../gameData/inventory/Inventory');
 const Character = require('../gameData/person/Character');
 const Request = require('./Request');
-const surroundObjects = require('../gameData/person/utils/surroundObjects');
+const visibleObjects = require('../gameData/visibleObjects');
 const viewDistance = 20;
 const width = 48*3;
 const height = 48*3;
@@ -29,9 +29,10 @@ function initializeClient(data, characterId, inventoryId){
     characters[characterId].craftRecipesId.push(2);
     let request;
     for (let key in characters) {
-        request = new Request ({type:HUMAN_DATA, request:characters[key]})
+        request = new Request ({type:HUMAN_DATA, request:key});
         clients[characterId].send(JSON.stringify(request));
     }
+    visibleObjects.findCharacters(characters, viewDistance, characterId);
     clients[characterId].send(JSON.stringify(new Request({type:ITEMS_LIST, request:items})));
     clients[characterId].send(JSON.stringify(new Request({type:CRAFT, request:recipeList})));
 
@@ -39,12 +40,13 @@ function initializeClient(data, characterId, inventoryId){
 
 	for (let key in clients) {
 		if (+key!==characterId){
-			request = new Request ({type:HUMAN_DATA, request:characters[characterId]})
-			clients[key].send(JSON.stringify(request));	
+			request = new Request ({type:HUMAN_DATA, request:characterId});
+			clients[key].send(JSON.stringify(request));
+            visibleObjects.findCharacters(characters, viewDistance, key);
 		}
 	}
 	
-	let nearbyObjects = surroundObjects(characters[characterId].column, characters[characterId].row, viewDistance, width, height, cellsMap);
+	let nearbyObjects = visibleObjects.surroundObjects(characters[characterId].column, characters[characterId].row, viewDistance, width, height, cellsMap);
 	clients[characterId].send(JSON.stringify(new Request({type:MAP_OBJECT, request:nearbyObjects})));
 	
 

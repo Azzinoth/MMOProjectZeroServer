@@ -11,5 +11,7 @@ module.exports = {
 	CRAFT : 9,
     ITEMS_LIST : 10,
     PLACE_ON_MAP : 11,
-	SYSTEM_MESSAGE : 12
+	SYSTEM_MESSAGE : 12,
+	SHOT : 13,
+	HIT : 14
 };
