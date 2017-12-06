@@ -29,8 +29,14 @@ function initializeClient(data, characterId, inventoryId){
     characters[characterId].craftRecipesId.push(2);
     let request;
     for (let key in characters) {
-        request = new Request ({type:HUMAN_DATA, request:key});
-        clients[characterId].send(JSON.stringify(request));
+		if (key==characterId){
+			request = new Request ({type:HUMAN_DATA, request:characters[key]});
+			clients[characterId].send(JSON.stringify(request));
+		}else{
+			request = new Request ({type:HUMAN_DATA, request:characters[key].id});
+			clients[characterId].send(JSON.stringify(request));
+		}
+        
     }
     visibleObjects.findCharacters(characters, viewDistance, characterId);
     clients[characterId].send(JSON.stringify(new Request({type:ITEMS_LIST, request:items})));
@@ -40,7 +46,7 @@ function initializeClient(data, characterId, inventoryId){
 
 	for (let key in clients) {
 		if (+key!==characterId){
-			request = new Request ({type:HUMAN_DATA, request:characterId});
+			request = new Request ({type:HUMAN_DATA, request:characters[key].id});
 			clients[key].send(JSON.stringify(request));
             visibleObjects.findCharacters(characters, viewDistance, key);
 		}
