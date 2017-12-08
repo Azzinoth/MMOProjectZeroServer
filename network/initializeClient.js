@@ -10,7 +10,8 @@ const {
     HUMAN_DATA,
 	MAP_OBJECT,
     ITEMS_LIST,
-    CRAFT
+    CRAFT,
+    PLAYER_DATA
 } = require('../constants').messageTypes;
 
 function initializeClient(data, characterId, inventoryId){
@@ -30,7 +31,7 @@ function initializeClient(data, characterId, inventoryId){
     let request;
     for (let key in characters) {
 		if (key==characterId){
-			request = new Request ({type:HUMAN_DATA, request:characters[key]});
+			request = new Request ({type:PLAYER_DATA, request:characters[characterId]});
 			clients[characterId].send(JSON.stringify(request));
 		}else{
 			request = new Request ({type:HUMAN_DATA, request:characters[key].id});
@@ -46,7 +47,7 @@ function initializeClient(data, characterId, inventoryId){
 
 	for (let key in clients) {
 		if (+key!==characterId){
-			request = new Request ({type:HUMAN_DATA, request:characters[key].id});
+			request = new Request ({type:HUMAN_DATA, request:characterId});
 			clients[key].send(JSON.stringify(request));
             visibleObjects.findCharacters(characters, viewDistance, key);
 		}

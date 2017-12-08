@@ -20,40 +20,20 @@ const Stack = require('./inventory/Stack');
 const Inventory = require('./inventory/Inventory');
 const FiredAmmo = require('./FiredAmmo');
 
-function fillData(sqlUtils,toData){
+function fillData(sqlUtils){
 
-    sqlUtils.initDB();
-    sqlUtils.selectAll('identificators', callBackTable)
-	.then(
-		 result=>
-	sqlUtils.selectAll('items', callBackTable)
-	).then(
-		result=>
-	sqlUtils.selectAll('mapItems', callBackTable)
-	).then(
-		result=>
-	sqlUtils.selectAll('mapCells', callBackTable)
-	).then(
-		result=>
-    sqlUtils.selectAll('stacks', callBackTable)
-	).then(
-		result=>
-		sqlUtils.selectAll('craftRecipes', callBackTable)
-	).then(
-        result=>
-            sqlUtils.selectAll('ingredients', callBackTable)
-	).then(
-        result=>
-            sqlUtils.selectAll('inventories', callBackTable)
-	).then(
-        result=>
-			sqlUtils.selectAll('characterRecipes', callBackTable)
-	).then(
-        result=>{
-			sqlUtils.selectAll('characters', callBackTable),
-            sqlUtils.closeDB()
-        }
-	);
+	sqlUtils.selectAll('identificators', callBackTable);
+	sqlUtils.selectAll('items', callBackTable);
+	sqlUtils.selectAll('mapItems', callBackTable);
+	sqlUtils.selectAll('mapCells', callBackTable);
+	sqlUtils.selectAll('stacks', callBackTable);
+	sqlUtils.selectAll('craftRecipes', callBackTable);
+	sqlUtils.selectAll('ingredients', callBackTable);
+	sqlUtils.selectAll('inventories', callBackTable);
+	sqlUtils.selectAll('characterRecipes', callBackTable);
+	sqlUtils.selectAll('characters', callBackTable);
+
+
     for(let i =0; i<firedAmmos.length; i++){
         firedAmmos[i]=new FiredAmmo();
     }
@@ -87,51 +67,46 @@ function getId(dataName){
             identificators.recipeId++;
             id = identificators.recipeId;
             break;
+        case 'weapon':
+            identificators.weaponId++;
+            id = identificators.weaponId;
+            break;
 	}
 	return id;
+}
+function showLastId(dataName){
+    let id = null;
+    switch (dataName){
+        case 'character':{
+            id =  identificators.characterId
+        }
+            break;
+        case 'inventory':{
+            id = identificators.inventoryId;
+        }
+            break;
+        case 'stack':
+            id = identificators.stackId;
+            break;
+        case 'item':
+            id = identificators.itemId;
+            break;
+        case 'mapItem':
+            id = identificators.mapItemId;
+            break;
+        case 'recipe':
+            id = identificators.recipeId;
+            break;
+        case 'weapon':
+            id = identificators.weaponId;
+            break;
+    }
+    return id;
 }
 function getMap(){
 	return cellsMap;
 }
-// function getFiredAmmos(){
-//     return firedAmmos;
-// }
-// function setFiredAmmos(characterId, speedPerSec, initialX, initialY, finalX, finalY){
-//     for (let i = 0; i<firedAmmos.length; i++){
-//         if (!firedAmmos.active){
-//             firedAmmos[i].characterId = characterId;
-//             firedAmmos[i].speedPerSec = speedPerSec;
-//             firedAmmos[i].initialX = initialX;
-//             firedAmmos[i].initialY = initialY;
-//             firedAmmos[i].finalX = finalX;
-//             firedAmmos[i].finalY = finalY;
-//             firedAmmos[i].distToFinal = Math.sqrt(Math.pow(firedAmmos[i].initialX - firedAmmos[i].finalX, 2) + Math.pow(firedAmmos[i].initialY - firedAmmos[i].finalY, 2));
-//             firedAmmos[i].timeToFinal = firedAmmos[i].distToFinal / firedAmmos[i].speedPerSec * 1000;
-//             let time = new Date().getTime();
-//             firedAmmos[i].currentTick = time;
-//             firedAmmos[i].lastTick = time;
-//             firedAmmos[i].timePassed = 0;
-//             firedAmmos[i].active = true;
-//             indexFiredAmmo = i;
-//             break;
-//         }
-//         if (i===data.firedAmmos.length-1){
-//             let ammo = new FiredAmmo();
-//             ammo.characterId = personId;
-//             ammo.speedPerSec = 750;
-//             ammo.initialX = characters[personId].left;
-//             ammo.initialY = characters[personId].top;
-//             ammo.finalX = json.request[0];
-//             ammo.finalY = json.request[1];
-//             ammo.distToFinal = Math.sqrt(Math.pow(ammo.initialX - ammo.finalX, 2) + Math.pow(ammo.initialY - ammo.finalY, 2));
-//             ammo.timeToFinal = ammo.distToFinal / ammo.speedPerSec * 1000;
-//             ammo.active = true;
-//             indexFiredAmmo = data.firedAmmos.length;
-//             data.firedAmmos.push(ammo);
-//             break;
-//         }
-//     }
-// }
+
 function callBackTable(tableRows, tableName){
 	switch(tableName){
         case 'identificators':
@@ -205,8 +180,8 @@ exports.recipeList=recipeList;
 exports.stacks = stacks;
 exports.identificators=identificators;
 exports.firedAmmos = firedAmmos;
-// exports.getFiredAmmos=getFiredAmmos;
-// exports.setFiredAmmos=setFiredAmmos;
+exports.callBackTable = callBackTable;
+exports.showLastId=showLastId;
 exports.getMap = getMap;
 exports.getId = getId;
 exports.fillData = fillData;

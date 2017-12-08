@@ -71,6 +71,7 @@ function messageHandler (data, message, personId){
 			}else{									
 				characters[personId].top=toTop;
 				characters[personId].left=toLeft;
+                visibleObjects.findCharacters(characters, viewDistance, personId);
                 // request = new Request({type:HUMAN_MOVE, request:characters[personId]});
                 // sender.sendAllExcept(clients, request, personId);
 			}

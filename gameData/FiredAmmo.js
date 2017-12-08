@@ -1,5 +1,5 @@
 function FiredAmmo() {
-    this.ammoId = 0;
+    this.weaponId = 0;
     this.characterId = 0;
     this.initialX = 0;
     this.initialY = 0;
@@ -18,8 +18,8 @@ function FiredAmmo() {
 }
 let FiredAmmoProto = {
     active: false,
-    idAmmo: null,
-    idCharacter: null,
+    ammoId: null,
+    characterId: null,
     x: 0,
     y: 0,
     initialX: 0,

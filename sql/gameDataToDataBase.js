@@ -18,64 +18,21 @@
 
 function toDataBase(sqlUtils, data){
 setInterval(function(){
-    sqlUtils.initDB();
-
-        sqlUtils.updateById('identificators', null, data.identificators).then(
-    result=>
-        sqlUtils.deleteTable('characters')).then(
-            result=>
-        sqlUtils.insertAll('characters',data.characters)).then(
-    result=>
-        sqlUtils.deleteTable('inventories')).then(
-            result=>
-        sqlUtils.insertAll('inventories', data.inventories)).then(
-            result=>
-        sqlUtils.deleteTable('stacks')).then(
-            result=>
-        sqlUtils.insertAll('stacks', data.stacks)).then(
-    result=>
-        sqlUtils.deleteTable('characterRecipes')).then(
-            result=>
-        sqlUtils.insertAll('characterRecipes', data.characterRecipes)).then(
-    result=>
-        sqlUtils.updateAllById('cellsMap', data.cellsMap));
-    //     .then(
-    // result=>
-    //     sqlUtils.closeDB()
-    // );
-        // sqlUtils.updateAllById('characters', charactersUpdate)).then(
-        //     result=>
-        //         sqlUtils.updateAllById('inventories', inventoriesUpdate)).then(
-        //     result=>
-        //         sqlUtils.updateAllById('stacks', stacksUpdate)).then(
-        //     result=>
-        //         sqlUtils.updateAllById('characterRecipes', characterRecipesUpdate)).then(
-        //     result=>
-        // sqlUtils.deleteAllById('stacks', stacksDelete)).then(
-        //     result=>
-        // sqlUtils.deleteAllById('inventories', inventoriesDelete)).then(
-        //     result=>
-        // sqlUtils.deleteAllById('characters', charactersDelete)).then(
-        //     result=>{
-        //
-        // characters = null,
-        // inventories = null,
-        // stacks = null,
-        // identificators=null,
-        // characterRecipes = null,
-        // cellsMap=[],
-        // charactersUpdate = null,
-        // inventoriesUpdate = null,
-        // stacksUpdate = null,
-        // characterRecipesUpdate = null,
-        // charactersDelete = [],
-        // inventoriesDelete = [],
-        // stacksDelete = []
-
-
+    // sqlUtils.initDB().then(
+    sqlUtils.updateById('identificators', null, data.identificators);
+    sqlUtils.deleteTable('characters');
+    sqlUtils.insertAll('characters',data.characters);
+    sqlUtils.deleteTable('inventories');
+    sqlUtils.insertAll('inventories', data.inventories);
+    sqlUtils.deleteTable('stacks');
+    sqlUtils.insertAll('stacks', data.stacks);
+    sqlUtils.deleteTable('characterRecipes');
+    sqlUtils.insertAll('characterRecipes', data.characterRecipes);
+    sqlUtils.updateAllById('cellsMap', data.cellsMap);
+    // result=>sqlUtils.closeDB())
 
     console.log('Game data added to data base');
-}, 5000);
+}, 50000);
 }
 // function addData(dataName, value, familyId){
 //     switch(dataName){

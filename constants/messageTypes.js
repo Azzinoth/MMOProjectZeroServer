@@ -13,5 +13,6 @@ module.exports = {
     PLACE_ON_MAP : 11,
 	SYSTEM_MESSAGE : 12,
 	SHOT : 13,
-	HIT : 14
+	HIT : 14,
+	PLAYER_DATA : 15
 };

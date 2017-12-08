@@ -6,8 +6,8 @@ const {
 function findCharacters(characters, distance, id) {
     let character = characters[id];
     for (let key in characters){
-        if (key!=id&&(character.column+distance>characters[key].column/2&&character.column-distance<characters[key].column/2)&&
-            (character.row+distance>characters[key].row/2&&character.row-distance<characters[key].row/2)){
+        if (key!=id&&(character.column+distance/2>characters[key].column&&character.column-distance/2<characters[key].column)&&
+            (character.row+distance/2>characters[key].row&&character.row-distance/2<characters[key].row)){
             sender.sendToClient(id, new Request({type:HUMAN_MOVE, request:characters[key]}));
             sender.sendToClient(key, new Request({type:HUMAN_MOVE, request:characters[id]}));
         }
