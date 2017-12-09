@@ -20,9 +20,10 @@ const Stack = require('./inventory/Stack');
 const Inventory = require('./inventory/Inventory');
 const FiredAmmo = require('./FiredAmmo');
 
+function fillId(sqlUtils){
+    sqlUtils.selectAll('identificators', callBackTable);
+}
 function fillData(sqlUtils){
-
-	sqlUtils.selectAll('identificators', callBackTable);
 	sqlUtils.selectAll('items', callBackTable);
 	sqlUtils.selectAll('mapItems', callBackTable);
 	sqlUtils.selectAll('mapCells', callBackTable);
@@ -32,7 +33,6 @@ function fillData(sqlUtils){
 	sqlUtils.selectAll('inventories', callBackTable);
 	sqlUtils.selectAll('characterRecipes', callBackTable);
 	sqlUtils.selectAll('characters', callBackTable);
-
 
     for(let i =0; i<firedAmmos.length; i++){
         firedAmmos[i]=new FiredAmmo();
@@ -141,7 +141,13 @@ function callBackTable(tableRows, tableName){
 		break;
 		case 'characters':
 			for (let i =0; i<tableRows.length; i++){
-				characters[tableRows[i].id] = new Character({id:tableRows[i].id, idInventory:tableRows[i].idInventory, isPlayer:tableRows[i].isPlayer==1?true:false, column:tableRows[i].column, row:tableRows[i].row, health:tableRows[i].health, strength:tableRows[i].strength});
+				characters[tableRows[i].id] = new Character(tableRows[i].id, tableRows[i].idInventory,
+                    tableRows[i].isPlayer==1?true:false, tableRows[i].column, tableRows[i].row,
+                    tableRows[i].top, tableRows[i].left, tableRows[i].level, tableRows[i].health,
+                    tableRows[i].strength);
+                characters[tableRows[i].id].armId = tableRows[i].armId;
+                characters[tableRows[i].id].bodyId = tableRows[i].bodyId;
+                characters[tableRows[i].id].headId = tableRows[i].headId;
 			}
 		break;
 		case 'inventories':
@@ -171,6 +177,16 @@ function callBackTable(tableRows, tableName){
 		break;
 	}
 }
+function createInventory(size){
+    let inventoryId = getId('inventory');
+    inventories[inventoryId] = new Inventory(inventoryId, size);
+    for (let i=0; i<inventories[inventoryId].stacks.length; i++){
+        let stackId = getId('stack');
+        stacks[stackId] = new Stack(stackId, null, null, inventoryId);
+        inventories[inventoryId].stacks[i] = stackId;
+    }
+    return inventoryId;
+}
 exports.clients = clients;
 exports.characters = characters;
 exports.inventories = inventories;
@@ -185,3 +201,5 @@ exports.showLastId=showLastId;
 exports.getMap = getMap;
 exports.getId = getId;
 exports.fillData = fillData;
+exports.fillId = fillId;
+exports.createInventory = createInventory;

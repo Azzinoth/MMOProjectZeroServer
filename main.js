@@ -7,48 +7,43 @@ const send = require('./network/sender');
 const mainLoop = require ('./loop');
 sqlUtils.fill();
 
-
 clear();
-identificators();
-stacks();
-inventories();
-ingredients();
-characterRecipes();
-characters();
-sqlUtils.pushDb().then(
-result=>{
-    start();
-    return result;
-    }).then(
-    result =>sqlUtils.pushDb(data.callBackTable)).then(
-    result =>{
-    items();
-    craftRecipes();
-    return result;
-}).then(
-    result =>sqlUtils.pushDb());
+start();
+// identificators();
+// stacks();
+// inventories();
+// characterRecipes();
+// characters();
+// sqlUtils.pushDb().then(
+// result=>{data.fillId(sqlUtils),
+// sqlUtils.pushDb(data.callBackTable).then(
+//     result=> {
+//         items(),
+//             craftRecipes(),
+//             ingredients(),
+//             sqlUtils.pushDb()
+//     });
+// });
+
+
 
 
 
 
 
 function start(){
-    data.fillData(sqlUtils, toDataBase);
-    // sqlUtils.pushDb(data.callBackTable);
-    toDataBase.toDataBase(sqlUtils);
+    data.fillId(sqlUtils);
+    data.fillData(sqlUtils);
+    sqlUtils.pushDb(data.callBackTable);
+    toDataBase.toDataBase(sqlUtils, data);
     mainLoop(data);
     send.setData(data);
     server(data);
 }
 function clear(){
-    // return new Promise(function(resolve, reject) {
-        // sqlUtils.initDB().then(
     sqlUtils.deleteTable('inventories');
     sqlUtils.deleteTable('characters');
     sqlUtils.deleteTable('stacks');
-
-            // result => resolve());
-    // });
 }
 function identificators(){
   sqlUtils.drop('identificators');
@@ -155,6 +150,6 @@ function characterRecipes(){
 function characters(){
 
     sqlUtils.drop('characters');
-    sqlUtils.createTable('characters', 'id INTEGER primary key, inventoryId INTEGER, isPlayer INTEGER, column INTEGER, row INTEGER, top INTEGER, left INTEGER, health INTEGER, strength INTEGER');
+    sqlUtils.createTable('characters', 'id INTEGER primary key, inventoryId INTEGER, isPlayer INTEGER, column INTEGER, row INTEGER, top INTEGER, left INTEGER, level  INTEGER, health INTEGER, strength INTEGER, armId  INTEGER, bodyId INTEGER, headId INTEGER');
 
 }

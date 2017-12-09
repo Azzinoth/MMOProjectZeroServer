@@ -6,6 +6,7 @@ const craftItem = require('../../gameData/craft/craftItem');
 const FiredAmmo = require('../../gameData/FiredAmmo');
 const cellUtils = require('../../gameData/map/cellUtils');
 const sender = require('../sender');
+const accuracyShot = require('../../gameData/accuracyShot');
 const viewDistance = 20;
 const width = 48*3;
 const height = 48*3;
@@ -23,7 +24,9 @@ const {
     ITEMS_LIST,
     PLACE_ON_MAP,
 	SYSTEM_MESSAGE,
-    SHOT
+    SHOT,
+	PUT_ON,
+	PUT_OFF
 } = require('../../constants').messageTypes;
 
 function messageHandler (data, message, personId){
@@ -91,7 +94,7 @@ function messageHandler (data, message, personId){
                 let mapItemId = cellsMap[toColumn][toRow].objectId;
                 let itemId = mapItems[mapItemId].objectId;
 
-				let reqStacks = stackUtils.addStack(data, inventories[characters[personId].inventoryId], stacks, itemId, 6, items);
+				let reqStacks = stackUtils.addStack(inventories[characters[personId].inventoryId], stacks, itemId, 6, items);
 				if (reqStacks!=null){
                     cellsMap[toColumn][toRow].objectId=null;
                     cellsMap[toColumn][toRow].movable=true;
@@ -129,8 +132,8 @@ function messageHandler (data, message, personId){
 		case INVENTORY_CHANGE:{
 			let indexFrom = json.request[0];
 			let indexTo = json.request[1];
-			let swaps = stackUtils.swapStack (inventories[characters[personId].inventoryId], stacks, personId, indexFrom, indexTo, items);
-            request = requestInventory (characters[personId].inventoryId, swaps, Object.getOwnPropertyNames(swaps).length);
+			let swaps = stackUtils.swapStack (inventories[characters[personId].inventoryId], stacks, indexFrom, indexTo, items);
+            if (swaps!==1)request = requestInventory (characters[personId].inventoryId, swaps, Object.getOwnPropertyNames(swaps).length);
 			clients[personId].send(JSON.stringify(request));
 		}
 		break;
@@ -140,9 +143,11 @@ function messageHandler (data, message, personId){
 
 			for(let i=0; i<craftRecipes.length; i++){
 				if (craftRecipes[i]===craftId){
-					let invent = craftItem(data, inventories[characters[personId].inventoryId], stacks, data.recipeList[craftRecipes[i]], personId, items);
-					request = requestInventory (characters[personId].inventoryId, invent, Object.getOwnPropertyNames(invent).length);
-					clients[personId].send(JSON.stringify(request));
+					let invent = craftItem(inventories[characters[personId].inventoryId], stacks, data.recipeList[craftRecipes[i]], items);
+					if (invent!==1||invent!==2||invent!==3){
+					    request = requestInventory (characters[personId].inventoryId, invent, Object.getOwnPropertyNames(invent).length);
+					    clients[personId].send(JSON.stringify(request));
+                    }
 				}
 			}
 
@@ -159,10 +164,11 @@ function messageHandler (data, message, personId){
 				if (findStacks!==null){
 					for	(let key in findStacks){
 						if (findStacks[key].size>1){
-                            inventories[characters[personId].inventoryId].stacks[key].size -=1;
+                            findStacks[key].size -=1;
                         }else{
-							inventories[characters[personId].inventoryId].stacks[key]=null;
-                            findStacks[key] = null;
+							//stacks[key]=null;
+                            findStacks[key].itemId = null;
+                            findStacks[key].size = null;
 						}
 					}
                     cellsMap[column][row].movable = false;
@@ -180,14 +186,15 @@ function messageHandler (data, message, personId){
         case SHOT: {
             let firedAmmos = data.firedAmmos;
 			let indexFiredAmmo;
+			let accuracyShot1=accuracyShot.getAccuracy(300);
             for (let i = 0; i<firedAmmos.length; i++){
 				if (!firedAmmos[i].active){
                     firedAmmos[i].characterId = personId;
                     firedAmmos[i].speedPerSec = 750;
-                    firedAmmos[i].initialX = characters[personId].left;
-                    firedAmmos[i].initialY = characters[personId].top;
-                    firedAmmos[i].finalX = json.request[0];
-                    firedAmmos[i].finalY = json.request[1];
+                    firedAmmos[i].initialX = characters[personId].left-5;
+                    firedAmmos[i].initialY = characters[personId].top-32;
+                    firedAmmos[i].finalX = json.request[0]+accuracyShot1[0];
+                    firedAmmos[i].finalY = json.request[1]+accuracyShot1[1];
                     firedAmmos[i].distToFinal = Math.sqrt(Math.pow(firedAmmos[i].initialX - firedAmmos[i].finalX, 2) + Math.pow(firedAmmos[i].initialY - firedAmmos[i].finalY, 2));
                     firedAmmos[i].timeToFinal = firedAmmos[i].distToFinal / firedAmmos[i].speedPerSec * 1000;
                     let time = new Date().getTime();
@@ -204,8 +211,8 @@ function messageHandler (data, message, personId){
                     ammo.speedPerSec = 750;
                     ammo.initialX = characters[personId].left;
                     ammo.initialY = characters[personId].top;
-                    ammo.finalX = json.request[0];
-                    ammo.finalY = json.request[1];
+                    ammo.finalX = json.request[0]+accuracyShot1[0];
+                    ammo.finalY = json.request[1]+accuracyShot1[1];
                     ammo.distToFinal = Math.sqrt(Math.pow(ammo.initialX - ammo.finalX, 2) + Math.pow(ammo.initialY - ammo.finalY, 2));
                     ammo.timeToFinal = ammo.distToFinal / ammo.speedPerSec * 1000;
                     ammo.active = true;
@@ -214,8 +221,32 @@ function messageHandler (data, message, personId){
                     break;
 				}
             }
-            sender.sendAllExcept(clients, new Request({type:SHOT, request:data.firedAmmos[indexFiredAmmo]}), personId);
+
+            sender.sendToAll(clients, new Request({type:SHOT, request:data.firedAmmos[indexFiredAmmo]}));
             break;
+        }
+		case PUT_ON:{
+            let stackId = json.request;
+            if (stacks[stackId].inventoryId === characters[personId].inventoryId
+				&&items[stacks[stackId].itemId].type === 'armory'){
+            	let itemId = stacks[stackId].itemId;
+            	if (characters[personId].armId!=null){
+                    stacks[stackId].itemId = characters[personId].armId;
+                    characters[personId].armId= itemId;
+				}else{
+                    stacks[stackId].itemId = null;
+                    stacks[stackId].size = null;
+                    characters[personId].armId= itemId;
+				}
+			}
+		}
+        case PUT_OFF:{
+            let stackId = json.request;
+            let itemId = characters[personId].armId;
+            if (stacks[stackId].itemId===null){
+                stacks[stackId].itemId=itemId;
+                stacks[stackId].size = 1;
+            }
         }
 	}
 }

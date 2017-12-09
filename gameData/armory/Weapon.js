@@ -5,7 +5,7 @@ function Weapon(id, itemId, ammoId, durability, damage, accuracy, distance) {
     this.durability = durability;
     this.damage = damage;
     this.accuracy = accuracy;
-    this.distance = distance
+    this.distance = distance;
 }
 let WeaponProto = {
     id:null,

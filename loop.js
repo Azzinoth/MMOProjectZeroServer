@@ -13,7 +13,6 @@ function fire(data){
     let firedAmmos = data.firedAmmos;
     for (let i = 0; i< firedAmmos.length; i++){
         if (firedAmmos[i].active){
-            console.log(firedAmmos[i].x+' '+firedAmmos[i].y);
             let time = new Date().getTime();
             firedAmmos[i].currentTick = time;
             firedAmmos[i].timePassed += firedAmmos[i].currentTick - firedAmmos[i].lastTick;
@@ -25,7 +24,7 @@ function fire(data){
 
                 if (key!=firedAmmos[i].characterId&&
                     (characters[key].top>firedAmmos[i].y&&characters[key].top-characters[key].size<firedAmmos[i].y)&&
-                    (characters[key].left>firedAmmos[i].x&&characters[key].left-characters[key].size<firedAmmos[i].x)){
+                    (characters[key].left>firedAmmos[i].x&&characters[key].left-characters[key].size/2<firedAmmos[i].x)){
                     sender.sendToAll(data.clients, new Request ({type:HIT, request:characters[key]}));
                     firedAmmos[i].active = false;
                     break;

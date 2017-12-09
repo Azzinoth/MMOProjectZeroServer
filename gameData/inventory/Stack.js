@@ -1,9 +1,13 @@
-class Stack{
-	constructor({id=-1, itemId=-1, size=-1, inventoryId=-1}){
-		this.id=id;
-		this.itemId=itemId;
-		this.size=size;
-		this.inventoryId=inventoryId;
-	}
+function Stack(id, itemId, size, inventoryId){
+	this.id=id;
+	this.itemId=itemId;
+	this.size=size;
+	this.inventoryId=inventoryId;
+}
+let stackProto={
+    id:null,
+	itemId:null,
+	size:null,
+	inventoryId:null
 }
 module.exports=Stack;

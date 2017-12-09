@@ -1,5 +1,6 @@
 const data = require('./data');
-const Ammo = require('./Ammo');
+const FiredAmmo = require('./FiredAmmo');
 const visibleObjects = require('./visibleObjects');
+const accuracyShot = require('./accuracyShot');
 
-module.exports = { data, Ammo, visibleObjects};
+module.exports = { data, FiredAmmo, visibleObjects, accuracyShot};

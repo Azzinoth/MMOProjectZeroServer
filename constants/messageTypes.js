@@ -14,5 +14,7 @@ module.exports = {
 	SYSTEM_MESSAGE : 12,
 	SHOT : 13,
 	HIT : 14,
-	PLAYER_DATA : 15
+	PLAYER_DATA : 15,
+	PUT_ON : 16,
+    PUT_OFF : 17
 };

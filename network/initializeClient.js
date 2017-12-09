@@ -24,10 +24,11 @@ function initializeClient(data, characterId, inventoryId){
 	
 
     clients[characterId].send(JSON.stringify(new Request({type:SESSION_ID, request:characterId})));
-	inventories[inventoryId] = new Inventory({id:inventoryId, size:24});
-	characters[characterId] = new Character({id:characterId, inventoryId:inventoryId, isPlayer:true, column:10, row:10, health:3, strength:1});
+	characters[characterId] = new Character(characterId, inventoryId, true, 10, 10, 10*64, 10*64, 1, 3, 1);
 	characters[characterId].craftRecipesId.push(1);
     characters[characterId].craftRecipesId.push(2);
+    characters[characterId].craftRecipesId.push(3);
+    characters[characterId].craftRecipesId.push(4);
     let request;
     for (let key in characters) {
 		if (key==characterId){

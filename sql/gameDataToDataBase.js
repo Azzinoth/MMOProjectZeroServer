@@ -29,6 +29,7 @@ setInterval(function(){
     sqlUtils.deleteTable('characterRecipes');
     sqlUtils.insertAll('characterRecipes', data.characterRecipes);
     sqlUtils.updateAllById('cellsMap', data.cellsMap);
+    sqlUtils.pushDb();
     // result=>sqlUtils.closeDB())
 
     console.log('Game data added to data base');
