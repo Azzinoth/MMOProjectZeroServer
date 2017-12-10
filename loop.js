@@ -4,11 +4,25 @@ const {
     HIT
 } = require('./constants').messageTypes;
 function mainLoop (data){
+    let count = 0;
 	setInterval(function(){
+        count++;
         fire(data);
+        moveNpc(data);
 	}, 17);
 }
+function moveNpc(data) {
+    for (let key in data.animals){
+        if (data.animals[key].destination===null){
+            data.animals[key].chooseNewDestination();
+            if (!cellsMap[data.animals[key].destination.column][data.animals[key].destination.row].movable){
+                data.animals[key].destination=null;
+            }
+        }else{
 
+        }
+    }
+}
 function fire(data){
     let firedAmmos = data.firedAmmos;
     for (let i = 0; i< firedAmmos.length; i++){
@@ -31,7 +45,7 @@ function fire(data){
                 }
 
             }
-            if (firedAmmos[i].timePassed > firedAmmos[i].timeToFinal) {
+            if (firedAmmos[i].timePassed > firedAmmos[i].maxTime) {
                 firedAmmos[i].active = false;
             }
 

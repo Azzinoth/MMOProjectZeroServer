@@ -11,9 +11,6 @@ function Character (id, inventoryId, isPlayer, column, row, top, left, level, he
 		this.health = health;
 		this.strength = strength;
 		this.isAlive = true;
-		this.armId = null;
-		this.bodyId = null;
-		this.headId = null;
 		this.craftRecipesId = [];
 }
 let characterPtoto={
@@ -29,9 +26,6 @@ let characterPtoto={
 	health : null,
 	strength : null,
 	isAlive : true,
-	armId : null,
-	bodyId : null,
-	headId : null,
 	craftRecipesId : []
 }
 module.exports = Character;

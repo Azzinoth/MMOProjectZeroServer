@@ -186,17 +186,19 @@ function messageHandler (data, message, personId){
         case SHOT: {
             let firedAmmos = data.firedAmmos;
 			let indexFiredAmmo;
-			let accuracyShot1=accuracyShot.getAccuracy(300);
+
             for (let i = 0; i<firedAmmos.length; i++){
 				if (!firedAmmos[i].active){
                     firedAmmos[i].characterId = personId;
                     firedAmmos[i].speedPerSec = 750;
                     firedAmmos[i].initialX = characters[personId].left-5;
                     firedAmmos[i].initialY = characters[personId].top-32;
-                    firedAmmos[i].finalX = json.request[0]+accuracyShot1[0];
-                    firedAmmos[i].finalY = json.request[1]+accuracyShot1[1];
+                    let accuracyShot1=accuracyShot.getAccuracy(15, firedAmmos[i].initialX, firedAmmos[i].initialY, json.request[0], json.request[1]);
+                    firedAmmos[i].finalX = parseInt(accuracyShot1[0]);
+                    firedAmmos[i].finalY = parseInt(accuracyShot1[1]);
                     firedAmmos[i].distToFinal = Math.sqrt(Math.pow(firedAmmos[i].initialX - firedAmmos[i].finalX, 2) + Math.pow(firedAmmos[i].initialY - firedAmmos[i].finalY, 2));
                     firedAmmos[i].timeToFinal = firedAmmos[i].distToFinal / firedAmmos[i].speedPerSec * 1000;
+                    firedAmmos[i].maxTime = 1000 / firedAmmos[i].speedPerSec * 1000;
                     let time = new Date().getTime();
                     firedAmmos[i].currentTick = time;
                     firedAmmos[i].lastTick = time;
@@ -209,10 +211,11 @@ function messageHandler (data, message, personId){
                     let ammo = new FiredAmmo();
                     ammo.characterId = personId;
                     ammo.speedPerSec = 750;
-                    ammo.initialX = characters[personId].left;
-                    ammo.initialY = characters[personId].top;
-                    ammo.finalX = json.request[0]+accuracyShot1[0];
-                    ammo.finalY = json.request[1]+accuracyShot1[1];
+                    ammo.initialX = characters[personId].left-5;
+                    ammo.initialY = characters[personId].top-32;
+                    let accuracyShot1=accuracyShot.getAccuracy(15, ammo.initialX, ammo.initialY, json.request[0], json.request[1]);
+                    ammo.finalX = parseInt(accuracyShot1[0]);
+                    ammo.finalY = parseInt(accuracyShot1[1]);
                     ammo.distToFinal = Math.sqrt(Math.pow(ammo.initialX - ammo.finalX, 2) + Math.pow(ammo.initialY - ammo.finalY, 2));
                     ammo.timeToFinal = ammo.distToFinal / ammo.speedPerSec * 1000;
                     ammo.active = true;
@@ -224,29 +227,6 @@ function messageHandler (data, message, personId){
 
             sender.sendToAll(clients, new Request({type:SHOT, request:data.firedAmmos[indexFiredAmmo]}));
             break;
-        }
-		case PUT_ON:{
-            let stackId = json.request;
-            if (stacks[stackId].inventoryId === characters[personId].inventoryId
-				&&items[stacks[stackId].itemId].type === 'armory'){
-            	let itemId = stacks[stackId].itemId;
-            	if (characters[personId].armId!=null){
-                    stacks[stackId].itemId = characters[personId].armId;
-                    characters[personId].armId= itemId;
-				}else{
-                    stacks[stackId].itemId = null;
-                    stacks[stackId].size = null;
-                    characters[personId].armId= itemId;
-				}
-			}
-		}
-        case PUT_OFF:{
-            let stackId = json.request;
-            let itemId = characters[personId].armId;
-            if (stacks[stackId].itemId===null){
-                stacks[stackId].itemId=itemId;
-                stacks[stackId].size = 1;
-            }
         }
 	}
 }

@@ -15,6 +15,5 @@ module.exports = {
 	SHOT : 13,
 	HIT : 14,
 	PLAYER_DATA : 15,
-	PUT_ON : 16,
-    PUT_OFF : 17
+    NPC_MOVE : 16
 };

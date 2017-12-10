@@ -6,27 +6,12 @@ const toDataBase = require ('./sql/gameDataToDataBase');
 const send = require('./network/sender');
 const mainLoop = require ('./loop');
 sqlUtils.fill();
-
+// sqlUtils.pushDb(data.callBackTable).then(
+//     result=>{
+//     }
+// )
 clear();
 start();
-// identificators();
-// stacks();
-// inventories();
-// characterRecipes();
-// characters();
-// sqlUtils.pushDb().then(
-// result=>{data.fillId(sqlUtils),
-// sqlUtils.pushDb(data.callBackTable).then(
-//     result=> {
-//         items(),
-//             craftRecipes(),
-//             ingredients(),
-//             sqlUtils.pushDb()
-//     });
-// });
-
-
-
 
 
 
@@ -47,12 +32,11 @@ function clear(){
 }
 function identificators(){
   sqlUtils.drop('identificators');
-  sqlUtils.createTable('identificators', 'characterId INTEGER, itemId INTEGER, mapItemId INTEGER, recipeId INTEGER, inventoryId INTEGER, stackId INTEGER, weaponId INTEGER');
-  sqlUtils.insert('identificators', 'characterId, itemId, mapItemId, recipeId, inventoryId, stackId, weaponId', '0, 0, 0, 0, 0, 0, 0');
+  sqlUtils.createTable('identificators', 'characterId INTEGER, animalId INTEGER, itemId INTEGER, mapItemId INTEGER, recipeId INTEGER, inventoryId INTEGER, stackId INTEGER, weaponId INTEGER, zoneId INTEGER');
+  sqlUtils.insert('identificators', 'characterId, animalId, itemId, mapItemId, recipeId, inventoryId, stackId, weaponId, zoneId', '0, 0, 0, 0, 0, 0, 0, 0, 0');
 }
 
 function items(){
-
     sqlUtils.drop('items');
     sqlUtils.createTable('items', 'id INTEGER primary key, name TEXT, type TEXT, stackSize INTEGER');
     sqlUtils.insert('items', 'id, name, type, stackSize', data.getId('item')+', \'wood\', \'resource\', 20');
@@ -61,7 +45,6 @@ function items(){
     sqlUtils.insert('items', 'id, name, type, stackSize', data.getId('item')+',  \'stoneWall\', \'buildingPart\', 20');
     sqlUtils.insert('items', 'id, name, type, stackSize', data.getId('item')+',  \'bow\', \'armory\', 1');
     sqlUtils.insert('items', 'id, name, type, stackSize', data.getId('item')+',  \'arrow\', \'armory\', 20');
-
 }
 
 function mapItems(){
@@ -150,6 +133,48 @@ function characterRecipes(){
 function characters(){
 
     sqlUtils.drop('characters');
-    sqlUtils.createTable('characters', 'id INTEGER primary key, inventoryId INTEGER, isPlayer INTEGER, column INTEGER, row INTEGER, top INTEGER, left INTEGER, level  INTEGER, health INTEGER, strength INTEGER, armId  INTEGER, bodyId INTEGER, headId INTEGER');
+    sqlUtils.createTable('characters', 'id INTEGER primary key, inventoryId INTEGER, isPlayer INTEGER, column INTEGER, row INTEGER, top INTEGER, left INTEGER, level  INTEGER, health INTEGER, strength INTEGER');
 
+}
+function animals(){
+    sqlUtils.drop('animals');
+    sqlUtils.createTable('animals', 'id INTEGER primary key, column INTEGER, row INTEGER, top INTEGER, left INTEGER, name TEXT');
+    let fromC;
+    let toC;
+    let fromR;
+    let toR;
+    for (let i = 0; i<3; i++){
+        if (i===0){
+            fromC=0;
+            toC=36;
+            fromR=5;
+            toR=30;
+        }
+        if (i===1){
+            fromC=50;
+            toC=80;
+            fromR=60;
+            toR=80;
+        }
+        if (i===2){
+            fromC=108;
+            toC=144;
+            fromR=12;
+            toR=50;
+        }
+        for (let j = 0; j<10; j++){
+            let col = parseInt(Math.random() * (toC - fromC) + fromC);
+            let row = parseInt(Math.random() * (toR - fromR) + fromR);
+            sqlUtils.insert('animals', 'id, column, row, top, left, name', data.getId('animal')+', '+col+', '+row+', '+col*64+', '+row*64+', \'rabbit\'');
+        }
+    }
+}
+function zones(){
+    sqlUtils.drop('zones');
+    sqlUtils.createTable('zones', 'id INTEGER primary key, fromColumn INTEGER, fromRow INTEGER, toColumn INTEGER, toRow INTEGER, type TEXT');
+    sqlUtils.insert('zones', 'id, fromColumn, fromRow, toColumn, toRow, type', data.getId('zone') + ', 0, 48, 48, 96, \'rocks\'');
+    sqlUtils.insert('zones', 'id, fromColumn, fromRow, toColumn, toRow, type', data.getId('zone') + ', 0, 5, 36, 30, \'forest\'');
+    sqlUtils.insert('zones', 'id, fromColumn, fromRow, toColumn, toRow, type', data.getId('zone') + ', 50, 60, 80, 80, \'forest\'');
+    sqlUtils.insert('zones', 'id, fromColumn, fromRow, toColumn, toRow, type', data.getId('zone') + ', 108, 12, 144, 50, \'forest\'');
+    sqlUtils.insert('zones', 'id, fromColumn, fromRow, toColumn, toRow, type', data.getId('zone') + ', 120, 70, 134, 90, \'rocks\'');
 }

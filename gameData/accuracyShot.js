@@ -1,38 +1,42 @@
-function getAccuracy(accuracy) {
-    let currentRadius0 = accuracy * 0.2;
-    let currentRadius1 = accuracy * 0.55;
-    let currentRadius2 = accuracy * 0.85;
-    let array =new Array(2);
-    let sx = 0;
-    let sy = 0;
+function getAccuracy(accuracy, initX, initY, finalX, finalY) {
+    let result =new Array(2);
+    let angle0 = accuracy * 0.2;
+    let angle1 = accuracy * 0.55;
+    let angle2 = accuracy * 0.85;
+
+    let currentAngle = 0;
 
     let rand = Math.random();
 
     if (rand <= 0.15) {
-        sx = -currentRadius0 / 2 + currentRadius0 * Math.random();
-        sy = -currentRadius0 / 2 + currentRadius0 * Math.random();
-    } else if (rand > 0.15 && rand <= 0.5) {
-        currentRadius = accuracy * 0.2;
-        sx = -currentRadius1 / 2 + currentRadius1 * Math.random();
-        while (Math.abs(sx) <= currentRadius0 / 2) {
-            sx = -currentRadius1 / 2 + currentRadius1 * Math.random();
-        }
-        sy = -currentRadius1 / 2 + currentRadius1 * Math.random();
-        while (Math.abs(sy) <= currentRadius0 / 2) {
-            sy = -currentRadius1 / 2 + currentRadius1 * Math.random();
-        }
-    } else if (rand > 0.5 && rand <= 1) {
-        sx = -currentRadius2 / 2 + currentRadius2 * Math.random();
-        while (Math.abs(sx) <= currentRadius1 / 2) {
-            sx = -currentRadius2 / 2 + currentRadius2 * Math.random();
-        }
-        sy = -currentRadius2 / 2 + currentRadius2 * Math.random();
-        while (Math.abs(sy) <= currentRadius1 / 2) {
-            sy = -currentRadius2 / 2 + currentRadius2 * Math.random();
-        }
+        currentAngle = 0 + angle0 * Math.random();
+    } else if (rand > 0.15 && rand <= 0.7) {
+        currentAngle = angle0 + (angle1 - angle0) * Math.random();
+    } else if (rand > 0.7) {
+        currentAngle = angle1 + (angle2 - angle1) * Math.random();
     }
-    array[0]=sx;
-    array[1]=sy;
-    return array;
+
+    rand = Math.random();
+    if (rand <= 0.5) {
+        currentAngle = -currentAngle;
+    }
+
+
+    // * TO MOUSE VECTOR *
+    tempMagnitude = Math.sqrt(Math.pow(finalX - initX, 2) + Math.pow(finalY - initY, 2));
+    normalizedVector = new Array();
+
+    normalizedVector.push((finalX - initX) / tempMagnitude);
+    normalizedVector.push((finalY - initY) / tempMagnitude);
+    // * TO MOUSE VECTOR END *
+
+    let a = currentAngle * (Math.PI / 180.0);
+    let newx = normalizedVector[0]* Math.cos(a) - normalizedVector[1]*Math.sin(a);
+    let newy = normalizedVector[0]*Math.sin(a) + normalizedVector[1]*Math.cos(a);
+
+    //AddFiredAmmo(humans[0].left, humans[0].top, worldMouseX, worldMouseY, 750, null);
+    result[0] = initX + newx * 100;
+    result[1] = initY + newy * 100;
+    return result;
 }
 exports.getAccuracy = getAccuracy;

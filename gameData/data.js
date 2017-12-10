@@ -7,6 +7,8 @@ let mapItems = {};
 let cellsMap;
 let recipeList={};
 let identificators ={};
+let animals ={};
+let zones ={};
 let firedAmmos =new Array(2000);
 
 const width = 48*3;
@@ -19,7 +21,10 @@ const Cell = require('./map/Cell');
 const Stack = require('./inventory/Stack');
 const Inventory = require('./inventory/Inventory');
 const FiredAmmo = require('./FiredAmmo');
-
+const Rabbit = require('./npc/animals/Rabbit');
+const BullSheep = require('./npc/animals/BullSheep');
+const Location = require('./Location');
+const Zone = require('./map/Zone');
 function fillId(sqlUtils){
     sqlUtils.selectAll('identificators', callBackTable);
 }
@@ -33,6 +38,8 @@ function fillData(sqlUtils){
 	sqlUtils.selectAll('inventories', callBackTable);
 	sqlUtils.selectAll('characterRecipes', callBackTable);
 	sqlUtils.selectAll('characters', callBackTable);
+    sqlUtils.selectAll('animals', callBackTable);
+    sqlUtils.selectAll('zones', callBackTable);
 
     for(let i =0; i<firedAmmos.length; i++){
         firedAmmos[i]=new FiredAmmo();
@@ -46,6 +53,11 @@ function getId(dataName){
             id = identificators.characterId;
         }
 			break;
+        case 'animal':{
+            identificators.animalId++;
+            id = identificators.animalId;
+        }
+            break;
         case 'inventory':{
             identificators.inventoryId++;
             id = identificators.inventoryId;
@@ -71,6 +83,10 @@ function getId(dataName){
             identificators.weaponId++;
             id = identificators.weaponId;
             break;
+        case 'zone':
+            identificators.zoneId++;
+            id = identificators.zoneId;
+            break;
 	}
 	return id;
 }
@@ -79,6 +95,10 @@ function showLastId(dataName){
     switch (dataName){
         case 'character':{
             id =  identificators.characterId
+        }
+            break;
+        case 'animal':{
+            id =  identificators.animalId
         }
             break;
         case 'inventory':{
@@ -100,6 +120,9 @@ function showLastId(dataName){
         case 'weapon':
             id = identificators.weaponId;
             break;
+        case 'zone':
+            id = identificators.zoneId;
+            break;
     }
     return id;
 }
@@ -111,11 +134,13 @@ function callBackTable(tableRows, tableName){
 	switch(tableName){
         case 'identificators':
             identificators.characterId = tableRows[0].characterId;
+            identificators.animalId = tableRows[0].animalId;
             identificators.inventoryId = tableRows[0].inventoryId;
             identificators.stackId = tableRows[0].stackId;
             identificators.itemId = tableRows[0].itemId;
             identificators.mapItemId = tableRows[0].mapItemId;
             identificators.recipeId = tableRows[0].recipeId;
+            identificators.zoneId = tableRows[0].zoneId;
 		break;
 		case 'items':
 			for (let i =0; i<tableRows.length; i++){
@@ -150,6 +175,18 @@ function callBackTable(tableRows, tableName){
                 characters[tableRows[i].id].headId = tableRows[i].headId;
 			}
 		break;
+        case 'animals':
+            for (let i =0; i<tableRows.length; i++){
+                switch (tableRows[i].name){
+                    case 'rabbit':
+                        animals[tableRows[i].id] = new Rabbit(tableRows[i].id, new Location(tableRows[i].column, tableRows[i].row, tableRows[i].top, tableRows[i].left));
+                        break;
+                    case 'bullsheep':
+                        animals[tableRows[i].id] = new BullSheep(tableRows[i].id, new Location(tableRows[i].column, tableRows[i].row, tableRows[i].top, tableRows[i].left));
+                        break;
+                }
+            }
+            break;
 		case 'inventories':
 			for (let i =0; i<tableRows.length; i++){
 				inventories[tableRows[i].id] = new Inventory({id:tableRows[i].id, size:tableRows[i].size});
@@ -175,6 +212,11 @@ function callBackTable(tableRows, tableName){
 				recipeList[tableRows[i].id] = new CraftRecipe.CraftRecipe(tableRows[i].id, tableRows[i].craftedItemId, tableRows[i].name, new Array(), tableRows[i].outputAmount, tableRows[i].categoryName);
 			}
 		break;
+        case 'zones':
+            for (let i =0; i<tableRows.length; i++){
+                zones[tableRows[i].id] = new Zone(tableRows[i].id, tableRows[i].fromColumn, tableRows[i].fromRow, tableRows[i].toColumn, tableRows[i].toRow, tableRows[i].type);
+            }
+            break;
 	}
 }
 function createInventory(size){
@@ -196,6 +238,8 @@ exports.recipeList=recipeList;
 exports.stacks = stacks;
 exports.identificators=identificators;
 exports.firedAmmos = firedAmmos;
+exports.zones = zones;
+exports.animals = animals;
 exports.callBackTable = callBackTable;
 exports.showLastId=showLastId;
 exports.getMap = getMap;

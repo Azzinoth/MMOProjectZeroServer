@@ -11,6 +11,7 @@ function FiredAmmo() {
     this.distToFinal = 0;
     this.timeToFinal = 0;
     this.timePassed = 0;
+    this.maxTime = 0;
 
     this.active = false;
     this.currentTick = 0;
