@@ -224,8 +224,13 @@ function messageHandler (data, message, personId){
                     break;
 				}
             }
-
-            sender.sendToAll(clients, new Request({type:SHOT, request:data.firedAmmos[indexFiredAmmo]}));
+			let arr = [5];
+            arr[0]=data.firedAmmos[indexFiredAmmo].characterId;
+            arr[1]=data.firedAmmos[indexFiredAmmo].initialX;
+            arr[2]=data.firedAmmos[indexFiredAmmo].initialY;
+            arr[3]=data.firedAmmos[indexFiredAmmo].finalX;
+            arr[4]=data.firedAmmos[indexFiredAmmo].finalY;
+            sender.sendToAll(clients, new Request({type:SHOT, request:arr}));
             break;
         }
 	}

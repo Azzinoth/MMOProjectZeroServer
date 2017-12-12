@@ -11,7 +11,9 @@ const {
 	MAP_OBJECT,
     ITEMS_LIST,
     CRAFT,
-    PLAYER_DATA
+    PLAYER_DATA,
+    NPC_MOVE,
+    NPC_DATA
 } = require('../constants').messageTypes;
 
 function initializeClient(data, characterId, inventoryId){
@@ -56,7 +58,7 @@ function initializeClient(data, characterId, inventoryId){
 	
 	let nearbyObjects = visibleObjects.surroundObjects(characters[characterId].column, characters[characterId].row, viewDistance, width, height, cellsMap);
 	clients[characterId].send(JSON.stringify(new Request({type:MAP_OBJECT, request:nearbyObjects})));
-	
+    clients[characterId].send(JSON.stringify(new Request({type:NPC_DATA, request:data.animals})));
 
 }
 module.exports = initializeClient;

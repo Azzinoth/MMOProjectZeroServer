@@ -179,10 +179,10 @@ function callBackTable(tableRows, tableName){
             for (let i =0; i<tableRows.length; i++){
                 switch (tableRows[i].name){
                     case 'rabbit':
-                        animals[tableRows[i].id] = new Rabbit(tableRows[i].id, new Location(tableRows[i].column, tableRows[i].row, tableRows[i].top, tableRows[i].left));
+                        animals[tableRows[i].id] = new Rabbit(tableRows[i].id, new Location(tableRows[i].column, tableRows[i].row, tableRows[i].top, tableRows[i].left), tableRows[i].zoneId);
                         break;
                     case 'bullsheep':
-                        animals[tableRows[i].id] = new BullSheep(tableRows[i].id, new Location(tableRows[i].column, tableRows[i].row, tableRows[i].top, tableRows[i].left));
+                        animals[tableRows[i].id] = new BullSheep(tableRows[i].id, new Location(tableRows[i].column, tableRows[i].row, tableRows[i].top, tableRows[i].left), tableRows[i].zoneId);
                         break;
                 }
             }

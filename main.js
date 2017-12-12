@@ -6,8 +6,11 @@ const toDataBase = require ('./sql/gameDataToDataBase');
 const send = require('./network/sender');
 const mainLoop = require ('./loop');
 sqlUtils.fill();
+// data.fillId(sqlUtils);
 // sqlUtils.pushDb(data.callBackTable).then(
 //     result=>{
+//         animals(),
+//             sqlUtils.pushDb()
 //     }
 // )
 clear();
@@ -138,34 +141,39 @@ function characters(){
 }
 function animals(){
     sqlUtils.drop('animals');
-    sqlUtils.createTable('animals', 'id INTEGER primary key, column INTEGER, row INTEGER, top INTEGER, left INTEGER, name TEXT');
+    sqlUtils.createTable('animals', 'id INTEGER primary key, column INTEGER, row INTEGER, top INTEGER, left INTEGER, name TEXT, zoneId INTEGER');
     let fromC;
     let toC;
     let fromR;
     let toR;
+    let zoneId;
     for (let i = 0; i<3; i++){
+
         if (i===0){
             fromC=0;
             toC=36;
             fromR=5;
             toR=30;
+            zoneId = 2;
         }
         if (i===1){
             fromC=50;
             toC=80;
             fromR=60;
             toR=80;
+            zoneId = 3;
         }
         if (i===2){
             fromC=108;
             toC=144;
             fromR=12;
             toR=50;
+            zoneId = 4;
         }
         for (let j = 0; j<10; j++){
             let col = parseInt(Math.random() * (toC - fromC) + fromC);
             let row = parseInt(Math.random() * (toR - fromR) + fromR);
-            sqlUtils.insert('animals', 'id, column, row, top, left, name', data.getId('animal')+', '+col+', '+row+', '+col*64+', '+row*64+', \'rabbit\'');
+            sqlUtils.insert('animals', 'id, column, row, left, top, name, zoneId', data.getId('animal')+', '+col+', '+row+', '+col*64+', '+row*64+', \'rabbit\', '+zoneId);
         }
     }
 }

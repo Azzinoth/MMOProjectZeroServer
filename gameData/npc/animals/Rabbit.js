@@ -1,9 +1,9 @@
 const Animal = require('../Animal');
-function Rabbit (id, location){
+function Rabbit (id, location, zoneId){
     Animal.apply(this, arguments);
     this.name = 'rabbit';
-    this.zone = this.randZone;
-    this.speed = 300;
+    this.zoneId = zoneId;
+    this.speed = 6;
     this.health = 3;
 
 }
@@ -11,12 +11,12 @@ function Rabbit (id, location){
 Rabbit.prototype = Object.create(Animal.prototype);
 
 
-Rabbit.prototype.randZone = function  (){
+Rabbit.prototype.randZone = function  (zones){
     let rand;
     let maxRand=null;
     let keyZone=null;
-    for (let key in this.data.zones){
-        if (this.data.zones.type==='forest'){
+    for (let key in zones){
+        if (zones[key].type==='forest'){
             rand=Math.random;
             if (rand>maxRand){
                 maxRand = rand;
@@ -25,7 +25,8 @@ Rabbit.prototype.randZone = function  (){
         }
     }
     if (keyZone!==null){
-        return this.data.zones[keyZone];
+        this.zoneId= zones[keyZone].id;
+        return this.zoneId;
     }
     return null;
 }

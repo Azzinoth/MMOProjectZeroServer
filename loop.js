@@ -1,27 +1,37 @@
 const Request = require('./network/Request');
 const sender = require('./network/sender');
+const findPath = require('./utils/findPath');
 const {
-    HIT
+    HIT,
+    NPC_MOVE
 } = require('./constants').messageTypes;
+
 function mainLoop (data){
-    let count = 0;
 	setInterval(function(){
-        count++;
         fire(data);
+
         moveNpc(data);
 	}, 17);
 }
 function moveNpc(data) {
-    for (let key in data.animals){
-        if (data.animals[key].destination===null){
-            data.animals[key].chooseNewDestination();
-            if (!cellsMap[data.animals[key].destination.column][data.animals[key].destination.row].movable){
-                data.animals[key].destination=null;
-            }
-        }else{
 
+let result=[];
+
+    for (let key in data.animals){
+        result.push(new Array(data.animals[key].location.left, data.animals[key].location.top));
+        if (data.animals[key].zone===null){
+            data.animals[key].randZone();
+        }
+        if (data.animals[key].destination===null){
+            data.animals[key].chooseNewDestination(data.getMap(), data.zones);
+        }else{
+            data.animals[key].move(data.getMap());
         }
     }
+    //if (count>5) {
+        sender.sendToAll(data.clients, new Request({type: NPC_MOVE, request: result}));
+       // count = 0;
+    //}
 }
 function fire(data){
     let firedAmmos = data.firedAmmos;
