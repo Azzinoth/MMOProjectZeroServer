@@ -164,9 +164,12 @@ function algoritmA(currentLoc, target, map){
         if (currentNode.column === targetNode.column&&currentNode.row===targetNode.row){
             let current = target;
             result.unshift({column:current.column, row:current.row});
-            while(from[current.column.toString()+'/'+current.row.toString()].column!==currentLoc.column&&from[current.column.toString()+'/'+current.row.toString()].row!==currentLoc.row){
+            while(true){
+                if (from[current.column.toString()+'/'+current.row.toString()].column===currentLoc.column&&
+                    from[current.column.toString()+'/'+current.row.toString()].row===currentLoc.row) break;
                result.unshift(from[current.column.toString()+'/'+current.row.toString()]);
                current = from[current.column.toString()+'/'+current.row.toString()];
+
             }
             // let time1 = new Date().getTime();
             // console.log(time1-time);

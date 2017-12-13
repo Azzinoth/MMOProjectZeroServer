@@ -14,24 +14,31 @@ function mainLoop (data){
 	}, 17);
 }
 function moveNpc(data) {
-
-let result=[];
-
+    let result = [];
     for (let key in data.animals){
-        result.push(new Array(data.animals[key].location.left, data.animals[key].location.top));
+
+        //result.push(new Array(data.animals[key].location.left, data.animals[key].location.top));
         if (data.animals[key].zone===null){
             data.animals[key].randZone();
         }
         if (data.animals[key].destination===null){
             data.animals[key].chooseNewDestination(data.getMap(), data.zones);
-        }else{
-            data.animals[key].move(data.getMap());
         }
+        if (data.animals[key].destination!==null&&data.animals[key].path.length===0){
+            data.animals[key].findPath(data.getMap());
+            if (data.animals[key].path.length>0){
+                result=new Array(data.animals[key].id, data.animals[key].path, data.animals[key].location.column, data.animals[key].location.row);
+                sender.sendToAll(data.clients, new Request({type: NPC_MOVE, request: result}));
+            }
+        }
+        if (data.animals[key].path.length > 0 && !data.animals[key].isMovement) {
+            data.animals[key].initMovement();
+
+        }
+        data.animals[key].move();
+        
+
     }
-    //if (count>5) {
-        sender.sendToAll(data.clients, new Request({type: NPC_MOVE, request: result}));
-       // count = 0;
-    //}
 }
 function fire(data){
     let firedAmmos = data.firedAmmos;
