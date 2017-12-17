@@ -1,7 +1,7 @@
-function Stack(id, itemId, size, inventoryId){
+function Stack(id, inventoryId){
 	this.id=id;
-	this.itemId=itemId;
-	this.size=size;
+	this.item=null;
+	this.size=null;
 	this.inventoryId=inventoryId;
 }
 let stackProto={

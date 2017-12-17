@@ -3,7 +3,7 @@ function Rabbit (id, location, zoneId){
     Animal.apply(this, arguments);
     this.name = 'rabbit';
     this.zoneId = zoneId;
-    this.speed = 16;
+    this.speed = 32;
     this.health = 3;
 
 }

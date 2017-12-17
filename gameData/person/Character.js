@@ -1,6 +1,9 @@
-function Character (id, inventoryId, isPlayer, column, row, top, left, level, health, strength){
+function Character (id, inventoryId, armorInventoryId, hotBarId, activeHotBarCell, isPlayer, column, row, top, left, level, health, strength, viewDistance){
 		this.id = id;
 		this.inventoryId = inventoryId;
+    	this.armorInventoryId = armorInventoryId;
+		this.hotBarId = hotBarId;
+    	this.activeHotBarCell = activeHotBarCell;
 		this.isPlayer = isPlayer;
 		this.size = 64;
 		this.column = column;
@@ -11,6 +14,7 @@ function Character (id, inventoryId, isPlayer, column, row, top, left, level, he
 		this.health = health;
 		this.strength = strength;
 		this.isAlive = true;
+		this.viewDistance = viewDistance;
 		this.craftRecipesId = [];
 }
 let characterPtoto={

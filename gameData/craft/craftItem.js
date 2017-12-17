@@ -1,9 +1,8 @@
-const Inventory = require('../inventory/Inventory') ;
 const bubbleSort = require('../../utils/bubbleSort');
 const stackUtils = require('../inventory/stackUtils');
 function craftItem(inventory, stacks, recipe, items){
 	let stacksId = inventory.stacks;
-	let result = {};
+	let result = [];
 	let isEnoughtItem = false;
     let isAvailableSpace = false;
 	let isBreak;
@@ -12,7 +11,7 @@ function craftItem(inventory, stacks, recipe, items){
         let amount = recipe.ingredients[i].amount;
         isEnoughtItem= false;
         for (let j = 0; j < stacksId.length; j++) {
-            if (stacksId[j]!==null&&stacks[stacksId[j]].itemId!==null&&recipe.ingredients[i].itemId===stacks[stacksId[j]].itemId){
+            if (stacksId[j]!==null&&stacks[stacksId[j]].item!==null&&recipe.ingredients[i].typeId===stacks[stacksId[j]].item.typeId){
                 if (stacks[stacksId[j]].size>amount){
                     isEnoughtItem = true;
                     break;
@@ -30,13 +29,13 @@ function craftItem(inventory, stacks, recipe, items){
     if (!isEnoughtItem)  return 1;
 /////////Check available space in inventory
     if (!isAvailableSpace){
-        let stackSize = items[recipe.craftedItemId].stackSize;
+        let stackSize = items[recipe.craftedTypeId].stackSize;
         let amount = recipe.outputAmount;
         for (let i = 0; i < stacksId.length; i++) {
-            if (stacksId[i]===null||stacks[stacksId[i]].itemId===null){
+            if (stacks[stacksId[i]].item===null){
                 isAvailableSpace = true;
                 break;
-            }else if(stacks[stacksId[i]].itemId === recipe.craftedItemId){
+            }else if(stacks[stacksId[i]].item.typeId === recipe.craftedTypeId){
                 if (stacks[stacksId[i]].size+amount<=stackSize){
                     isAvailableSpace = true;
                     break;
@@ -55,7 +54,7 @@ function craftItem(inventory, stacks, recipe, items){
 		for (let j = 0; j<inventory.stacks.length; j++){
 		    let stackId = inventory.stacks[j];
 			//if (!isFullTmpStack)tmpStacks[j] = stacks[inventory.stacks[j]];
-			if (stacks[stackId].itemId===recipe.ingredients[i].itemId){
+			if (stacks[stackId].item!==null&&stacks[stackId].item.typeId===recipe.ingredients[i].typeId){
 				indexStack.push(stacks[stackId]);
 			}
 		}
@@ -70,22 +69,25 @@ function craftItem(inventory, stacks, recipe, items){
                    stackId = inventory.stacks[k];
 					if (price<stacks[stackId].size){
                         stacks[stackId].size -= price;
-						result[k] = stacks[stackId];
+                        result.push(stacks[stackId]);
+						//result[k] = stacks[stackId];
 						isBreak=true;
                         isMinusIngridient = true;
 						break;
 					}else if (price===stacks[stackId].size){
-                        stacks[stackId].itemId = null;
+                        stacks[stackId].item = null;
                         stacks[stackId].size = null;
-						result[k] = stacks[stackId];
+                        result.push(stacks[stackId]);
+						//result[k] = stacks[stackId];
 						isBreak=true;
                         isMinusIngridient = true;
 						break;
 					}else{
 						price -= stacks[stackId].size;
-                        stacks[stackId].itemId=null;
+                        stacks[stackId].item=null;
                         stacks[stackId].size=null;
-						result[k] = stacks[stackId];
+                        result.push(stacks[stackId]);
+						//result[k] = stacks[stackId];
 						
 					}
 				}
@@ -94,9 +96,9 @@ function craftItem(inventory, stacks, recipe, items){
 		}
         if (!isMinusIngridient) return 3;
 	}
-    let tmp = stackUtils.addStack(inventory, stacks, recipe.craftedItemId, recipe.outputAmount, items);
-    for (let key in tmp){
-        result[key] = tmp[key];
+    let tmp = stackUtils.addStack(inventory, stacks, recipe.craftedTypeId, recipe.outputAmount);
+    for (let i = 0; i<tmp.length; i++){
+        result.push(tmp[i]);
     }
 	return result;
 }

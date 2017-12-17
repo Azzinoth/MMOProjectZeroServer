@@ -1,9 +1,6 @@
-class Item {
-    constructor({id = -1, name= null, type = null, stackSize = 10}) {
-        this.id = id;
-        this.name = name;
-        this.type = type;
-		this.stackSize = stackSize;
-    }
+function Item(typeId, typeName, stackSize) {
+    this.typeId = typeId;
+    this.typeName = typeName;
+    this.stackSize = stackSize;
 }
 module.exports = Item;

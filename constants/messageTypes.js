@@ -16,5 +16,10 @@ module.exports = {
 	HIT : 14,
 	PLAYER_DATA : 15,
     NPC_DATA : 16,
-    NPC_MOVE : 17
+    NPC_MOVE : 17,
+    INVENTORY_DATA : 18,
+    HOT_BAR_DATA: 19,
+    HOT_BAR_CHANGE : 20,
+    HOT_BAR_CELL_ACTIVATE : 21,
+    RELOAD_WEAPON : 22
 };

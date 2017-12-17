@@ -2,6 +2,7 @@ let clients = {};
 let characters = {};
 let inventories = {};
 let stacks = {};
+let commonItems = {};
 let items = {};
 let mapItems = {};
 let cellsMap;
@@ -20,11 +21,13 @@ const Character = require('./person/Character');
 const Cell = require('./map/Cell');
 const Stack = require('./inventory/Stack');
 const Inventory = require('./inventory/Inventory');
-const FiredAmmo = require('./FiredAmmo');
+const FiredAmmo = require('./item/unique/weapon/FiredAmmo');
 const Rabbit = require('./npc/animals/Rabbit');
 const BullSheep = require('./npc/animals/BullSheep');
 const Location = require('./Location');
 const Zone = require('./map/Zone');
+const CommonItem = require('./item/common/CommonItem');
+const Bow = require('./item/unique/weapon/range/Bow');
 function fillId(sqlUtils){
     sqlUtils.selectAll('identificators', callBackTable);
 }
@@ -40,6 +43,9 @@ function fillData(sqlUtils){
 	sqlUtils.selectAll('characters', callBackTable);
     sqlUtils.selectAll('animals', callBackTable);
     sqlUtils.selectAll('zones', callBackTable);
+    sqlUtils.selectAll('commonItems', callBackTable);
+    sqlUtils.selectAll('weaponsRange', callBackTable);
+
 
     for(let i =0; i<firedAmmos.length; i++){
         firedAmmos[i]=new FiredAmmo();
@@ -79,52 +85,12 @@ function getId(dataName){
             identificators.recipeId++;
             id = identificators.recipeId;
             break;
-        case 'weapon':
-            identificators.weaponId++;
-            id = identificators.weaponId;
-            break;
         case 'zone':
             identificators.zoneId++;
             id = identificators.zoneId;
             break;
 	}
 	return id;
-}
-function showLastId(dataName){
-    let id = null;
-    switch (dataName){
-        case 'character':{
-            id =  identificators.characterId
-        }
-            break;
-        case 'animal':{
-            id =  identificators.animalId
-        }
-            break;
-        case 'inventory':{
-            id = identificators.inventoryId;
-        }
-            break;
-        case 'stack':
-            id = identificators.stackId;
-            break;
-        case 'item':
-            id = identificators.itemId;
-            break;
-        case 'mapItem':
-            id = identificators.mapItemId;
-            break;
-        case 'recipe':
-            id = identificators.recipeId;
-            break;
-        case 'weapon':
-            id = identificators.weaponId;
-            break;
-        case 'zone':
-            id = identificators.zoneId;
-            break;
-    }
-    return id;
 }
 function getMap(){
 	return cellsMap;
@@ -142,10 +108,11 @@ function callBackTable(tableRows, tableName){
             identificators.recipeId = tableRows[0].recipeId;
             identificators.zoneId = tableRows[0].zoneId;
 		break;
-		case 'items':
-			for (let i =0; i<tableRows.length; i++){
-				items[tableRows[i].id] = new Item({id:tableRows[i].id, type:tableRows[i].type, type:tableRows[i].type, stackSize:tableRows[i].stackSize});
-			}
+        case 'items':
+            for (let i =0; i<tableRows.length; i++){
+                items[tableRows[i].id] = new Item(tableRows[i].id, tableRows[i].typeName, tableRows[i].stackSize);
+            }
+
 		break;
 		case 'mapItems':
 			for (let i =0; i<tableRows.length; i++){
@@ -166,13 +133,11 @@ function callBackTable(tableRows, tableName){
 		break;
 		case 'characters':
 			for (let i =0; i<tableRows.length; i++){
-				characters[tableRows[i].id] = new Character(tableRows[i].id, tableRows[i].idInventory,
+				characters[tableRows[i].id] = new Character(tableRows[i].id, tableRows[i].inventoryId,
+                    tableRows[i].armorInventoryId, tableRows[i].hotBarId, tableRows.activeHotBarCell,
                     tableRows[i].isPlayer==1?true:false, tableRows[i].column, tableRows[i].row,
                     tableRows[i].top, tableRows[i].left, tableRows[i].level, tableRows[i].health,
-                    tableRows[i].strength);
-                characters[tableRows[i].id].armId = tableRows[i].armId;
-                characters[tableRows[i].id].bodyId = tableRows[i].bodyId;
-                characters[tableRows[i].id].headId = tableRows[i].headId;
+                    tableRows[i].strength, tableRows[i].viewDistance);
 			}
 		break;
         case 'animals':
@@ -199,17 +164,17 @@ function callBackTable(tableRows, tableName){
 		break;
 		case 'stacks':
 			for (let i =0; i<tableRows.length; i++){
-				stacks[tableRows[i].id] = new Stack({id:tableRows[i].id, itemId:tableRows[i].itemId, size:tableRows[i].size, inventoryId:tableRows[i].inventoryId});
+				stacks[tableRows[i].id] = new Stack(tableRows[i].id, tableRows[i].inventoryId);
 			}
 		break;
 		case 'ingredients':
 			for (let i =0; i<tableRows.length; i++){
-                recipeList[tableRows[i].recipeId].ingredients.push(new CraftRecipe.Ingredient(tableRows[i].itemId, tableRows[i].amount));
+                recipeList[tableRows[i].recipeId].ingredients.push(new CraftRecipe.Ingredient(tableRows[i].typeId, tableRows[i].amount));
 			}
 		break;
 		case 'craftRecipes':
 			for (let i =0; i<tableRows.length; i++){
-				recipeList[tableRows[i].id] = new CraftRecipe.CraftRecipe(tableRows[i].id, tableRows[i].craftedItemId, tableRows[i].name, new Array(), tableRows[i].outputAmount, tableRows[i].categoryName);
+				recipeList[tableRows[i].id] = new CraftRecipe.CraftRecipe(tableRows[i].id, tableRows[i].craftedTypeId, tableRows[i].name, new Array(), tableRows[i].outputAmount, tableRows[i].categoryName);
 			}
 		break;
         case 'zones':
@@ -217,6 +182,17 @@ function callBackTable(tableRows, tableName){
                 zones[tableRows[i].id] = new Zone(tableRows[i].id, tableRows[i].fromColumn, tableRows[i].fromRow, tableRows[i].toColumn, tableRows[i].toRow, tableRows[i].type);
             }
             break;
+        case 'commonItems':
+            for (let i =0; i<tableRows.length; i++){
+                stacks[tableRows[i].stackId].item = new CommonItem(tableRows[i].typeId, tableRows[i].name, tableRows[i].stackSize);
+            }
+            break;
+        case 'weaponsRange':
+            for (let i =0; i<tableRows.length; i++){
+                stacks[tableRows[i].stackId].item = new Bow(tableRows[i].typeId, tableRows[i].itemId, tableRows[i].durability, tableRows[i].damage, tableRows[i].accuracy, tableRows[i].fireRate, tableRows[i].distance, tableRows[i].reloadTime, tableRows[i].magazineSize);
+            }
+            break;
+
 	}
 }
 function createInventory(size){
@@ -224,7 +200,7 @@ function createInventory(size){
     inventories[inventoryId] = new Inventory(inventoryId, size);
     for (let i=0; i<inventories[inventoryId].stacks.length; i++){
         let stackId = getId('stack');
-        stacks[stackId] = new Stack(stackId, null, null, inventoryId);
+        stacks[stackId] = new Stack(stackId, inventoryId);
         inventories[inventoryId].stacks[i] = stackId;
     }
     return inventoryId;
@@ -240,8 +216,8 @@ exports.identificators=identificators;
 exports.firedAmmos = firedAmmos;
 exports.zones = zones;
 exports.animals = animals;
+exports.commonItems = commonItems;
 exports.callBackTable = callBackTable;
-exports.showLastId=showLastId;
 exports.getMap = getMap;
 exports.getId = getId;
 exports.fillData = fillData;

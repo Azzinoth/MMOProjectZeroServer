@@ -1,12 +1,12 @@
 // ******* INGREDIENT *******
 var IngredientProto = {
-    itemId : -1,
+    typeId : -1,
     amount : -1,
 
 }
 
-function Ingredient(itemId, amount) {
-    this.itemId = itemId;
+function Ingredient(typeId, amount) {
+    this.typeId = typeId;
     this.amount = amount;
 
 }
@@ -18,7 +18,7 @@ Ingredient.prototype = IngredientProto;
 
 var CraftRecipeProto = {
     id : -1,
-    craftedItemId: -1,
+    craftedTypeId: -1,
     name : "",
     ingredients : new Array(),
     outputAmount : 0,
@@ -26,9 +26,9 @@ var CraftRecipeProto = {
 
 }
 
-function CraftRecipe(id, craftedItemId, name, ingredients, outputAmount, categoryName) {
+function CraftRecipe(id, craftedTypeId, name, ingredients, outputAmount, categoryName) {
     this.id = id;
-    this.craftedItemId = craftedItemId;
+    this.craftedTypeId = craftedTypeId;
     this.name = name;
     this.ingredients = ingredients;
     this.outputAmount = outputAmount;

@@ -14,13 +14,15 @@ function server(data){
 	
 	webSocketServer.on('connection', function(ws) {
         let inventoryId = data.createInventory(24);
+        let hotBarId = data.createInventory(3);
+        let armorInventoryId = data.createInventory(2);
         let characterId = data.getId('character');
 		sqlUtils.insert('inventories', 'id, size', inventoryId+', 24');
-		sqlUtils.insert('characters', 'id, inventoryId, isPlayer, column, row, health, strength', characterId+', '+inventoryId+', 1, 10, 10, 3, 1');
-		ws.id = characterId,
-		data.clients[characterId] = ws,
-		console.log("new connection " + ws.id),
-		initialize(data, characterId, inventoryId);
+		sqlUtils.insert('characters', 'id, inventoryId, armorInventoryId, hotBarId, activeHotBarCell,  isPlayer, column, row, top, left, level, health, strength, viewDistance', characterId+', '+inventoryId+', '+armorInventoryId+', '+hotBarId+', '+null+', 1, 10, 10, 640, 640, 1, 3, 1, 10');
+		ws.id = characterId;
+		data.clients[characterId] = ws;
+		console.log("new connection " + ws.id);
+		initialize(data, characterId, inventoryId, hotBarId, armorInventoryId);
 		ws.on('message', function(message){
 			messageHandler(data, message, characterId);
 		});

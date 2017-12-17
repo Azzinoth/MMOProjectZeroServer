@@ -1,5 +1,5 @@
 const data = require('./data');
-const FiredAmmo = require('./FiredAmmo');
+const FiredAmmo = require('./item/unique/weapon/FiredAmmo');
 const visibleObjects = require('./visibleObjects');
 const accuracyShot = require('./accuracyShot');
 const Location = require('./Location');

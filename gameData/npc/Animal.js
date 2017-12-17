@@ -25,7 +25,7 @@ Animal.prototype.getZone = function  (){
 }
 
 Animal.prototype.chooseNewDestination = function (map, zones) {
-    if (Math.random()<0.9) return null;
+    if (Math.random()<0.999) return null;
 
     if (this.destination===null)this.destination=new Location();
     this.destination.column = parseInt(Math.random() * (zones[this.zoneId].toColumn - zones[this.zoneId].fromColumn) + zones[this.zoneId].fromColumn);
@@ -66,7 +66,7 @@ Animal.prototype.move = function () {
 
 
 
-        if (!this.isMovement) return;
+        if (!this.isMovement) return 0;
 
         this.currentTick = this.getCurrentTimeMS();
         this.timePassed += this.currentTick - this.lastTick;
@@ -92,7 +92,10 @@ Animal.prototype.move = function () {
             }else{
                 this.destination = null;
             }
+            return 1;
 
+        }else {
+            return 2;
         }
 
 ////////////////////////////////////////////

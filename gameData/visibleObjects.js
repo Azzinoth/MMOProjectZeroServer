@@ -26,5 +26,16 @@ function surroundObjects (startColumn, startRow, distance, width, height, cellsM
     }
     return arrayObjects;
 }
+function surroundAnimals (startColumn, startRow, distance, animals){
+    let arrayObjects = [];
+    for (let key in animals){
+        if ((startColumn+distance/2>animals[key].location.column&&startColumn-distance/2<animals[key].location.column)&&
+            (startRow+distance/2>animals[key].location.row&&startRow-distance/2<animals[key].location.row)){
+            arrayObjects.push(new Array(animals[key].id, animals[key].path, animals[key].location.column, animals[key].location.row, animals[key].location.left, animals[key].location.top));
+        }
+    }
+    return arrayObjects;
+}
 exports.surroundObjects = surroundObjects;
 exports.findCharacters = findCharacters;
+exports.surroundAnimals = surroundAnimals;
