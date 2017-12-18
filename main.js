@@ -6,6 +6,7 @@ const toDataBase = require ('./sql/gameDataToDataBase');
 const send = require('./network/sender');
 const mainLoop = require ('./loop');
 sqlUtils.fill();
+
 // data.fillId(sqlUtils);
 // sqlUtils.pushDb(data.callBackTable).then(
 //     result=>{
@@ -46,7 +47,7 @@ function items(){
     sqlUtils.insert('items', 'id, typeName, stackSize', 3+', \'buildingPart\', 1');
     sqlUtils.insert('items', 'id, typeName, stackSize', 4+', \'buildingPart\', 1');
     sqlUtils.insert('items', 'id, typeName, stackSize', 5+', \'weapon\', 1');
-    sqlUtils.insert('items', 'id, typeName, stackSize', 6+', \'ammo\', 1');
+    sqlUtils.insert('items', 'id, typeName, stackSize', 6+', \'ammo\', 20');
 }
 
 function commonItems(){

@@ -22,7 +22,7 @@ function initializeClient(data, characterId, inventoryId, hotBarId, armorInvento
     clients = data.clients;
     inventories = data.inventories;
     characters = data.characters;
-    itemsType = data.itemsType;
+    items = data.items;
     cellsMap = data.getMap();
     recipeList = data.recipeList;
 	
@@ -49,7 +49,7 @@ function initializeClient(data, characterId, inventoryId, hotBarId, armorInvento
     clients[characterId].send(JSON.stringify(new Request({type:HOT_BAR_DATA, request:data.inventories[hotBarId]})));
 
     visibleObjects.findCharacters(characters, viewDistance, characterId);
-    clients[characterId].send(JSON.stringify(new Request({type:ITEMS_LIST, request:itemsType})));
+    clients[characterId].send(JSON.stringify(new Request({type:ITEMS_LIST, request:items})));
     clients[characterId].send(JSON.stringify(new Request({type:CRAFT, request:recipeList})));
 
    // let myInventoryId = characters[characterId].inventoryId;
@@ -68,9 +68,9 @@ function initializeClient(data, characterId, inventoryId, hotBarId, armorInvento
     if (surAnimals.length>0)
         clients[characterId].send(JSON.stringify(new Request({type:NPC_DATA, request:surAnimals})));
 
-    let stacks = stackUtils.addStack(inventories[inventoryId], data.stacks, 1, 60);
+    let stacks = stackUtils.addStack(inventories,characters[characterId], data.stacks, 1, 60);
     clients[characterId].send(JSON.stringify(new Request({type:INVENTORY_CHANGE, request:stacks})));
-    stacks = stackUtils.addStack(inventories[inventoryId], data.stacks, 2, 60);
+    stacks = stackUtils.addStack(inventories,characters[characterId], data.stacks, 2, 60);
     clients[characterId].send(JSON.stringify(new Request({type:INVENTORY_CHANGE, request:stacks})));
 }
 module.exports = initializeClient;

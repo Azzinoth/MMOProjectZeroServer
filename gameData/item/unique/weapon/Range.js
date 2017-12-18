@@ -16,8 +16,8 @@ Range.prototype.shot = function (firedAmmos, personId, initialX, initialY, toX, 
     let result=null;
     if (this.isReloaded&&this.isFireRateReady&&this.currentMagazine>0) {
         this.currentMagazine--;
-        this.damage--;
-        if (this.fireRate!==null){
+        //this.damage--;
+
             for (let i = 0; i<firedAmmos.length; i++){
                 if (!firedAmmos[i].active){
                     firedAmmos[i].characterId = personId;
@@ -61,24 +61,29 @@ Range.prototype.shot = function (firedAmmos, personId, initialX, initialY, toX, 
                     break;
                 }
             }
+        if (this.fireRate!==null){
             this.isFireRateReady = false;
             setTimeout(function (){
                 this.isFireRateReady = true;
-            }, this.fireRate);
+            }.bind(this), this.fireRate);
         }
-        return true;
+        return result;
     }
-    return false;
+    return result;
 }
 Range.prototype.reloadWeapon = function (size) {
     this.isReloaded = false;
-    setTimeout(this.setReloaded, this.reloadTime);
+    setTimeout(function () {
+        this.isReloaded = true;
+        this.currentMagazine=size;
+    }.bind(this), this.reloadTime);
 }
 
-Range.prototype.setReloaded = function () {
-    this.isReloaded = true;
-    this.currentMagazine=1;
-}
+// Range.prototype.setReloaded = function () {
+//     this.isReloaded = true;
+//     this.currentMagazine=1;
+// }
+
 Range.prototype.getAccuracy=function(accuracy, initX, initY, finalX, finalY) {
     let result =new Array(2);
     let angle0 = accuracy * 0.2;
@@ -104,8 +109,8 @@ Range.prototype.getAccuracy=function(accuracy, initX, initY, finalX, finalY) {
 
 
     // * TO MOUSE VECTOR *
-    tempMagnitude = Math.sqrt(Math.pow(finalX - initX, 2) + Math.pow(finalY - initY, 2));
-    normalizedVector = new Array();
+    let tempMagnitude = Math.sqrt(Math.pow(finalX - initX, 2) + Math.pow(finalY - initY, 2));
+    let normalizedVector = new Array();
 
     normalizedVector.push((finalX - initX) / tempMagnitude);
     normalizedVector.push((finalY - initY) / tempMagnitude);

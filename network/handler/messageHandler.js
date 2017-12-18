@@ -101,8 +101,8 @@ function messageHandler (data, message, personId){
                 let mapItemId = cellsMap[toColumn][toRow].objectId;
                 let typeId = mapItems[mapItemId].objectId;
 
-				let reqStacks = stackUtils.addStack(inventories[characters[personId].inventoryId], stacks, typeId, 6);
-				if (reqStacks!=null){
+				let reqStacks = stackUtils.addStack(inventories, characters[personId], stacks, typeId, 6);
+				if (reqStacks.length>0){
                     cellsMap[toColumn][toRow].objectId=null;
                     cellsMap[toColumn][toRow].movable=true;
 					//delete reqStacks.isFull;
@@ -118,11 +118,11 @@ function messageHandler (data, message, personId){
 					request = new Request({type:MAP_OBJECT, request:tmpArray});
 					sender.sendToAll(clients, request);
 				}else{
-					request = new Request({type:ERROR, request:'001'});
+					request = new Request({type:SYSTEM_MESSAGE, request:'Full inventory!'});
                     sender.sendToClient(personId, request);
 				}
 			}else{
-                request = new Request({type:GATHER, request:false});
+                request = new Request({type:SYSTEM_MESSAGE, request:'Can not gather!'});
                 sender.sendToClient(personId, request);
 			}
 		}
@@ -159,15 +159,13 @@ function messageHandler (data, message, personId){
 
 			for(let i=0; i<craftRecipes.length; i++){
 				if (craftRecipes[i]===craftId){
-					let invent = craftItem(inventories[characters[personId].inventoryId], stacks, data.recipeList[craftRecipes[i]], items);
+					let invent = craftItem(inventories, characters[personId], stacks, data.recipeList[craftRecipes[i]], items);
 					if (invent!==1&&invent!==2&&invent!==3){
                         request = new Request({type:INVENTORY_CHANGE, request:invent});
                         sender.sendToClient(personId, request);
                     }
 				}
 			}
-
-			
 		}
 		break;
         case PLACE_ON_MAP:{
@@ -217,7 +215,7 @@ function messageHandler (data, message, personId){
 
 			if (stacks[stackId].item.isReloaded&&stacks[stackId].item.currentMagazine===0){
                 let quantity = stacks[stackId].item.magazineSize - stacks[stackId].item.currentMagazine;
-                let findAmmo = stackUtils.findItems(stacks[stackId].item.ammoId,inventories, new Array(characters[personId].hotBarId, characters[personId].inventoryId), stacks);
+                let findAmmo = stackUtils.findItems(stacks[stackId].item.ammoId,inventories, characters[personId], stacks);
                 if (findAmmo[0]==0)break;
                 if (findAmmo[0]<quantity)quantity = findAmmo[0];
                 let removeItems = stackUtils.removeItems(quantity, findAmmo[1]);
@@ -227,6 +225,7 @@ function messageHandler (data, message, personId){
             }
             let firedAmmo = stacks[stackId].item.shot(firedAmmos, personId, characters[personId].left, characters[personId].top, toX, toY);
 
+			if (firedAmmo===null) break;
 			let arr = [5];
             arr[0]=firedAmmo.characterId;
             arr[1]=firedAmmo.initialX;
@@ -261,7 +260,7 @@ function messageHandler (data, message, personId){
             if (stacks[stackId].item.typeName!=='weapon'||!stacks[stackId].item.isReloaded)break;
             let quantity = stacks[stackId].item.magazineSize - stacks[stackId].item.currentMagazine;
             if (quantity===0) break;
-            let findAmmo = stackUtils.findItems(stacks[stackId].item.ammoId, inventories, new Array(characters[personId].hotBarId, characters[personId].inventoryId), stacks);
+            let findAmmo = stackUtils.findItems(stacks[stackId].item.ammoId, inventories, characters[personId], stacks);
             if (findAmmo[0]==0)break;
             if (findAmmo[0]<quantity)quantity = findAmmo[0];
             let removeItems = stackUtils.removeItems(quantity, findAmmo[1]);

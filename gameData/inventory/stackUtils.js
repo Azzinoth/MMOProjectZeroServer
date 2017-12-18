@@ -1,22 +1,46 @@
 const itemUtils = require('../item/itemUtils');
 const utils = require('../../utils/bubbleSort');
 
-function findItems(typeId, inventories, arrayInventoryId, stacks){
+function findItems(typeId, inventories, character, stacks){
     let result = [2];
     result[0] = 0;
     result[1] = [];
-    for (let i = 0; i<arrayInventoryId.length; i++){
-        for (let j =0; j<inventories[arrayInventoryId[i]].stacks.length; j++){
-            if(stacks[inventories[arrayInventoryId[i]].stacks[j]].item!==null&&stacks[inventories[arrayInventoryId[i]].stacks[j]].item.typeId===typeId){
-                result[0]+=stacks[inventories[arrayInventoryId[i]].stacks[j]].size;
-                // result[i] = stacks[inventory.stacks[i]];
-                result[1].push(stacks[inventories[arrayInventoryId[i]].stacks[j]]);
-            }
+
+    for (let i =0; i<inventories[character.inventoryId].stacks.length; i++){
+        if(stacks[inventories[character.inventoryId].stacks[i]].item!==null&&stacks[inventories[character.inventoryId].stacks[i]].item.typeId===typeId){
+            result[0]+=stacks[inventories[character.inventoryId].stacks[i]].size;
+            result[1].push(stacks[inventories[character.inventoryId].stacks[i]]);
         }
     }
+    for (let i =0; i<inventories[character.hotBarId].stacks.length; i++){
+        if(stacks[inventories[character.hotBarId].stacks[i]].item!==null&&stacks[inventories[character.hotBarId].stacks[i]].item.typeId===typeId){
+            result[0]+=stacks[inventories[character.hotBarId].stacks[i]].size;
+            result[1].push(stacks[inventories[character.hotBarId].stacks[i]]);
+        }
+    }
+
     if (result[1].length>1)result[1]=utils.bubbleSort(result[1]);
     return result;
 
+}
+function checkFreeSpace(item, inventories, character, stacks){
+    let result=0;
+
+    for (let i =0; i<inventories[character.inventoryId].stacks.length; i++){
+        if (stacks[inventories[character.inventoryId].stacks[i]].item===null){
+            result+=item.stackSize;
+        }else if(stacks[inventories[character.inventoryId].stacks[i]].item!==null&&stacks[inventories[character.inventoryId].stacks[i]].item.typeId===item.typeId){
+            result+=item.stackSize - stacks[inventories[character.inventoryId].stacks[i]].size;
+        }
+    }
+    for (let i =0; i<inventories[character.hotBarId].stacks.length; i++){
+        if (stacks[inventories[character.hotBarId].stacks[i]].item===null){
+            result+=item.stackSize;
+        }else if(stacks[inventories[character.hotBarId].stacks[i]].item!==null&&stacks[inventories[character.hotBarId].stacks[i]].item.typeId===item.typeId){
+            result+=item.stackSize - stacks[inventories[character.hotBarId].stacks[i]].size;
+        }
+    }
+    return result;
 }
 
 function removeItems(size, arrayStacks){
@@ -44,10 +68,11 @@ function removeItems(size, arrayStacks){
 
 }
 
-function addStack (inventory, stacks, typeId, size){
-	//let array = {};
+function addStack (inventories, character, stacks, typeId, size){
 	let result = [];
 
+    let inventory = inventories[character.inventoryId];
+    let hotBar = inventories[character.hotBarId];
 	for (let i = 0; i<inventory.stacks.length; i++){
 		let stackId = inventory.stacks[i];
 		if (stacks[stackId].item!==null&&stacks[stackId].item.typeId==typeId&&stacks[stackId].item.stackSize>stacks[stackId].size){
@@ -65,6 +90,23 @@ function addStack (inventory, stacks, typeId, size){
 			}
 		}
 	}
+    for (let i = 0; i<hotBar.stacks.length; i++){
+        let stackId = hotBar.stacks[i];
+        if (stacks[stackId].item!==null&&stacks[stackId].item.typeId==typeId&&stacks[stackId].item.stackSize>stacks[stackId].size){
+            let quantity = stacks[stackId].size+size - stacks[stackId].item.stackSize;
+            if (quantity<=0){
+                stacks[stackId].size += size;
+                // array[i] = stacks[stackId];
+                result.push(stacks[stackId]);
+                return result;
+            }else {
+                stacks[stackId].size = stacks[stackId].item.stackSize;
+                size = quantity;
+                // array[i] = stacks[stackId];
+                result.push(stacks[stackId]);
+            }
+        }
+    }
 
 	let stackId;
 	for (let i = 0; i<inventory.stacks.length; i++){
@@ -89,6 +131,28 @@ function addStack (inventory, stacks, typeId, size){
 
             }
 	}
+    for (let i = 0; i<hotBar.stacks.length; i++){
+        stackId = hotBar.stacks[i];
+        if (stacks[stackId].item === null) {
+            let obj = itemUtils.createItem(typeId);
+            if (size <= obj.stackSize) {
+                stacks[stackId].item = obj;
+                stacks[stackId].size = size;
+
+                //array[i] = stacks[stackId];
+                result.push(stacks[stackId]);
+                return result;
+            } else {
+                stacks[stackId].item = obj;
+                stacks[stackId].size = obj.stackSize;
+
+                //array[i] = stacks[stackId];
+                result.push(stacks[stackId]);
+                size -= obj.stackSize;
+            }
+
+        }
+    }
 	return result;
 }
 
@@ -159,3 +223,4 @@ exports.findItems=findItems;
 exports.addStack=addStack;
 exports.swapStack=swapStack;
 exports.removeItems = removeItems;
+exports.checkFreeSpace = checkFreeSpace;
