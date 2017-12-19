@@ -1,5 +1,5 @@
 const bubbleSort = require('./bubbleSort');
 const findPath = require('./findPath');
-const nearlyDistance = require('./nearlyDistance');
+const nearlyDistance = require('./distanceUtils');
 
 module.exports = { bubbleSort, findPath, nearlyDistance};

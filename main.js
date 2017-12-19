@@ -6,7 +6,6 @@ const toDataBase = require ('./sql/gameDataToDataBase');
 const send = require('./network/sender');
 const mainLoop = require ('./loop');
 sqlUtils.fill();
-
 // data.fillId(sqlUtils);
 // sqlUtils.pushDb(data.callBackTable).then(
 //     result=>{
@@ -42,12 +41,12 @@ function identificators(){
 function items(){
     sqlUtils.drop('items');
     sqlUtils.createTable('items', 'id INTEGER primary key, typeName TEXT, stackSize INTEGER');
-    sqlUtils.insert('items', 'id, typeName, stackSize', 1+', \'resource\', 20');
-    sqlUtils.insert('items', 'id, typeName, stackSize', 2+', \'resource\', 20');
-    sqlUtils.insert('items', 'id, typeName, stackSize', 3+', \'buildingPart\', 1');
-    sqlUtils.insert('items', 'id, typeName, stackSize', 4+', \'buildingPart\', 1');
-    sqlUtils.insert('items', 'id, typeName, stackSize', 5+', \'weapon\', 1');
-    sqlUtils.insert('items', 'id, typeName, stackSize', 6+', \'ammo\', 20');
+    sqlUtils.insert('items', 'id, typeName, stackSize', 1+', \'RESOURCE\', 20');
+    sqlUtils.insert('items', 'id, typeName, stackSize', 2+', \'RESOURCE\', 20');
+    sqlUtils.insert('items', 'id, typeName, stackSize', 3+', \'BUILDING_PART\', 1');
+    sqlUtils.insert('items', 'id, typeName, stackSize', 4+', \'BUILDING_PART\', 1');
+    sqlUtils.insert('items', 'id, typeName, stackSize', 5+', \'WEAPON\', 1');
+    sqlUtils.insert('items', 'id, typeName, stackSize', 6+', \'AMMO\', 20');
 }
 
 function commonItems(){

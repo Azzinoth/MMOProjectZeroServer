@@ -5,22 +5,22 @@ function createItem(typeId, itemId){
 
     switch (typeId) {
         case 1:
-            obj = new CommonItem(typeId, 'resource', 20);
+            obj = new CommonItem(typeId, 'RESOURCE', 20);
             break;
         case 2:
-            obj = new CommonItem(typeId, 'resource', 20);
+            obj = new CommonItem(typeId, 'RESOURCE', 20);
             break;
         case 3:
-            obj = new CommonItem(typeId, 'buildingPart', 1);
+            obj = new CommonItem(typeId, 'BUILDING_PART', 1);
             break;
         case 4:
-            obj = new CommonItem(typeId, 'buildingPart', 1);
+            obj = new CommonItem(typeId, 'BUILDING_PART', 1);
             break;
         case 5:
             obj = new Bow(typeId, itemId);
             break;
         case 6:
-            obj = new CommonItem(typeId, 'ammo', 20);
+            obj = new CommonItem(typeId, 'AMMO', 20);
             break;
     }
     return obj;

@@ -1,5 +1,5 @@
 const utils = require('./bubbleSort');
-const nearlyDistance = require('./nearlyDistance');
+const distanceUtils = require('./distanceUtils');
 
 function algoritmA(currentLoc, target, map){
     let result = [];
@@ -24,7 +24,7 @@ function algoritmA(currentLoc, target, map){
     let g ={};
     g[currentNode.column.toString()+'/'+currentNode.row.toString()] = 0;
     let f ={};
-    f[currentNode.column.toString()+'/'+currentNode.row.toString()] = g[currentNode.column.toString()+'/'+currentNode.row.toString()]+nearlyDistance(currentNode.column,currentNode.row, targetNode.column,target.row);
+    f[currentNode.column.toString()+'/'+currentNode.row.toString()] = g[currentNode.column.toString()+'/'+currentNode.row.toString()]+distanceUtils.nearlyDistance(currentNode.column,currentNode.row, targetNode.column,target.row);
     while (open.length>0){
         currentNode = minF(f, open);
         if (currentNode.column === targetNode.column&&currentNode.row===targetNode.row){
@@ -60,7 +60,7 @@ function algoritmA(currentLoc, target, map){
             if (!inOpen||tmpG<g[neibors[i].column.toString()+'/'+neibors[i].row.toString()]){
                 from[neibors[i].column.toString()+'/'+neibors[i].row.toString()]=currentNode;
                 g[neibors[i].column.toString()+'/'+neibors[i].row.toString()]=tmpG;
-                f[neibors[i].column.toString()+'/'+neibors[i].row.toString()]=g[neibors[i].column.toString()+'/'+neibors[i].row.toString()]+nearlyDistance(neibors[i].column, neibors[i].row, targetNode.column, targetNode.row);
+                f[neibors[i].column.toString()+'/'+neibors[i].row.toString()]=g[neibors[i].column.toString()+'/'+neibors[i].row.toString()]+distanceUtils.nearlyDistance(neibors[i].column, neibors[i].row, targetNode.column, targetNode.row);
             }
             if(!inOpen){
                 open.push(neibors[i]);

@@ -25,7 +25,7 @@ Animal.prototype.getZone = function  (){
 }
 
 Animal.prototype.chooseNewDestination = function (map, zones) {
-    if (Math.random()<0.999) return null;
+    if (Math.random()<0) return null;
 
     if (this.destination===null)this.destination=new Location();
     this.destination.column = parseInt(Math.random() * (zones[this.zoneId].toColumn - zones[this.zoneId].fromColumn) + zones[this.zoneId].fromColumn);

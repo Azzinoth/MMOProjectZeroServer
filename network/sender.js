@@ -2,7 +2,7 @@ let data;
 function setData (myData){
     data = myData;
 }
-const nearlyDistance = require('../utils/nearlyDistance');
+const distanceUtils = require('../utils/distanceUtils');
 function sendToAll(clients, request){
 	for (let key in data.clients){
         data.clients[key].send(JSON.stringify(request));
@@ -22,7 +22,7 @@ function sendAllExcept(clients, request, id){
 function sendByViewDistance(characters, request, column, row){
 
     for (let key in characters){
-    	let distance = nearlyDistance(characters[key].column,characters[key].row,column,row);
+    	let distance = distanceUtils.nearlyDistance(characters[key].column,characters[key].row,column,row);
     	if (distance<=characters[key].viewDistance){
             data.clients[key].send(JSON.stringify(request));
 		}

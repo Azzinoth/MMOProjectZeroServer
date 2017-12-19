@@ -5,7 +5,7 @@ const craftItem = require('../../gameData/craft/craftItem');
 const Weapon = require('../../gameData/item/unique/Weapon');
 const cellUtils = require('../../gameData/map/cellUtils');
 const sender = require('../sender');
-const viewDistance = 20;
+const collision = require('../../utils/collision');
 const width = 48*3;
 const height = 48*3;
 const {
@@ -46,14 +46,17 @@ function messageHandler (data, message, personId){
 	let row;
 	let request;
     if (json.type!==HUMAN_UPDATE&&json.type!==HUMAN_MOVE) console.log(message);
+
 	switch (json.type){
 
 		case HUMAN_MOVE:{
+            console.log(count1);
 			column = characters[personId].column;
 			row = characters[personId].row;
-			let toTop = parseInt(json.request.top);
-			let toLeft = parseInt(json.request.left);
-			
+            let toLeft = json.request[0];
+			let toTop = json.request[1];
+            //let resultMove = new Array(personId, characters[personId].column, characters[personId].row, characters[personId].left, characters[personId].top);
+
 			let toRow = Math.floor(toTop / 64);
 			let toColumn = Math.floor(toLeft / 64);
 			if (toColumn!==column||toRow!==row){
@@ -64,27 +67,41 @@ function messageHandler (data, message, personId){
 					characters[personId].left=toLeft;
 					characters[personId].column=toColumn;
 					characters[personId].row=toRow;
-                    // request = new Request({type:HUMAN_MOVE, request:characters[personId]});
-                    // sender.sendAllExcept(clients, request, personId);
-                    visibleObjects.findCharacters(characters, viewDistance, personId);
-					let visible = visibleObjects.surroundObjects(characters[personId].column, characters[personId].row, viewDistance, width, height, cellsMap);
-					request = new Request({type:MAP_OBJECT, request:visible});
+                    let founderCharacters = visibleObjects.findCharacters(characters, characters[personId].viewDistance, personId);
+                    let resultCharacter=null;
+                    for (let i=0; i<founderCharacters.length; i++){
+                        resultCharacter = new Array(founderCharacters[i].id, founderCharacters[i].column, founderCharacters[i].row, founderCharacters[i].left, founderCharacters[i].top);
+                        sender.sendToClient(personId, new Request({type:HUMAN_MOVE, request:resultCharacter}));
+                        resultCharacter = new Array(characters[personId].id, characters[personId].column, characters[personId].row, characters[personId].left, characters[personId].top);
+                        sender.sendToClient(founderCharacters[i].id, new Request({type:HUMAN_MOVE, request:resultCharacter}));
+                    }
+					let visible = visibleObjects.surroundObjects(characters[personId].column, characters[personId].row, characters[personId].viewDistance, width, height, cellsMap);
+					let result = [];
+					for(let i=0; i<visible.length; i++){
+                        result.push(new Array(visible[i].column, visible[i].row, visible[i].objectId));
+                    }
+					request = new Request({type:MAP_OBJECT, request:result});
                     sender.sendToClient(personId, request);
-                    let surrAnimals = visibleObjects.surroundAnimals(characters[personId].column, characters[personId].row, viewDistance, animals);
+                    let surrAnimals = visibleObjects.surroundAnimals(characters[personId].column, characters[personId].row, characters[personId].viewDistance, animals);
                     request = new Request({type:NPC_DATA, request:surrAnimals});
                     sender.sendToClient(personId, request);
 
-				}else{
-					request = new Request({type:HUMAN_MOVE, request:characters[personId]});
-                    sender.sendToClient(personId, request)
 				}
 			}else{									
 				characters[personId].top=toTop;
 				characters[personId].left=toLeft;
-                //visibleObjects.findCharacters(characters, viewDistance, personId);
-                // request = new Request({type:HUMAN_MOVE, request:characters[personId]});
-                // sender.sendAllExcept(clients, request, personId);
+
 			}
+            let founderCharacters = visibleObjects.findCharacters(characters, characters[personId].viewDistance, personId);
+            let resultCharacter=null;
+            for (let i=0; i<founderCharacters.length; i++){
+                resultCharacter = new Array(characters[personId].id, characters[personId].column, characters[personId].row, characters[personId].left, characters[personId].top);
+                sender.sendToClient(founderCharacters[i].id, new Request({type:HUMAN_MOVE, request:resultCharacter}));
+                // resultCharacter = new Array(founderCharacters[i].id, founderCharacters[i].column, founderCharacters[i].row, founderCharacters[i].left, founderCharacters[i].top);
+                // sender.sendToClient(personId, new Request({type:HUMAN_MOVE, request:resultCharacter}));
+            }
+            // request = new Request({type:HUMAN_MOVE, request:resultMove});
+            // sender.sendByViewDistance(clients, request, personId);
 			
 		}
 			break;
@@ -114,7 +131,7 @@ function messageHandler (data, message, personId){
                     sender.sendToClient(personId, request);
 					request = new Request({type:GATHER, request:cellsMap[toColumn][toRow]});
                     sender.sendAllExcept(clients, request, personId);
-					let tmpArray = [cellsMap[toColumn][toRow]];
+					let tmpArray = [new Array(cellsMap[toColumn][toRow].column, cellsMap[toColumn][toRow].row, cellsMap[toColumn][toRow].objectId)];
 					request = new Request({type:MAP_OBJECT, request:tmpArray});
 					sender.sendToAll(clients, request);
 				}else{
@@ -128,9 +145,9 @@ function messageHandler (data, message, personId){
 		}
         	break;
 		case HUMAN_UPDATE:{
-			request = new Request({type:HUMAN_MOVE, request:characters[personId]});
+			let result = new Array(personId, characters[personId].column, characters[personId].row, characters[personId].left, characters[personId].top);
+            request = new Request({type:HUMAN_MOVE, request:result});
             sender.sendToClient(personId, request);
-			
 		}
 		break;
 		case INVENTORY_CHANGE:{
@@ -175,7 +192,7 @@ function messageHandler (data, message, personId){
             row = json.request[1][1];
             let inventoryId = stacks[stackId].inventoryId;
             if (stacks[stackId].item===null||(characters[personId].inventoryId!==inventoryId&&characters[personId].hotBarId!==inventoryId)) break;
-            if (stacks[stackId].item.typeName!=='buildingPart') break;
+            if (stacks[stackId].item.typeName!=='BUILDING_PART') break;
 			let typeId = stacks[stackId].item.typeId;
             if (!cellUtils.isBuilderCell(cellsMap, column, row)) break;
             if (stacks[stackId].size>0)stacks[stackId].size--;
@@ -194,7 +211,7 @@ function messageHandler (data, message, personId){
             // }
             cellsMap[column][row].movable = false;
             cellsMap[column][row].objectId = typeId;
-            let result = [cellsMap[column][row]];
+            let result = [new Array(cellsMap[toColumn][toRow].column, cellsMap[toColumn][toRow].row, cellsMap[toColumn][toRow].objectId)];
             request = new Request({type:MAP_OBJECT, request:result});
             sender.sendByViewDistance(characters, request, column, row);
 
@@ -210,7 +227,7 @@ function messageHandler (data, message, personId){
             let firedAmmos = data.firedAmmos;
 			if (characters[personId].activeHotBarCell===null||stacks[characters[personId].activeHotBarCell].item===null)break;
 			let stackId = characters[personId].activeHotBarCell;
-			if (stacks[stackId].item.typeName!=='weapon')break;
+			if (stacks[stackId].item.typeName!=='WEAPON')break;
 
 
 			if (stacks[stackId].item.isReloaded&&stacks[stackId].item.currentMagazine===0){
@@ -257,7 +274,7 @@ function messageHandler (data, message, personId){
         case RELOAD_WEAPON: {
             if (characters[personId].activeHotBarCell===null||stacks[characters[personId].activeHotBarCell].item===null)break;
             let stackId = characters[personId].activeHotBarCell;
-            if (stacks[stackId].item.typeName!=='weapon'||!stacks[stackId].item.isReloaded)break;
+            if (stacks[stackId].item.typeName!=='WEAPON'||!stacks[stackId].item.isReloaded)break;
             let quantity = stacks[stackId].item.magazineSize - stacks[stackId].item.currentMagazine;
             if (quantity===0) break;
             let findAmmo = stackUtils.findItems(stacks[stackId].item.ammoId, inventories, characters[personId], stacks);
@@ -273,6 +290,10 @@ function messageHandler (data, message, personId){
             if (stacks[stackId].inventoryId!==characters[personId].hotBarId)break;
             characters[personId].activeHotBarCell = stackId;
 
+        }
+            break;
+        case SYSTEM_MESSAGE: {
+            console.log(json.request);
         }
             break;
 	}
