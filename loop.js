@@ -1,20 +1,68 @@
 const Request = require('./network/Request');
 const sender = require('./network/sender');
 const collision = require('./utils/collision');
+const getTime = require('./utils/getTime');
 const visibleObjects = require('./gameData/visibleObjects');
+const cellUtils = require('./gameData/map/cellUtils');
 const {
     HIT,
     NPC_MOVE,
     NPC_DATA,
-    SHOT
+    SHOT,
+    HUMAN_MOVE,
+    MAP_OBJECT
 } = require('./constants').messageTypes;
 
 function mainLoop (data){
 	setInterval(function(){
+        moveCharacters(data);
         fire(data);
         moveNpc(data);
 	}, 17);
 }
+function moveCharacters(data) {
+    let request;
+    for (let key in data.characters){
+        if (data.characters[key].direction!==-1){
+            let column = data.characters[key].column;
+            let row = data.characters[key].row;
+            let changedCell = data.characters[key].getNewCoord();
+            let toColumn = Math.floor(changedCell[0]/64);
+            let toRow = Math.floor(changedCell[1]/64);
+            if (column!==toColumn||row!==toRow){
+                if (cellUtils.isMovableCell(data.getMap(), row, toRow, column, toColumn)){
+                    let visible = visibleObjects.surroundObjects(data.characters[key].column, data.characters[key].row, data.characters[key].viewDistance, 48*3, 48*3, data.getMap());
+                    let result = [];
+                    for(let i=0; i<visible.length; i++){
+                        result.push(new Array(visible[i].column, visible[i].row, visible[i].objectId));
+                    }
+                    request = new Request({type:MAP_OBJECT, request:result});
+                    sender.sendToClient(key, request);
+                    let surrAnimals = visibleObjects.surroundAnimals(data.characters[key].column, data.characters[key].row, data.characters[key].viewDistance, data.animals);
+                    request = new Request({type:NPC_DATA, request:surrAnimals});
+                    sender.sendToClient(key, request);
+
+                    let founderCharacters = visibleObjects.findCharacters(data.characters, data.characters[key].viewDistance, key);
+                    let resultChatacter=null;
+                    for (let i=0; i<founderCharacters.length; i++){
+                        resultChatacter = new Array(founderCharacters[i].id, founderCharacters[i].column, founderCharacters[i].row, founderCharacters[i].left, founderCharacters[i].top, founderCharacters[i].direction);
+                        sender.sendToClient(key, new Request({type:HUMAN_MOVE, request:resultChatacter}));
+                        resultChatacter = new Array(data.characters[key].id, data.characters[key].column, data.characters[key].row, data.characters[key].left, data.characters[key].top, data.characters[key].direction);
+                        sender.sendToClient(founderCharacters[i].id, new Request({type:HUMAN_MOVE, request:resultChatacter}));
+                    }
+
+                }else{
+                    data.characters[key].direction = -1;
+                }
+            }
+            data.characters[key].lastTick = getTime.getTimeInMs();
+            data.characters[key].move();
+            // sender.sendToClient(key, new Request({type:HUMAN_MOVE, request:new Array(0, data.characters[key].left, data.characters[key].top)}));
+        }
+
+    }
+}
+
 function moveNpc(data) {
     let result = [];
     for (let key in data.animals){
@@ -38,8 +86,6 @@ function moveNpc(data) {
             data.animals[key].initMovement();
 
         }
-        let fromLeft = data.animals[key].location.left;
-        let fromTop = data.animals[key].location.top;
         let fromColumn = data.animals[key].location.column;
         let fromRow = data.animals[key].location.row;
         let changeCell = data.animals[key].move();

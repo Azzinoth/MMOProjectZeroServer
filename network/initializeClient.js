@@ -48,18 +48,16 @@ function initializeClient(data, characterId, inventoryId, hotBarId, armorInvento
     clients[characterId].send(JSON.stringify(new Request({type:INVENTORY_DATA, request:data.inventories[inventoryId]})));
     clients[characterId].send(JSON.stringify(new Request({type:HOT_BAR_DATA, request:data.inventories[hotBarId]})));
 
-    let founderCharacters = visibleObjects.findCharacters(characters, characters[characterId].viewDistance, characterId);
-    let resultChatacter=null;
-    for (let i=0; i<founderCharacters.length; i++){
-        resultChatacter = new Array(founderCharacters[i].id, founderCharacters[i].column, founderCharacters[i].row, founderCharacters[i].left, founderCharacters[i].top);
-        clients[characterId].send(JSON.stringify(new Request({type:HUMAN_MOVE, request:resultChatacter})));
-        resultChatacter = new Array(characters[characterId].id, characters[characterId].column, characters[characterId].row, characters[characterId].left, characters[characterId].top);
-        clients[characterId].send(JSON.stringify(new Request({type:HUMAN_MOVE, request:resultChatacter})));
-    }
+    // let founderCharacters = visibleObjects.findCharacters(characters, characters[characterId].viewDistance, characterId);
+    // let resultChatacter=null;
+    // for (let i=0; i<founderCharacters.length; i++){
+    //     resultChatacter = new Array(founderCharacters[i].id, founderCharacters[i].column, founderCharacters[i].row, founderCharacters[i].left, founderCharacters[i].top);
+    //     clients[characterId].send(JSON.stringify(new Request({type:HUMAN_MOVE, request:resultChatacter})));
+    //     resultChatacter = new Array(characters[characterId].id, characters[characterId].column, characters[characterId].row, characters[characterId].left, characters[characterId].top);
+    //     clients[characterId].send(JSON.stringify(new Request({type:HUMAN_MOVE, request:resultChatacter})));
+    // }
     clients[characterId].send(JSON.stringify(new Request({type:ITEMS_LIST, request:items})));
     clients[characterId].send(JSON.stringify(new Request({type:CRAFT, request:recipeList})));
-
-   // let myInventoryId = characters[characterId].inventoryId;
 
 	for (let key in clients) {
 		if (+key!==characterId){
@@ -68,10 +66,10 @@ function initializeClient(data, characterId, inventoryId, hotBarId, armorInvento
             let founderCharacters2 = visibleObjects.findCharacters(characters, characters[key].viewDistance, key);
             let resultChatacter2=null;
             for (let i=0; i<founderCharacters2.length; i++){
-                resultChatacter2 = new Array(founderCharacters2[i].id, founderCharacters2[i].column, founderCharacters2[i].row, founderCharacters2[i].left, founderCharacters2[i].top);
+                resultChatacter2 = new Array(founderCharacters2[i].id, founderCharacters2[i].column, founderCharacters2[i].row, founderCharacters2[i].left, founderCharacters2[i].top, founderCharacters2[i].direction);
                 clients[characterId].send(JSON.stringify(new Request({type:HUMAN_MOVE, request:resultChatacter2})));
-                resultChatacter2 = new Array(characters[characterId].id, characters[characterId].column, characters[characterId].row, characters[characterId].left, characters[characterId].top);
-                clients[characterId].send(JSON.stringify(new Request({type:HUMAN_MOVE, request:resultChatacter2})));
+                resultChatacter2 = new Array(characters[characterId].id, characters[characterId].column, characters[characterId].row, characters[characterId].left, characters[characterId].top, characters[characterId].direction);
+                clients[founderCharacters2[i].id].send(JSON.stringify(new Request({type:HUMAN_MOVE, request:resultChatacter2})));
             }
 		}
 	}

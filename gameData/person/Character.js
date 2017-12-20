@@ -1,3 +1,4 @@
+const getTime = require('../../utils/getTime');
 function Character (id, inventoryId, armorInventoryId, hotBarId, activeHotBarCell, isPlayer, column, row, top, left, level, health, strength, viewDistance){
 		this.id = id;
 		this.inventoryId = inventoryId;
@@ -16,6 +17,12 @@ function Character (id, inventoryId, armorInventoryId, hotBarId, activeHotBarCel
 		this.isAlive = true;
 		this.viewDistance = viewDistance;
 		this.craftRecipesId = [];
+		this.direction = -1;
+    	this.normalSpeed = 64;
+    	this.currentSpeed = 64;
+		this.currentTick = null;
+    	this.lastTick = null;
+    	this.tmpDistanceWalked = 0;
 }
 let characterPtoto={
     id : null,
@@ -31,5 +38,120 @@ let characterPtoto={
 	strength : null,
 	isAlive : true,
 	craftRecipesId : []
+}
+Character.prototype.getNewCoord = function(){
+	this.currentTick = getTime.getTimeInMs();
+	this.tmpDistanceWalked += this.currentSpeed * (this.currentTick - this.lastTick) / 1000;
+
+	let newLeft = this.left;
+	let newTop = this.top;
+
+	if (this.tmpDistanceWalked > 1) {
+        switch(this.direction) {
+		case 0:
+			newTop--;
+			// this.row = Math.floor(this.top / 64);
+			//this.direction = 1;
+			break;
+		case 1:
+			newTop--;
+			newLeft++;
+			// this.column = Math.floor(this.left / 64);
+			// this.row = Math.floor(this.top / 64);
+			//this.direction = 7;
+			break;
+		case 2:
+			newLeft++;
+			// this.column = Math.floor(this.left / 64);
+			//this.direction = 2;
+			break;
+		case 3:
+			newTop++;
+			newLeft++;
+			// this.column = Math.floor(this.left / 64);
+			// this.row = Math.floor(this.top / 64);
+			//this.direction = 6;
+			break;
+		case 4:
+			newTop++;
+			// this.row = Math.floor(this.top / 64);
+			//this.direction = 0;
+			break;
+		case 5:
+			newTop++;
+			newLeft--;
+			// this.column = Math.floor(this.left / 64);
+			// this.row = Math.floor(this.top / 64);
+			//this.direction = 4;
+			break;
+		case 6:
+			newLeft--;
+			// this.column = Math.floor(this.left / 64);
+			//this.direction = 3;
+			break;
+		case 7:
+			newTop--;
+			newLeft--;
+			// this.column = Math.floor(this.left / 64);
+			// this.row = Math.floor(this.top / 64);
+			//this.direction = 5;
+			break;
+        }
+	}
+
+	return new Array(newLeft, newTop);
+
+}
+Character.prototype.move = function(){
+    switch(this.direction) {
+        case 0:
+            this.top--;
+            this.row = Math.floor(this.top / 64);
+            //this.direction = 1;
+            break;
+        case 1:
+            this.top--;
+            this.left++;
+            this.column = Math.floor(this.left / 64);
+            this.row = Math.floor(this.top / 64);
+            //this.direction = 7;
+            break;
+        case 2:
+            this.left++;
+            this.column = Math.floor(this.left / 64);
+            //this.direction = 2;
+            break;
+        case 3:
+            this.top++;
+            this.left++;
+            this.column = Math.floor(this.left / 64);
+            this.row = Math.floor(this.top / 64);
+            //this.direction = 6;
+            break;
+        case 4:
+            this.top++;
+            this.row = Math.floor(this.top / 64);
+            //this.direction = 0;
+            break;
+        case 5:
+            this.top++;
+            this.left--;
+            this.column = Math.floor(this.left / 64);
+            this.row = Math.floor(this.top / 64);
+            //this.direction = 4;
+            break;
+        case 6:
+            this.left--;
+            this.column = Math.floor(this.left / 64);
+            // this.direction = 3;
+            break;
+        case 7:
+            this.top--;
+            this.left--;
+            this.column = Math.floor(this.left / 64);
+            this.row = Math.floor(this.top / 64);
+            //this.direction = 5;
+            break;
+    }
 }
 module.exports = Character;

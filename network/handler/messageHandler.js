@@ -50,59 +50,10 @@ function messageHandler (data, message, personId){
 	switch (json.type){
 
 		case HUMAN_MOVE:{
-            console.log(count1);
-			column = characters[personId].column;
-			row = characters[personId].row;
-            let toLeft = json.request[0];
-			let toTop = json.request[1];
-            //let resultMove = new Array(personId, characters[personId].column, characters[personId].row, characters[personId].left, characters[personId].top);
-
-			let toRow = Math.floor(toTop / 64);
-			let toColumn = Math.floor(toLeft / 64);
-			if (toColumn!==column||toRow!==row){
-	
-				if (cellUtils.isMovableCell(cellsMap, row, toRow, column, toColumn)){
-					
-					characters[personId].top=toTop;
-					characters[personId].left=toLeft;
-					characters[personId].column=toColumn;
-					characters[personId].row=toRow;
-                    let founderCharacters = visibleObjects.findCharacters(characters, characters[personId].viewDistance, personId);
-                    let resultCharacter=null;
-                    for (let i=0; i<founderCharacters.length; i++){
-                        resultCharacter = new Array(founderCharacters[i].id, founderCharacters[i].column, founderCharacters[i].row, founderCharacters[i].left, founderCharacters[i].top);
-                        sender.sendToClient(personId, new Request({type:HUMAN_MOVE, request:resultCharacter}));
-                        resultCharacter = new Array(characters[personId].id, characters[personId].column, characters[personId].row, characters[personId].left, characters[personId].top);
-                        sender.sendToClient(founderCharacters[i].id, new Request({type:HUMAN_MOVE, request:resultCharacter}));
-                    }
-					let visible = visibleObjects.surroundObjects(characters[personId].column, characters[personId].row, characters[personId].viewDistance, width, height, cellsMap);
-					let result = [];
-					for(let i=0; i<visible.length; i++){
-                        result.push(new Array(visible[i].column, visible[i].row, visible[i].objectId));
-                    }
-					request = new Request({type:MAP_OBJECT, request:result});
-                    sender.sendToClient(personId, request);
-                    let surrAnimals = visibleObjects.surroundAnimals(characters[personId].column, characters[personId].row, characters[personId].viewDistance, animals);
-                    request = new Request({type:NPC_DATA, request:surrAnimals});
-                    sender.sendToClient(personId, request);
-
-				}
-			}else{									
-				characters[personId].top=toTop;
-				characters[personId].left=toLeft;
-
-			}
-            let founderCharacters = visibleObjects.findCharacters(characters, characters[personId].viewDistance, personId);
-            let resultCharacter=null;
-            for (let i=0; i<founderCharacters.length; i++){
-                resultCharacter = new Array(characters[personId].id, characters[personId].column, characters[personId].row, characters[personId].left, characters[personId].top);
-                sender.sendToClient(founderCharacters[i].id, new Request({type:HUMAN_MOVE, request:resultCharacter}));
-                // resultCharacter = new Array(founderCharacters[i].id, founderCharacters[i].column, founderCharacters[i].row, founderCharacters[i].left, founderCharacters[i].top);
-                // sender.sendToClient(personId, new Request({type:HUMAN_MOVE, request:resultCharacter}));
-            }
-            // request = new Request({type:HUMAN_MOVE, request:resultMove});
-            // sender.sendByViewDistance(clients, request, personId);
-			
+            let direction = json.request;
+            characters[personId].direction=direction;
+            request = new Request({type:HUMAN_MOVE, request:new Array(personId, direction)});
+            sender.sendByViewDistanceExcept(characters, request, characters[personId].column, characters[personId].row, personId);
 		}
 			break;
         case GATHER:{
@@ -127,13 +78,14 @@ function messageHandler (data, message, personId){
                     request = new Request({type:INVENTORY_CHANGE, request:reqStacks});
                     sender.sendToClient(personId, request);
 					
-					request = new Request({type:GATHER, request:true});
-                    sender.sendToClient(personId, request);
-					request = new Request({type:GATHER, request:cellsMap[toColumn][toRow]});
-                    sender.sendAllExcept(clients, request, personId);
+                    // request = new Request({type:GATHER, request:true});
+                    // sender.sendToClient(personId, request);
+                    // let res = new Array(cellsMap[toColumn][toRow].column, cellsMap[toColumn][toRow].row, cellsMap[toColumn][toRow].objectId)
+                    // request = new Request({type:GATHER, request:res});
+                    // sender.sendByViewDistance(characters, request, toColumn, toRow);
 					let tmpArray = [new Array(cellsMap[toColumn][toRow].column, cellsMap[toColumn][toRow].row, cellsMap[toColumn][toRow].objectId)];
 					request = new Request({type:MAP_OBJECT, request:tmpArray});
-					sender.sendToAll(clients, request);
+					sender.sendByViewDistance(characters, request, toColumn, toRow);
 				}else{
 					request = new Request({type:SYSTEM_MESSAGE, request:'Full inventory!'});
                     sender.sendToClient(personId, request);
@@ -145,9 +97,17 @@ function messageHandler (data, message, personId){
 		}
         	break;
 		case HUMAN_UPDATE:{
-			let result = new Array(personId, characters[personId].column, characters[personId].row, characters[personId].left, characters[personId].top);
-            request = new Request({type:HUMAN_MOVE, request:result});
+            let founderCharacters = visibleObjects.findCharacters(characters, characters[personId].viewDistance, personId);
+            let resultCharacter=null;
+            for (let i=0; i<founderCharacters.length; i++){
+                resultCharacter = new Array(founderCharacters[i].id, founderCharacters[i].column, founderCharacters[i].row, founderCharacters[i].left, founderCharacters[i].top, founderCharacters[i].direction);
+                sender.sendToClient(personId, new Request({type:HUMAN_MOVE, request:resultCharacter}));
+            }
+            request = new Request({type:HUMAN_MOVE, request:new Array(characters[personId].id, characters[personId].column, characters[personId].row, characters[personId].left, characters[personId].top, characters[personId].direction)});
             sender.sendToClient(personId, request);
+            // let result = new Array(personId, characters[personId].column, characters[personId].row, characters[personId].left, characters[personId].top);
+            // request = new Request({type:HUMAN_MOVE, request:result});
+            // sender.sendToClient(personId, request);
 		}
 		break;
 		case INVENTORY_CHANGE:{
@@ -249,7 +209,7 @@ function messageHandler (data, message, personId){
             arr[2]=firedAmmo.initialY;
             arr[3]=firedAmmo.finalX;
             arr[4]=firedAmmo.finalY;
-            sender.sendToAll(clients, new Request({type:SHOT, request:arr}));
+            sender.sendToAll(new Request({type:SHOT, request:arr}));
             break;
         }
         case HOT_BAR_CHANGE: {

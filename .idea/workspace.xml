@@ -6,22 +6,13 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="ed62a6e3-5542-496f-a173-1ecc7d08608d" name="Default" comment="">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/utils/distanceUtils.js" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/sql/tables/dataBase.db-journal" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/utils/nearlyDistance.js" afterPath="" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sql/tables/dataBase.db" afterPath="$PROJECT_DIR$/sql/tables/dataBase.db" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/gameData/item/itemUtils.js" afterPath="$PROJECT_DIR$/gameData/item/itemUtils.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/gameData/item/unique/weapon/range/Bow.js" afterPath="$PROJECT_DIR$/gameData/item/unique/weapon/range/Bow.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/gameData/npc/Animal.js" afterPath="$PROJECT_DIR$/gameData/npc/Animal.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/gameData/visibleObjects.js" afterPath="$PROJECT_DIR$/gameData/visibleObjects.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/gameData/person/Character.js" afterPath="$PROJECT_DIR$/gameData/person/Character.js" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/loop.js" afterPath="$PROJECT_DIR$/loop.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/main.js" afterPath="$PROJECT_DIR$/main.js" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/network/handler/messageHandler.js" afterPath="$PROJECT_DIR$/network/handler/messageHandler.js" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/network/initializeClient.js" afterPath="$PROJECT_DIR$/network/initializeClient.js" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/network/sender.js" afterPath="$PROJECT_DIR$/network/sender.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/utils/findPath.js" afterPath="$PROJECT_DIR$/utils/findPath.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/utils/index.js" afterPath="$PROJECT_DIR$/utils/index.js" />
     </list>
     <ignored path="$PROJECT_DIR$/.tmp/" />
     <ignored path="$PROJECT_DIR$/temp/" />
@@ -35,11 +26,41 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file leaf-file-name="messageHandler.js" pinned="false" current-in-tab="true">
+      <file leaf-file-name="messageHandler.js" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/network/handler/messageHandler.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-459">
-              <caret line="9" column="20" lean-forward="false" selection-start-line="9" selection-start-column="20" selection-end-line="9" selection-end-column="20" />
+            <state relative-caret-position="357">
+              <caret line="105" column="233" lean-forward="false" selection-start-line="105" selection-start-column="233" selection-end-line="105" selection-end-column="233" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="cellUtils.js" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/gameData/map/cellUtils.js">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="153">
+              <caret line="9" column="33" lean-forward="false" selection-start-line="9" selection-start-column="33" selection-end-line="9" selection-end-column="33" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="loop.js" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/loop.js">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="340">
+              <caret line="32" column="16" lean-forward="false" selection-start-line="32" selection-start-column="16" selection-end-line="32" selection-end-column="16" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="getTime.js" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/utils/getTime.js">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="51">
+              <caret line="3" column="34" lean-forward="true" selection-start-line="3" selection-start-column="34" selection-end-line="3" selection-end-column="34" />
               <folding />
             </state>
           </provider>
@@ -48,8 +69,8 @@
       <file leaf-file-name="sender.js" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/network/sender.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="334">
-              <caret line="21" column="9" lean-forward="false" selection-start-line="21" selection-start-column="9" selection-end-line="21" selection-end-column="9" />
+            <state relative-caret-position="493">
+              <caret line="29" column="53" lean-forward="false" selection-start-line="29" selection-start-column="46" selection-end-line="29" selection-end-column="53" />
               <folding />
             </state>
           </provider>
@@ -58,58 +79,18 @@
       <file leaf-file-name="Character.js" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/gameData/person/Character.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="68">
-              <caret line="4" column="21" lean-forward="false" selection-start-line="4" selection-start-column="13" selection-end-line="4" selection-end-column="21" />
+            <state relative-caret-position="323">
+              <caret line="19" column="28" lean-forward="true" selection-start-line="19" selection-start-column="28" selection-end-line="19" selection-end-column="28" />
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="Cell.js" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/gameData/map/Cell.js">
+      <file leaf-file-name="Animal.js" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/gameData/npc/Animal.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="85">
-              <caret line="5" column="21" lean-forward="false" selection-start-line="5" selection-start-column="13" selection-end-line="5" selection-end-column="21" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="Range.js" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/gameData/item/unique/weapon/Range.js">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="17">
-              <caret line="16" column="67" lean-forward="false" selection-start-line="16" selection-start-column="52" selection-end-line="16" selection-end-column="67" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="Bow.js" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/gameData/item/unique/weapon/range/Bow.js">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="34">
-              <caret line="2" column="70" lean-forward="false" selection-start-line="2" selection-start-column="70" selection-end-line="2" selection-end-column="70" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="visibleObjects.js" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/gameData/visibleObjects.js">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="0">
-              <caret line="0" column="1" lean-forward="true" selection-start-line="0" selection-start-column="1" selection-end-line="0" selection-end-column="1" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="findPath.js" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/utils/findPath.js">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="109">
-              <caret line="59" column="93" lean-forward="true" selection-start-line="59" selection-start-column="93" selection-end-line="59" selection-end-column="93" />
+            <state relative-caret-position="260">
+              <caret line="82" column="12" lean-forward="false" selection-start-line="82" selection-start-column="12" selection-end-line="83" selection-end-column="67" />
               <folding />
             </state>
           </provider>
@@ -118,8 +99,18 @@
       <file leaf-file-name="initializeClient.js" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/network/initializeClient.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1020">
-              <caret line="72" column="83" lean-forward="false" selection-start-line="72" selection-start-column="73" selection-end-line="72" selection-end-column="83" />
+            <state relative-caret-position="578">
+              <caret line="70" column="226" lean-forward="false" selection-start-line="70" selection-start-column="226" selection-end-line="70" selection-end-column="226" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="visibleObjects.js" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/gameData/visibleObjects.js">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="119">
+              <caret line="7" column="23" lean-forward="false" selection-start-line="7" selection-start-column="9" selection-end-line="7" selection-end-column="23" />
               <folding />
             </state>
           </provider>
@@ -128,8 +119,8 @@
       <file leaf-file-name="distanceUtils.js" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/utils/distanceUtils.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="0">
-              <caret line="0" column="48" lean-forward="true" selection-start-line="0" selection-start-column="48" selection-end-line="0" selection-end-column="48" />
+            <state relative-caret-position="51">
+              <caret line="3" column="22" lean-forward="true" selection-start-line="3" selection-start-column="22" selection-end-line="3" selection-end-column="22" />
               <folding />
             </state>
           </provider>
@@ -146,9 +137,6 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>surroundObjects</find>
-      <find>sen</find>
-      <find>surr</find>
       <find>console.log</find>
       <find>craf</find>
       <find>fin</find>
@@ -176,6 +164,9 @@
       <find>MAP_OB</find>
       <find>findCharacters</find>
       <find>findCha</find>
+      <find>sendToAllE</find>
+      <find>sendAllExcept</find>
+      <find>sendToAll</find>
     </findStrings>
     <dirStrings>
       <dir>E:\Learn\server-mmorpg\gameData</dir>
@@ -190,12 +181,10 @@
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
       <list>
-        <option value="$PROJECT_DIR$/gameData/map/Zone.js" />
         <option value="$PROJECT_DIR$/gameData/npc/animals/BullSheep.js" />
         <option value="$PROJECT_DIR$/gameData/npc/findPath.js" />
         <option value="$PROJECT_DIR$/gameData/npc/animals/Rabbit.js" />
         <option value="$PROJECT_DIR$/utils/index.js" />
-        <option value="$PROJECT_DIR$/gameData/person/Character.js" />
         <option value="$PROJECT_DIR$/gameData/armory/Weapon.js" />
         <option value="$PROJECT_DIR$/gameData/armory/weapon/Bow.js" />
         <option value="$PROJECT_DIR$/network/requestInventory.js" />
@@ -233,14 +222,16 @@
         <option value="$PROJECT_DIR$/utils/collision.js" />
         <option value="$PROJECT_DIR$/utils/nearlyDistance.js" />
         <option value="$PROJECT_DIR$/utils/findPath.js" />
-        <option value="$PROJECT_DIR$/network/sender.js" />
         <option value="$PROJECT_DIR$/gameData/data.js" />
         <option value="$PROJECT_DIR$/utils/distanceUtils.js" />
-        <option value="$PROJECT_DIR$/loop.js" />
         <option value="$PROJECT_DIR$/gameData/item/unique/weapon/range/Bow.js" />
         <option value="$PROJECT_DIR$/gameData/visibleObjects.js" />
+        <option value="$PROJECT_DIR$/network/sender.js" />
+        <option value="$PROJECT_DIR$/utils/getTime.js" />
+        <option value="$PROJECT_DIR$/gameData/person/Character.js" />
         <option value="$PROJECT_DIR$/network/initializeClient.js" />
         <option value="$PROJECT_DIR$/network/handler/messageHandler.js" />
+        <option value="$PROJECT_DIR$/loop.js" />
       </list>
     </option>
   </component>
@@ -282,6 +273,7 @@
     </navigator>
     <panes>
       <pane id="Scratches" />
+      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <expand>
@@ -349,7 +341,6 @@
           <select />
         </subPane>
       </pane>
-      <pane id="Scope" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -424,32 +415,32 @@
       <workItem from="1513415697532" duration="27581000" />
       <workItem from="1513500348450" duration="38331000" />
       <workItem from="1513591174623" duration="19576000" />
-      <workItem from="1513669859343" duration="34082000" />
+      <workItem from="1513669859343" duration="34460000" />
+      <workItem from="1513760552142" duration="23928000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="486823000" />
+    <option name="totallyTimeSpent" value="511129000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-8" y="-8" width="1936" height="1056" extended-state="6" />
-    <editor active="true" />
     <layout>
       <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.18071654" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
-      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32875264" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="9" side_tool="false" content_ui="tabs" />
       <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.35652173" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
-      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.25869566" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25869566" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
       <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
+      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32875264" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
     </layout>
   </component>
@@ -461,7 +452,7 @@
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
-      <option name="time" value="684" />
+      <option name="time" value="702" />
     </breakpoint-manager>
     <watches-manager>
       <configuration name="NodeJSConfigurationType">
@@ -470,14 +461,6 @@
     </watches-manager>
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/constants/index.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/gameData/shoot/utils.js" />
     <entry file="file://$PROJECT_DIR$/gameData/armory/Ammo.js" />
     <entry file="file://$PROJECT_DIR$/gameData/map/index.js">
       <provider selected="true" editor-type-id="text-editor">
@@ -659,7 +642,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="238">
           <caret line="14" column="3" lean-forward="false" selection-start-line="14" selection-start-column="3" selection-end-line="14" selection-end-column="3" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -667,7 +649,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="544">
           <caret line="32" column="0" lean-forward="false" selection-start-line="32" selection-start-column="0" selection-end-line="32" selection-end-column="0" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -683,7 +664,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="102">
           <caret line="6" column="15" lean-forward="true" selection-start-line="6" selection-start-column="15" selection-end-line="6" selection-end-column="15" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -699,7 +679,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="102">
           <caret line="6" column="22" lean-forward="true" selection-start-line="6" selection-start-column="22" selection-end-line="6" selection-end-column="22" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -707,7 +686,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="204">
           <caret line="15" column="15" lean-forward="false" selection-start-line="15" selection-start-column="9" selection-end-line="15" selection-end-column="15" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -727,22 +705,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/gameData/npc/Animal.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="260">
-          <caret line="73" column="0" lean-forward="true" selection-start-line="73" selection-start-column="0" selection-end-line="73" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/loop.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="314">
-          <caret line="86" column="173" lean-forward="false" selection-start-line="86" selection-start-column="173" selection-end-line="86" selection-end-column="173" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/gameData/item/unique/weapon/range/Bow.js">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="34">
@@ -753,7 +715,7 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/gameData/item/unique/weapon/Range.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="17">
+        <state relative-caret-position="272">
           <caret line="16" column="67" lean-forward="false" selection-start-line="16" selection-start-column="52" selection-end-line="16" selection-end-column="67" />
           <folding />
         </state>
@@ -769,56 +731,88 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/utils/findPath.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="109">
-          <caret line="59" column="93" lean-forward="true" selection-start-line="59" selection-start-column="93" selection-end-line="59" selection-end-column="93" />
+        <state relative-caret-position="1003">
+          <caret line="59" column="93" lean-forward="false" selection-start-line="59" selection-start-column="93" selection-end-line="59" selection-end-column="93" />
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/utils/distanceUtils.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="0" column="48" lean-forward="true" selection-start-line="0" selection-start-column="48" selection-end-line="0" selection-end-column="48" />
+        <state relative-caret-position="51">
+          <caret line="3" column="22" lean-forward="true" selection-start-line="3" selection-start-column="22" selection-end-line="3" selection-end-column="22" />
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/gameData/person/Character.js">
+    <entry file="file://$PROJECT_DIR$/gameData/npc/Animal.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="68">
-          <caret line="4" column="21" lean-forward="false" selection-start-line="4" selection-start-column="13" selection-end-line="4" selection-end-column="21" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/network/initializeClient.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1020">
-          <caret line="72" column="83" lean-forward="false" selection-start-line="72" selection-start-column="73" selection-end-line="72" selection-end-column="83" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/network/sender.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="334">
-          <caret line="21" column="9" lean-forward="false" selection-start-line="21" selection-start-column="9" selection-end-line="21" selection-end-column="9" />
+        <state relative-caret-position="260">
+          <caret line="82" column="12" lean-forward="false" selection-start-line="82" selection-start-column="12" selection-end-line="83" selection-end-column="67" />
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/gameData/visibleObjects.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="0" column="1" lean-forward="true" selection-start-line="0" selection-start-column="1" selection-end-line="0" selection-end-column="1" />
+        <state relative-caret-position="119">
+          <caret line="7" column="23" lean-forward="false" selection-start-line="7" selection-start-column="9" selection-end-line="7" selection-end-column="23" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/gameData/map/cellUtils.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="153">
+          <caret line="9" column="33" lean-forward="false" selection-start-line="9" selection-start-column="33" selection-end-line="9" selection-end-column="33" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/network/sender.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="493">
+          <caret line="29" column="53" lean-forward="false" selection-start-line="29" selection-start-column="46" selection-end-line="29" selection-end-column="53" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/gameData/person/Character.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="323">
+          <caret line="19" column="28" lean-forward="true" selection-start-line="19" selection-start-column="28" selection-end-line="19" selection-end-column="28" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/utils/getTime.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="51">
+          <caret line="3" column="34" lean-forward="true" selection-start-line="3" selection-start-column="34" selection-end-line="3" selection-end-column="34" />
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/network/handler/messageHandler.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-459">
-          <caret line="9" column="20" lean-forward="false" selection-start-line="9" selection-start-column="20" selection-end-line="9" selection-end-column="20" />
+        <state relative-caret-position="357">
+          <caret line="105" column="233" lean-forward="false" selection-start-line="105" selection-start-column="233" selection-end-line="105" selection-end-column="233" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/network/initializeClient.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="578">
+          <caret line="70" column="226" lean-forward="false" selection-start-line="70" selection-start-column="226" selection-end-line="70" selection-end-column="226" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/loop.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="340">
+          <caret line="32" column="16" lean-forward="false" selection-start-line="32" selection-start-column="16" selection-end-line="32" selection-end-column="16" />
           <folding />
         </state>
       </provider>
