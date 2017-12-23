@@ -41,7 +41,8 @@ let characterPtoto={
 }
 Character.prototype.getNewCoord = function(){
 	this.currentTick = getTime.getTimeInMs();
-	this.tmpDistanceWalked += this.currentSpeed * (this.currentTick - this.lastTick) / 1000;
+    let time = (this.currentTick - this.lastTick) / 1000;
+    this.tmpDistanceWalked += this.currentSpeed * time;
 
 	let newLeft = this.left;
 	let newTop = this.top;
@@ -49,109 +50,103 @@ Character.prototype.getNewCoord = function(){
 	if (this.tmpDistanceWalked > 1) {
         switch(this.direction) {
 		case 0:
-			newTop--;
+			newTop-=this.tmpDistanceWalked;
 			// this.row = Math.floor(this.top / 64);
 			//this.direction = 1;
 			break;
 		case 1:
-			newTop--;
-			newLeft++;
+			newTop-=this.tmpDistanceWalked;
+			newLeft+=this.tmpDistanceWalked;
 			// this.column = Math.floor(this.left / 64);
 			// this.row = Math.floor(this.top / 64);
 			//this.direction = 7;
 			break;
 		case 2:
-			newLeft++;
+			newLeft+=this.tmpDistanceWalked;
 			// this.column = Math.floor(this.left / 64);
 			//this.direction = 2;
 			break;
 		case 3:
-			newTop++;
-			newLeft++;
-			// this.column = Math.floor(this.left / 64);
-			// this.row = Math.floor(this.top / 64);
-			//this.direction = 6;
+			newTop+=this.tmpDistanceWalked;
+			newLeft+=this.tmpDistanceWalked;
 			break;
 		case 4:
-			newTop++;
-			// this.row = Math.floor(this.top / 64);
-			//this.direction = 0;
+			newTop+=this.tmpDistanceWalked;
 			break;
 		case 5:
-			newTop++;
-			newLeft--;
-			// this.column = Math.floor(this.left / 64);
-			// this.row = Math.floor(this.top / 64);
-			//this.direction = 4;
+			newTop+=this.tmpDistanceWalked;
+			newLeft-=this.tmpDistanceWalked;
 			break;
 		case 6:
-			newLeft--;
-			// this.column = Math.floor(this.left / 64);
-			//this.direction = 3;
+			newLeft-=this.tmpDistanceWalked;
+
 			break;
 		case 7:
-			newTop--;
-			newLeft--;
-			// this.column = Math.floor(this.left / 64);
-			// this.row = Math.floor(this.top / 64);
-			//this.direction = 5;
+			newTop-=this.tmpDistanceWalked;
+			newLeft-=this.tmpDistanceWalked;
 			break;
         }
+        this.tmpDistanceWalked = 0;
+        this.lastTick = getTime.getTimeInMs();
 	}
 
 	return new Array(newLeft, newTop);
 
 }
-Character.prototype.move = function(){
-    switch(this.direction) {
-        case 0:
-            this.top--;
-            this.row = Math.floor(this.top / 64);
-            //this.direction = 1;
-            break;
-        case 1:
-            this.top--;
-            this.left++;
-            this.column = Math.floor(this.left / 64);
-            this.row = Math.floor(this.top / 64);
-            //this.direction = 7;
-            break;
-        case 2:
-            this.left++;
-            this.column = Math.floor(this.left / 64);
-            //this.direction = 2;
-            break;
-        case 3:
-            this.top++;
-            this.left++;
-            this.column = Math.floor(this.left / 64);
-            this.row = Math.floor(this.top / 64);
-            //this.direction = 6;
-            break;
-        case 4:
-            this.top++;
-            this.row = Math.floor(this.top / 64);
-            //this.direction = 0;
-            break;
-        case 5:
-            this.top++;
-            this.left--;
-            this.column = Math.floor(this.left / 64);
-            this.row = Math.floor(this.top / 64);
-            //this.direction = 4;
-            break;
-        case 6:
-            this.left--;
-            this.column = Math.floor(this.left / 64);
-            // this.direction = 3;
-            break;
-        case 7:
-            this.top--;
-            this.left--;
-            this.column = Math.floor(this.left / 64);
-            this.row = Math.floor(this.top / 64);
-            //this.direction = 5;
-            break;
-    }
+Character.prototype.move = function(left, top, column, row){
+	this.left = left;
+	this.top = top;
+	this.column = column;
+    this.row = row;
+    // switch(this.direction) {
+    //     case 0:
+    //         this.top--;
+    //         this.row = Math.floor(this.top / 64);
+    //         //this.direction = 1;
+    //         break;
+    //     case 1:
+    //         this.top--;
+    //         this.left++;
+    //         this.column = Math.floor(this.left / 64);
+    //         this.row = Math.floor(this.top / 64);
+    //         //this.direction = 7;
+    //         break;
+    //     case 2:
+    //         this.left++;
+    //         this.column = Math.floor(this.left / 64);
+    //         //this.direction = 2;
+    //         break;
+    //     case 3:
+    //         this.top++;
+    //         this.left++;
+    //         this.column = Math.floor(this.left / 64);
+    //         this.row = Math.floor(this.top / 64);
+    //         //this.direction = 6;
+    //         break;
+    //     case 4:
+    //         this.top++;
+    //         this.row = Math.floor(this.top / 64);
+    //         //this.direction = 0;
+    //         break;
+    //     case 5:
+    //         this.top++;
+    //         this.left--;
+    //         this.column = Math.floor(this.left / 64);
+    //         this.row = Math.floor(this.top / 64);
+    //         //this.direction = 4;
+    //         break;
+    //     case 6:
+    //         this.left--;
+    //         this.column = Math.floor(this.left / 64);
+    //         // this.direction = 3;
+    //         break;
+    //     case 7:
+    //         this.top--;
+    //         this.left--;
+    //         this.column = Math.floor(this.left / 64);
+    //         this.row = Math.floor(this.top / 64);
+    //         //this.direction = 5;
+    //         break;
+    // }
 }
 module.exports = Character;

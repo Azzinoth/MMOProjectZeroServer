@@ -6,6 +6,7 @@ const Weapon = require('../../gameData/item/unique/Weapon');
 const cellUtils = require('../../gameData/map/cellUtils');
 const sender = require('../sender');
 const collision = require('../../utils/collision');
+const getTime = require('../../utils/getTime');
 const width = 48*3;
 const height = 48*3;
 const {
@@ -27,7 +28,8 @@ const {
 	HOT_BAR_CHANGE,
     HOT_BAR_CELL_ACTIVATE,
     NPC_DATA,
-    RELOAD_WEAPON
+    RELOAD_WEAPON,
+    PING
 } = require('../../constants').messageTypes;
 
 function messageHandler (data, message, personId){
@@ -45,15 +47,24 @@ function messageHandler (data, message, personId){
 	let column;
 	let row;
 	let request;
-    if (json.type!==HUMAN_UPDATE&&json.type!==HUMAN_MOVE) console.log(message);
+    if (json.type!==HUMAN_UPDATE&&json.type!==HUMAN_MOVE&&json.type!==PING) console.log(message);
 
 	switch (json.type){
 
 		case HUMAN_MOVE:{
             let direction = json.request;
-            characters[personId].direction=direction;
+		   if (characters[personId].direction===-1)
+		        characters[personId].lastTick = getTime.getTimeInMs();
+
             request = new Request({type:HUMAN_MOVE, request:new Array(personId, direction)});
-            sender.sendByViewDistanceExcept(characters, request, characters[personId].column, characters[personId].row, personId);
+            if(direction!==characters[personId].direction) {
+                characters[personId].direction=direction;
+                sender.sendByViewDistanceExcept(characters, request, characters[personId].column, characters[personId].row, personId);
+                characters[personId].tmpDistanceWalked = 0;
+                request = new Request({type:HUMAN_MOVE, request:new Array(personId, characters[personId].column, characters[personId].row, characters[personId].left, characters[personId].top, characters[personId].direction)});
+                sender.sendToClient(personId, request);
+            }
+
 		}
 			break;
         case GATHER:{
@@ -210,8 +221,9 @@ function messageHandler (data, message, personId){
             arr[3]=firedAmmo.finalX;
             arr[4]=firedAmmo.finalY;
             sender.sendToAll(new Request({type:SHOT, request:arr}));
-            break;
+
         }
+            break;
         case HOT_BAR_CHANGE: {
             let indexFrom = json.request[0];
             let indexTo = json.request[1];
@@ -249,11 +261,15 @@ function messageHandler (data, message, personId){
             let stackId = json.request;
             if (stacks[stackId].inventoryId!==characters[personId].hotBarId)break;
             characters[personId].activeHotBarCell = stackId;
-
         }
             break;
         case SYSTEM_MESSAGE: {
             console.log(json.request);
+
+        }
+            break;
+        case PING: {
+            sender.sendToClient(personId, new Request({type:PING, request:null}));
         }
             break;
 	}

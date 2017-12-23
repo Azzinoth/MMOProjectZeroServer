@@ -12,12 +12,24 @@ const {
     HUMAN_MOVE,
     MAP_OBJECT
 } = require('./constants').messageTypes;
-
+let startTime;
+let finishTime;
+let frameTime;
 function mainLoop (data){
 	setInterval(function(){
+        startTime = getTime.getTimeInMs();
         moveCharacters(data);
         fire(data);
         moveNpc(data);
+        // for (let i=0; i<7000; i++){
+        //     moveNpc(data);
+        // }
+        finishTime= getTime.getTimeInMs();
+        frameTime=finishTime-startTime;
+
+        if (frameTime>20){
+            console.log('Frame: '+frameTime);
+        }
 	}, 17);
 }
 function moveCharacters(data) {
@@ -51,12 +63,10 @@ function moveCharacters(data) {
                         sender.sendToClient(founderCharacters[i].id, new Request({type:HUMAN_MOVE, request:resultChatacter}));
                     }
 
-                }else{
-                    data.characters[key].direction = -1;
-                }
+                }else continue;
             }
-            data.characters[key].lastTick = getTime.getTimeInMs();
-            data.characters[key].move();
+            //data.characters[key].lastTick = getTime.getTimeInMs();
+            data.characters[key].move(changedCell[0], changedCell[1], toColumn, toRow);
             // sender.sendToClient(key, new Request({type:HUMAN_MOVE, request:new Array(0, data.characters[key].left, data.characters[key].top)}));
         }
 
