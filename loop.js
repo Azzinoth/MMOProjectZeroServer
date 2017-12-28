@@ -124,9 +124,12 @@ function fire(data){
             firedAmmos[i].timePassed += firedAmmos[i].currentTick - firedAmmos[i].lastTick;
             firedAmmos[i].lastTick = time;
 
+            let fromColumn = Math.floor(firedAmmos[i].x/64);
+            let fromRow = Math.floor(firedAmmos[i].y/64);
             firedAmmos[i].x = parseInt(firedAmmos[i].initialX + (firedAmmos[i].finalX - firedAmmos[i].initialX) * (firedAmmos[i].timePassed / firedAmmos[i].timeToFinal));
             firedAmmos[i].y = parseInt(firedAmmos[i].initialY + (firedAmmos[i].finalY - firedAmmos[i].initialY) * (firedAmmos[i].timePassed / firedAmmos[i].timeToFinal));
-
+            let toColumn = Math.floor(firedAmmos[i].x/64);
+            let toRow = Math.floor(firedAmmos[i].y/64);
             for (let key in data.characters){
                 if (key!=data.firedAmmos[i].characterId){
                     let isHit = collision.isCollision(data.firedAmmos[i].x, data.firedAmmos[i].y, 3, 3, data.characters[key].left-32, data.characters[key].top-64, 32, 64);//shoot from center
@@ -150,6 +153,13 @@ function fire(data){
 
                 }
             }
+
+            if(fromColumn!=toColumn||fromRow!==toRow){
+                if (!data.getMap()[column][row].movable){
+                    data.firedAmmos[i].active = false;
+                }
+            }
+
 
             if (firedAmmos[i].timePassed > firedAmmos[i].maxTime) {
                 firedAmmos[i].active = false;
