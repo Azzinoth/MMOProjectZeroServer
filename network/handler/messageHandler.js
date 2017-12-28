@@ -88,12 +88,7 @@ function messageHandler (data, message, personId){
                     // request = requestInventory (characters[personId].inventoryId, reqStacks, Object.getOwnPropertyNames(reqStacks).length);
                     request = new Request({type:INVENTORY_CHANGE, request:reqStacks});
                     sender.sendToClient(personId, request);
-					
-                    // request = new Request({type:GATHER, request:true});
-                    // sender.sendToClient(personId, request);
-                    // let res = new Array(cellsMap[toColumn][toRow].column, cellsMap[toColumn][toRow].row, cellsMap[toColumn][toRow].objectId)
-                    // request = new Request({type:GATHER, request:res});
-                    // sender.sendByViewDistance(characters, request, toColumn, toRow);
+
 					let tmpArray = [new Array(cellsMap[toColumn][toRow].column, cellsMap[toColumn][toRow].row, cellsMap[toColumn][toRow].objectId)];
 					request = new Request({type:MAP_OBJECT, request:tmpArray});
 					sender.sendByViewDistance(characters, request, toColumn, toRow);
@@ -116,9 +111,6 @@ function messageHandler (data, message, personId){
             }
             request = new Request({type:HUMAN_MOVE, request:new Array(characters[personId].id, characters[personId].column, characters[personId].row, characters[personId].left, characters[personId].top, characters[personId].direction)});
             sender.sendToClient(personId, request);
-            // let result = new Array(personId, characters[personId].column, characters[personId].row, characters[personId].left, characters[personId].top);
-            // request = new Request({type:HUMAN_MOVE, request:result});
-            // sender.sendToClient(personId, request);
 		}
 		break;
 		case INVENTORY_CHANGE:{
@@ -166,28 +158,19 @@ function messageHandler (data, message, personId){
             if (stacks[stackId].item.typeName!=='BUILDING_PART') break;
 			let typeId = stacks[stackId].item.typeId;
             if (!cellUtils.isBuilderCell(cellsMap, column, row)) break;
-            if (stacks[stackId].size>0)stacks[stackId].size--;
-            // let findStacks = stackUtils.findItems(typeId, inventories, [characters[personId].hotBarId, characters[personId].inventoryId], stacks);
-            //
-            // if (findStacks[0]>=1){
-            //     for	(let i = 0; i<findStacks[1].length; i++){
-            //         if (findStacks[1][i].size>1){
-            //             findStacks[1][i].size -=1;
-            //         }else{
-            //             //stacks[key]=null;
-            //             findStacks[1][i].item = null;
-            //             findStacks[1][i].size = null;
-            //         }
-            //     }
-            // }
+            if (stacks[stackId].size>1)stacks[stackId].size--;
+            else {
+                delete stacks[stackId].item;
+                stacks[stackId].item = null;
+                stacks[stackId].size = null;
+            }
             cellsMap[column][row].movable = false;
             cellsMap[column][row].objectId = typeId;
-            let result = [new Array(cellsMap[toColumn][toRow].column, cellsMap[toColumn][toRow].row, cellsMap[toColumn][toRow].objectId)];
+            let result = [new Array(cellsMap[column][row].column, cellsMap[column][row].row, cellsMap[column][row].objectId)];
             request = new Request({type:MAP_OBJECT, request:result});
             sender.sendByViewDistance(characters, request, column, row);
 
-            // request = requestInventory(characters[personId].inventoryId, findStacks);
-            sender.sendToClient(personId, new Request({type:INVENTORY_CHANGE, request:new Array(stacks[stackId].size)}));
+            sender.sendToClient(personId, new Request({type:INVENTORY_CHANGE, request:new Array(stacks[stackId])}));
 
 
         }

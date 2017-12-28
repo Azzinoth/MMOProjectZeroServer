@@ -41,12 +41,13 @@ function identificators(){
 function items(){
     sqlUtils.drop('items');
     sqlUtils.createTable('items', 'id INTEGER primary key, typeName TEXT, stackSize INTEGER');
-    sqlUtils.insert('items', 'id, typeName, stackSize', 1+', \'RESOURCE\', 20');
-    sqlUtils.insert('items', 'id, typeName, stackSize', 2+', \'RESOURCE\', 20');
-    sqlUtils.insert('items', 'id, typeName, stackSize', 3+', \'BUILDING_PART\', 1');
-    sqlUtils.insert('items', 'id, typeName, stackSize', 4+', \'BUILDING_PART\', 1');
-    sqlUtils.insert('items', 'id, typeName, stackSize', 5+', \'WEAPON\', 1');
-    sqlUtils.insert('items', 'id, typeName, stackSize', 6+', \'AMMO\', 20');
+    sqlUtils.insert('items', 'id, typeName, stackSize', 1+', \'RESOURCE\', 20'); //wood
+    sqlUtils.insert('items', 'id, typeName, stackSize', 2+', \'RESOURCE\', 20'); //stone
+    sqlUtils.insert('items', 'id, typeName, stackSize', 3+', \'BUILDING_PART\', 1'); //wood wall
+    sqlUtils.insert('items', 'id, typeName, stackSize', 4+', \'BUILDING_PART\', 1'); //stone wall
+    sqlUtils.insert('items', 'id, typeName, stackSize', 5+', \'WEAPON\', 1'); //bow
+    sqlUtils.insert('items', 'id, typeName, stackSize', 6+', \'AMMO\', 20'); //arrow
+    sqlUtils.insert('items', 'id, typeName, stackSize', 7+', \'BUILDING_PART\', 1'); //campFire
 }
 
 function commonItems(){
@@ -127,13 +128,15 @@ function inventories(){
 function ingredients(){
     sqlUtils.drop('ingredients');
     sqlUtils.createTable('ingredients', 'typeId INTEGER, amount INTEGER, recipeId INTEGER');
-    sqlUtils.insert('ingredients', 'typeId, amount, recipeId', '1, 4, 1');
-    sqlUtils.insert('ingredients', 'typeId, amount, recipeId', '2, 3, 2');
-    sqlUtils.insert('ingredients', 'typeId, amount, recipeId', '1, 3, 2');
-    sqlUtils.insert('ingredients', 'typeId, amount, recipeId', '1, 12, 3');
-    sqlUtils.insert('ingredients', 'typeId, amount, recipeId', '1, 5, 3');
-    sqlUtils.insert('ingredients', 'typeId, amount, recipeId', '1, 10, 4');
-    sqlUtils.insert('ingredients', 'typeId, amount, recipeId', '2, 5, 4');
+    sqlUtils.insert('ingredients', 'typeId, amount, recipeId', '1, 4, 1'); //wood wall
+    sqlUtils.insert('ingredients', 'typeId, amount, recipeId', '2, 3, 2'); //stone wall
+    sqlUtils.insert('ingredients', 'typeId, amount, recipeId', '1, 3, 2'); //stone wall
+    sqlUtils.insert('ingredients', 'typeId, amount, recipeId', '1, 12, 3'); //bow
+    sqlUtils.insert('ingredients', 'typeId, amount, recipeId', '1, 5, 3'); //bow
+    sqlUtils.insert('ingredients', 'typeId, amount, recipeId', '1, 10, 4'); //arrows
+    sqlUtils.insert('ingredients', 'typeId, amount, recipeId', '2, 5, 4'); //arrows
+    sqlUtils.insert('ingredients', 'typeId, amount, recipeId', '1, 10, 5'); //camp fire
+    sqlUtils.insert('ingredients', 'typeId, amount, recipeId', '2, 5, 5'); //camp fire
 }
 function craftRecipes() {
     sqlUtils.drop('craftRecipes');
@@ -142,6 +145,7 @@ function craftRecipes() {
     sqlUtils.insert('craftRecipes', 'id, craftedTypeId, name, outputAmount, categoryName', data.getId('recipe') + ', 4, \'Stone wall\', 1, \'Building\'');
     sqlUtils.insert('craftRecipes', 'id, craftedTypeId, name, outputAmount, categoryName', data.getId('recipe') + ', 5, \'Bow\', 1, \'Armor\'');
     sqlUtils.insert('craftRecipes', 'id, craftedTypeId, name, outputAmount, categoryName', data.getId('recipe') + ', 6, \'Arrows\', 5, \'Armor\'');
+    sqlUtils.insert('craftRecipes', 'id, craftedTypeId, name, outputAmount, categoryName', data.getId('recipe') + ', 7, \'Camp fire\', 1, \'Building\'');
 }
 function characterRecipes(){
     sqlUtils.drop('characterRecipes');

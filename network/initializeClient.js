@@ -29,10 +29,10 @@ function initializeClient(data, characterId, inventoryId, hotBarId, armorInvento
 
     clients[characterId].send(JSON.stringify(new Request({type:SESSION_ID, request:characterId})));
 	characters[characterId] = new Character(characterId, inventoryId,armorInventoryId,hotBarId, null, true, 10, 10, 10*64, 10*64, 1, 3, 1, 20);
-	characters[characterId].craftRecipesId.push(1);
-    characters[characterId].craftRecipesId.push(2);
-    characters[characterId].craftRecipesId.push(3);
-    characters[characterId].craftRecipesId.push(4);
+	for (let key in recipeList){
+        characters[characterId].craftRecipesId.push(+key);
+    }
+
     let request;
     for (let key in characters) {
 		if (key==characterId){

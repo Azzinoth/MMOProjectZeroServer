@@ -22,6 +22,9 @@ function createItem(typeId, itemId){
         case 6:
             obj = new CommonItem(typeId, 'AMMO', 20);
             break;
+        case 7:
+            obj = new CommonItem(typeId, 'BUILDING_PART', 1);
+            break;
     }
     return obj;
 }
