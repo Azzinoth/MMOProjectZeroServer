@@ -45,7 +45,7 @@ function pushDb(callback=null){
 
                     });
 
-                });
+               });
             }else{
                 db.all(sqlQuery[i].query, function (err, rows) {
                     if (err) {
@@ -94,16 +94,29 @@ function insertAll(tableName, array, callBack){
         if (array===null){
             return;
         }
-        let values =null;
+        // let values =null;
         switch(tableName){
+            case 'accounts':{
+                for (let key in array){
+                    let id = key;
+                    let email = array[key].email;
+                    let password = array[key].password;
+                    insert(tableName, 'id, email, password', id+', \''+email+'\', \''+password+'\'');
+                    // if (values===null){
+                    //     values = '('+id+', '+email+', '+password+')';
+                    // }else  values += ', ('+id+', '+email+', '+password+')';
+                }
+
+            }
+            break;
             case 'characters':{
                 for (let key in array){
                     let id = key;
+                    let accountId = array[key].accountId;
                     let inventoryId = array[key].inventoryId;
-                    let isPlayer;
-                    if (array[key].isPlayer){
-                        isPlayer = 1;
-                    }else isPlayer = 0;
+                    let armorInventoryId = array[key].armorInventoryId;
+                    let hotBarId = array[key].hotBarId;
+                    let activeHotBarCell = array[key].activeHotBarCell;
                     let column = array[key].column;
                     let row = array[key].row;
                     let top = array[key].top;
@@ -111,12 +124,12 @@ function insertAll(tableName, array, callBack){
                     let level = array[key].level;
                     let health = array[key].health;
                     let strength = array[key].strength;
-                    let armId = array[key].armId;
-                    let bodyId = array[key].bodyId;
-                    let headId = array[key].headId;
-                    if (values===null){
-                        values = '('+id+', '+inventoryId+', '+isPlayer+', '+column+', '+row+', '+top+', '+left+', '+level+', '+health+', '+strength+', '+armId+', '+bodyId+', '+headId+')';
-                    }else  values += ', ('+key+', '+inventoryId+', '+isPlayer+', '+column+', '+row+', '+top+', '+left+', '+level+', '+health+', '+strength+', '+armId+', '+bodyId+', '+headId+')';
+                    let viewDistance = array[key].viewDistance;
+                    insert(tableName, 'id, accountId, inventoryId, armorInventoryId, hotBarId, activeHotBarCell, column, row, top, left, level, health, strength, viewDistance',
+                        id+', '+accountId+', '+inventoryId+', '+armorInventoryId+', '+hotBarId+', '+activeHotBarCell+', '+column+', '+row+', '+top+', '+left+', '+level+', '+health+', '+strength+', '+viewDistance);
+                    // if (values===null){
+                    //     values = '('+id+', '+accountId+', '+inventoryId+', '+armorInventoryId+', '+hotBarId+', '+activeHotBar+', '+column+', '+row+', '+top+', '+left+', '+level+', '+health+', '+strength+', '+viewDistance+')';
+                    // }else  values += ', ('+key+', '+accountId+', '+inventoryId+', '+armorInventoryId+', '+hotBarId+', '+activeHotBar+', '+column+', '+row+', '+top+', '+left+', '+level+', '+health+', '+strength+', '+viewDistance+')';
                 }
             }
                 break;
@@ -124,31 +137,69 @@ function insertAll(tableName, array, callBack){
                 for (let key in array){
                     let id = key;
                     let size = array[key].size;
-                    if (values===null){
-                        values = '('+id+', '+size+')';
-                    }else  values += ', ('+id+', '+size+')';
+                    insert(tableName, 'id, size', id+', '+size);
+                    // if (values===null){
+                    //     values = '('+id+', '+size+')';
+                    // }else  values += ', ('+id+', '+size+')';
                 }
 
                     break;
             case 'characterRecipes':
                 for (let key in array){
                     let characterId = key;
-                    let recipeId = array[key].recipeId;
-                    if (values===null){
-                        values = '('+characterId+', '+recipeId+')';
-                    }else  values += ', ('+characterId+', '+recipeId+')';
+                    for (let i =0; i<array[key].craftRecipesId.length; i++){
+                        let recipeId = array[key].craftRecipesId[i];
+                        insert(tableName, 'characterId, recipeId', characterId+', '+recipeId);
+                        // if (values===null){
+                        //     values = '('+characterId+', '+recipeId+')';
+                        // }else  values += ', ('+characterId+', '+recipeId+')';
+                    }
                 }
 
                 break;
             case 'stacks':
                 for (let key in array){
-                    let id = key;
-                    let itemId = array[key].itemId;
+                    let id = parseInt(key);
                     let size = array[key].size;
                     let inventoryId = array[key].inventoryId;
-                    if (values===null){
-                        values = '('+id+', '+itemId+', '+size+', '+inventoryId+')';
-                    }else  values += ', ('+id+', '+itemId+', '+size+', '+inventoryId+')';
+                    let position = array[key].position;
+                    insert(tableName, 'id, size, inventoryId, position', id+', '+size+', '+inventoryId+', '+position);
+                    if (array[key].item!==null){
+                        if (array[key].item.typeId===5){
+                            insert('weaponsRange', 'typeId, itemId, durability, stackId', array[key].item.typeId+', '+array[key].item.itemId+', '+array[key].item.durability+', '+id);
+                        }else{
+                            insert('commonItems', 'typeId, name, stackSize, stackId', array[key].item.typeId+', \''+array[key].item.typeName+'\', '+size+', '+id);
+                        }
+                    }
+                    // if (values===null){
+                    //     values = '('+id+', '+itemId+', '+size+', '+inventoryId+')';
+                    // }else  values += ', ('+id+', '+itemId+', '+size+', '+inventoryId+')';
+                }
+
+                break;
+            // case 'commonItems':
+            //     for (let key in array){
+            //         let stackId = array[key].stackId;
+            //         let typeId = array[key].typeId;
+            //         let stackSize = array[key].stackSize;
+            //         let name = array[key].name;
+            //         insert(tableName, 'typeId, name, stackSize, stackId', typeId+', \''+name+'\', '+stackSize+', '+stackId);
+            //         // if (values===null){
+            //         //     values = '('+id+', '+itemId+', '+size+', '+inventoryId+')';
+            //         // }else  values += ', ('+id+', '+itemId+', '+size+', '+inventoryId+')';
+            //     }
+            //
+            //     break;
+            case 'weaponsRange':
+                for (let key in array){
+                    let stackId = array[key].stackId;
+                    let typeId = array[key].typeId;
+                    let durability = array[key].durability;
+                    let itemId = array[key].itemId;
+                    insert(tableName, 'typeId, itemId, durability, stackId', typeId+', '+itemId+', '+durability+', '+stackId);
+                    // if (values===null){
+                    //     values = '('+id+', '+itemId+', '+size+', '+inventoryId+')';
+                    // }else  values += ', ('+id+', '+itemId+', '+size+', '+inventoryId+')';
                 }
 
                 break;
@@ -158,27 +209,15 @@ function insertAll(tableName, array, callBack){
             case 'mapItems':
 
                 break;
-            case 'mapCells':{
-                for (let i = 0; i < array.length; i++) {
-                    let col = array[i].column;
-                    let row = array[i].row;
-                    let movable = array[i].movable === true ? 1 : 0;
-                    let objId = array[i].objectId;
-                    if (values===null){
-                    values = '('+col+', '+row+', '+movable+', '+objId+')';
-                    }else  values += ', ('+col+', '+row+', '+movable+', '+objId+')';
-                }
-
-            }
                 break;
             case 'recipeList':
 
                 break;
         }
-        if (values!==null) {
-            addSql("run",tableName,'INSERT INTO ' + tableName + ' VALUES'+values);
-        }
-        values = null;
+        // if (values!==null) {
+        //     addSql("run",tableName,'INSERT INTO ' + tableName + ' VALUES'+values);
+        // }
+        // values = null;
 }
 
 function selectAll(tableName, callBack){
@@ -220,7 +259,7 @@ function updateById(tableName, id, value, callBack){
                 if (value===null){
                     return;
                 }
-                sqlValue = 'characterId='+value.characterId+', itemId='+value.itemId+', mapItemId='+value.mapItemId+', recipeId='+value.recipeId+', inventoryId='+value.inventoryId+', stackId='+value.stackId
+                sqlValue = 'accountId='+value.accountId+', characterId='+value.characterId+', animalId='+value.animalId+', itemId='+value.itemId+', mapItemId='+value.mapItemId+', recipeId='+value.recipeId+', inventoryId='+value.inventoryId+', stackId='+value.stackId+', zoneId='+value.zoneId;
                 addSql("run",tableName,"UPDATE " + tableName+' SET '+sqlValue);
             }
         }

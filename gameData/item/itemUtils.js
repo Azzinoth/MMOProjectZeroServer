@@ -1,6 +1,7 @@
 const CommonItem = require('./common/CommonItem');
 const Bow = require('./unique/weapon/range/Bow');
-function createItem(typeId, itemId){
+const data = require('../data');
+function createItem(typeId){
     let obj;
 
     switch (typeId) {
@@ -17,6 +18,7 @@ function createItem(typeId, itemId){
             obj = new CommonItem(typeId, 'BUILDING_PART', 1);
             break;
         case 5:
+            let itemId = data.getId('item');
             obj = new Bow(typeId, itemId);
             break;
         case 6:

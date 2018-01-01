@@ -9,7 +9,7 @@ function findCharacters(characters, distance, id) {
     let result = [];
     let character = characters[id];
     for (let key in characters){
-        if (key!=id&&(Math.abs(character.column-characters[key].column)<distance&&Math.abs(character.row-characters[key].row)<distance)){
+        if (characters[key].isOnline&&key!=id&&(Math.abs(character.column-characters[key].column)<distance&&Math.abs(character.row-characters[key].row)<distance)){
             result.push(characters[key]);
         }
     }
@@ -31,7 +31,7 @@ function surroundObjects (startColumn, startRow, distance, width, height, cellsM
 function surroundAnimals (startColumn, startRow, distance, animals){
     let arrayObjects = [];
     for (let key in animals){
-        if (Math.abs(startColumn-animals[key].location.column)<distance&&(Math.abs(startRow-animals[key].location.row)<distance)){
+        if (animals[key].isAlive&&Math.abs(startColumn-animals[key].location.column)<distance&&(Math.abs(startRow-animals[key].location.row)<distance)){
             arrayObjects.push(new Array(animals[key].id, animals[key].path, animals[key].location.column, animals[key].location.row, animals[key].location.left, animals[key].location.top));
         }
     }

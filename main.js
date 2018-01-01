@@ -12,7 +12,8 @@ sqlUtils.fill();
 //
 //     }
 // )
-clear();
+
+// clear();
 start();
 
 
@@ -22,24 +23,33 @@ function start(){
     data.fillId(sqlUtils);
     data.fillData(sqlUtils);
     sqlUtils.pushDb(data.callBackTable);
-    toDataBase.toDataBase(sqlUtils, data);
+    //toDataBase.toDataBase(sqlUtils, data);
     mainLoop(data);
     send.setData(data);
     server(data);
 }
 function clear(){
+    sqlUtils.deleteTable('accounts');
     sqlUtils.deleteTable('inventories');
     sqlUtils.deleteTable('characters');
     sqlUtils.deleteTable('stacks');
+    sqlUtils.deleteTable('characterRecipes');
+    sqlUtils.deleteTable('commonItems');
+    sqlUtils.deleteTable('weaponsRange');
+}
+
+function accounts(){
+    sqlUtils.drop('accounts');
+    sqlUtils.createTable('accounts', 'id INTEGER primary key, email TEXT, password TEXT');
 }
 function identificators(){
   sqlUtils.drop('identificators');
-  sqlUtils.createTable('identificators', 'characterId INTEGER, animalId INTEGER, itemId INTEGER, mapItemId INTEGER, recipeId INTEGER, inventoryId INTEGER, stackId INTEGER, zoneId INTEGER');
-  sqlUtils.insert('identificators', 'characterId, animalId, itemId, mapItemId, recipeId, inventoryId, stackId, zoneId', '0, 0, 0, 0, 0, 0, 0, 0');
+  sqlUtils.createTable('identificators', 'accountId INTEGER, characterId INTEGER, animalId INTEGER, itemId INTEGER, mapItemId INTEGER, recipeId INTEGER, inventoryId INTEGER, stackId INTEGER, zoneId INTEGER');
+  sqlUtils.insert('identificators', 'accountId, characterId, animalId, itemId, mapItemId, recipeId, inventoryId, stackId, zoneId', '0, 0, 0, 0, 0, 0, 0, 0, 0');
 }
 
 function items(){
-    sqlUtils.drop('items');
+    // sqlUtils.drop('items');
     sqlUtils.createTable('items', 'id INTEGER primary key, typeName TEXT, stackSize INTEGER');
     sqlUtils.insert('items', 'id, typeName, stackSize', 1+', \'RESOURCE\', 20'); //wood
     sqlUtils.insert('items', 'id, typeName, stackSize', 2+', \'RESOURCE\', 20'); //stone
@@ -119,8 +129,9 @@ function mapCells(){
 }
 function stacks(){
     sqlUtils.drop('stacks');
-    sqlUtils.createTable('stacks', 'id INTEGER primary key, size INTEGER, inventoryId INTEGER');
+    sqlUtils.createTable('stacks', 'id INTEGER primary key, size INTEGER, inventoryId INTEGER, position INTEGER');
 }
+
 function inventories(){
     sqlUtils.drop('inventories');
     sqlUtils.createTable('inventories', 'id INTEGER primary key, size INTEGER');
@@ -154,12 +165,12 @@ function characterRecipes(){
 function characters(){
 
     sqlUtils.drop('characters');
-    sqlUtils.createTable('characters', 'id INTEGER primary key, inventoryId INTEGER, armorInventoryId INTEGER, hotBarId INTEGER, activeHotBarCell INTEGER,  isPlayer INTEGER, column INTEGER, row INTEGER, top INTEGER, left INTEGER, level  INTEGER, health INTEGER, strength INTEGER, viewDistance INTEGER');
+    sqlUtils.createTable('characters', 'id INTEGER primary key, accountId INTEGER, inventoryId INTEGER, armorInventoryId INTEGER, hotBarId INTEGER, activeHotBarCell INTEGER, column INTEGER, row INTEGER, top INTEGER, left INTEGER, level  INTEGER, health INTEGER, strength INTEGER, viewDistance INTEGER');
 
 }
 function animals(){
-    sqlUtils.drop('animals');
-    sqlUtils.createTable('animals', 'id INTEGER primary key, column INTEGER, row INTEGER, top INTEGER, left INTEGER, name TEXT, zoneId INTEGER');
+    // sqlUtils.drop('animals');
+    sqlUtils.createTable('animals', 'id INTEGER primary key, column INTEGER, row INTEGER, top INTEGER, left INTEGER, name TEXT, zoneId INTEGER, isAlive INTEGER, timeToResurrection INTEGER');
     let fromC;
     let toC;
     let fromR;
@@ -191,7 +202,7 @@ function animals(){
         for (let j = 0; j<10; j++){
             let col = parseInt(Math.random() * (toC - fromC) + fromC);
             let row = parseInt(Math.random() * (toR - fromR) + fromR);
-            sqlUtils.insert('animals', 'id, column, row, left, top, name, zoneId', data.getId('animal')+', '+col+', '+row+', '+col*64+', '+row*64+', \'rabbit\', '+zoneId);
+            sqlUtils.insert('animals', 'id, column, row, left, top, name, zoneId, isAlive, timeToResurrection', data.getId('animal')+', '+col+', '+row+', '+col*64+', '+row*64+', \'rabbit\', '+zoneId+', '+1+', '+null);
         }
     }
 }

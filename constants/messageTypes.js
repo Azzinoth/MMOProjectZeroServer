@@ -22,5 +22,8 @@ module.exports = {
     HOT_BAR_CHANGE : 20,
     HOT_BAR_CELL_ACTIVATE : 21,
     RELOAD_WEAPON : 22,
-    PING : 23
+    PING : 23,
+	AUTORIZATION : 24,
+    REGISTRATION : 25,
+    DIE : 26,
 };

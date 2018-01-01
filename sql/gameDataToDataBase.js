@@ -20,16 +20,23 @@ function toDataBase(sqlUtils, data){
 setInterval(function(){
     // sqlUtils.initDB().then(
     sqlUtils.updateById('identificators', null, data.identificators);
+    sqlUtils.deleteTable('accounts');
+    sqlUtils.insertAll('accounts',data.accounts);
     sqlUtils.deleteTable('characters');
     sqlUtils.insertAll('characters',data.characters);
     sqlUtils.deleteTable('inventories');
     sqlUtils.insertAll('inventories', data.inventories);
     sqlUtils.deleteTable('stacks');
+    sqlUtils.deleteTable('commonItems');
+    sqlUtils.deleteTable('weaponsRange');
     sqlUtils.insertAll('stacks', data.stacks);
+    // sqlUtils.deleteTable('commonItems');
+    // sqlUtils.insertAll('commonItems', data.commonItems);
     sqlUtils.deleteTable('characterRecipes');
-    sqlUtils.insertAll('characterRecipes', data.characterRecipes);
-    sqlUtils.updateAllById('cellsMap', data.cellsMap);
+    sqlUtils.insertAll('characterRecipes', data.characters);
+    sqlUtils.updateAllById('cellsMap', data.getMap());
     sqlUtils.pushDb();
+
     // result=>sqlUtils.closeDB())
 
     console.log('Game data added to data base');

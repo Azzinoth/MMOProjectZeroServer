@@ -1,11 +1,12 @@
 const getTime = require('../../utils/getTime');
-function Character (id, inventoryId, armorInventoryId, hotBarId, activeHotBarCell, isPlayer, column, row, top, left, level, health, strength, viewDistance){
+function Character (id, accountId, inventoryId, armorInventoryId, hotBarId, activeHotBarCell, isOnline, column, row, top, left, level, health, strength, viewDistance){
 		this.id = id;
+		this.accountId = accountId;
 		this.inventoryId = inventoryId;
     	this.armorInventoryId = armorInventoryId;
 		this.hotBarId = hotBarId;
     	this.activeHotBarCell = activeHotBarCell;
-		this.isPlayer = isPlayer;
+		this.isOnline = isOnline;
 		this.size = 64;
 		this.column = column;
 		this.row = row;
@@ -98,55 +99,14 @@ Character.prototype.move = function(left, top, column, row){
 	this.top = top;
 	this.column = column;
     this.row = row;
-    // switch(this.direction) {
-    //     case 0:
-    //         this.top--;
-    //         this.row = Math.floor(this.top / 64);
-    //         //this.direction = 1;
-    //         break;
-    //     case 1:
-    //         this.top--;
-    //         this.left++;
-    //         this.column = Math.floor(this.left / 64);
-    //         this.row = Math.floor(this.top / 64);
-    //         //this.direction = 7;
-    //         break;
-    //     case 2:
-    //         this.left++;
-    //         this.column = Math.floor(this.left / 64);
-    //         //this.direction = 2;
-    //         break;
-    //     case 3:
-    //         this.top++;
-    //         this.left++;
-    //         this.column = Math.floor(this.left / 64);
-    //         this.row = Math.floor(this.top / 64);
-    //         //this.direction = 6;
-    //         break;
-    //     case 4:
-    //         this.top++;
-    //         this.row = Math.floor(this.top / 64);
-    //         //this.direction = 0;
-    //         break;
-    //     case 5:
-    //         this.top++;
-    //         this.left--;
-    //         this.column = Math.floor(this.left / 64);
-    //         this.row = Math.floor(this.top / 64);
-    //         //this.direction = 4;
-    //         break;
-    //     case 6:
-    //         this.left--;
-    //         this.column = Math.floor(this.left / 64);
-    //         // this.direction = 3;
-    //         break;
-    //     case 7:
-    //         this.top--;
-    //         this.left--;
-    //         this.column = Math.floor(this.left / 64);
-    //         this.row = Math.floor(this.top / 64);
-    //         //this.direction = 5;
-    //         break;
-    // }
+}
+Character.prototype.dead = function(){
+    this.column = 10;
+    this.row = 10;
+    this.left = this.column*64;
+    this.top = this.row*64;
+    this.direction = -1;
+    this.health = 10;
+
 }
 module.exports = Character;

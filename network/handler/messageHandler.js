@@ -59,10 +59,10 @@ function messageHandler (data, message, personId){
             request = new Request({type:HUMAN_MOVE, request:new Array(personId, direction)});
             if(direction!==characters[personId].direction) {
                 characters[personId].direction=direction;
-                sender.sendByViewDistanceExcept(characters, request, characters[personId].column, characters[personId].row, personId);
+                sender.sendByViewDistanceExcept(characters, request, characters[personId].column, characters[personId].row, characters[personId].accountId);
                 characters[personId].tmpDistanceWalked = 0;
                 request = new Request({type:HUMAN_MOVE, request:new Array(personId, characters[personId].column, characters[personId].row, characters[personId].left, characters[personId].top, characters[personId].direction)});
-                sender.sendToClient(personId, request);
+                sender.sendToClient(characters[personId].accountId, request);
             }
 
 		}
@@ -87,18 +87,18 @@ function messageHandler (data, message, personId){
 					//delete reqStacks.isFull;
                     // request = requestInventory (characters[personId].inventoryId, reqStacks, Object.getOwnPropertyNames(reqStacks).length);
                     request = new Request({type:INVENTORY_CHANGE, request:reqStacks});
-                    sender.sendToClient(personId, request);
+                    sender.sendToClient(characters[personId].accountId, request);
 
 					let tmpArray = [new Array(cellsMap[toColumn][toRow].column, cellsMap[toColumn][toRow].row, cellsMap[toColumn][toRow].objectId)];
 					request = new Request({type:MAP_OBJECT, request:tmpArray});
 					sender.sendByViewDistance(characters, request, toColumn, toRow);
 				}else{
 					request = new Request({type:SYSTEM_MESSAGE, request:'Full inventory!'});
-                    sender.sendToClient(personId, request);
+                    sender.sendToClient(characters[personId].accountId, request);
 				}
 			}else{
                 request = new Request({type:SYSTEM_MESSAGE, request:'Can not gather!'});
-                sender.sendToClient(personId, request);
+                sender.sendToClient(characters[personId].accountId, request);
 			}
 		}
         	break;
@@ -107,10 +107,10 @@ function messageHandler (data, message, personId){
             let resultCharacter=null;
             for (let i=0; i<founderCharacters.length; i++){
                 resultCharacter = new Array(founderCharacters[i].id, founderCharacters[i].column, founderCharacters[i].row, founderCharacters[i].left, founderCharacters[i].top, founderCharacters[i].direction);
-                sender.sendToClient(personId, new Request({type:HUMAN_MOVE, request:resultCharacter}));
+                sender.sendToClient(characters[personId].accountId, new Request({type:HUMAN_MOVE, request:resultCharacter}));
             }
             request = new Request({type:HUMAN_MOVE, request:new Array(characters[personId].id, characters[personId].column, characters[personId].row, characters[personId].left, characters[personId].top, characters[personId].direction)});
-            sender.sendToClient(personId, request);
+            sender.sendToClient(characters[personId].accountId, request);
 		}
 		break;
 		case INVENTORY_CHANGE:{
@@ -129,7 +129,7 @@ function messageHandler (data, message, personId){
 
             if (swaps!==1){
             	request = new Request({type:INVENTORY_CHANGE, request:swaps});
-                sender.sendToClient(personId, request);
+                sender.sendToClient(characters[personId].accountId, request);
             }
 		}
 		break;
@@ -142,7 +142,7 @@ function messageHandler (data, message, personId){
 					let invent = craftItem(inventories, characters[personId], stacks, data.recipeList[craftRecipes[i]], items);
 					if (invent!==1&&invent!==2&&invent!==3){
                         request = new Request({type:INVENTORY_CHANGE, request:invent});
-                        sender.sendToClient(personId, request);
+                        sender.sendToClient(characters[personId].accountId, request);
                     }
 				}
 			}
@@ -170,7 +170,7 @@ function messageHandler (data, message, personId){
             request = new Request({type:MAP_OBJECT, request:result});
             sender.sendByViewDistance(characters, request, column, row);
 
-            sender.sendToClient(personId, new Request({type:INVENTORY_CHANGE, request:new Array(stacks[stackId])}));
+            sender.sendToClient(characters[personId].accountId, new Request({type:INVENTORY_CHANGE, request:new Array(stacks[stackId])}));
 
 
         }
@@ -191,7 +191,7 @@ function messageHandler (data, message, personId){
                 if (findAmmo[0]<quantity)quantity = findAmmo[0];
                 let removeItems = stackUtils.removeItems(quantity, findAmmo[1]);
                 stacks[stackId].item.reloadWeapon(quantity);
-                sender.sendToClient(personId, new Request({type:INVENTORY_CHANGE, request:removeItems}));
+                sender.sendToClient(characters[personId].accountId, new Request({type:INVENTORY_CHANGE, request:removeItems}));
                 break;
             }
             let firedAmmo = stacks[stackId].item.shot(firedAmmos, personId, characters[personId].left, characters[personId].top, toX, toY);
@@ -222,7 +222,7 @@ function messageHandler (data, message, personId){
 
             if (swaps!==1){
                 request = new Request({type:INVENTORY_CHANGE, request:swaps});
-                sender.sendToClient(personId, request);
+                sender.sendToClient(characters[personId].accountId, request);
             }
         }
         break;
@@ -237,7 +237,7 @@ function messageHandler (data, message, personId){
             if (findAmmo[0]<quantity)quantity = findAmmo[0];
             let removeItems = stackUtils.removeItems(quantity, findAmmo[1]);
             stacks[stackId].item.reloadWeapon(quantity);
-            sender.sendToClient(personId, new Request({type:INVENTORY_CHANGE, request:removeItems}));
+            sender.sendToClient(characters[personId].accountId, new Request({type:INVENTORY_CHANGE, request:removeItems}));
         }
             break;
         case HOT_BAR_CELL_ACTIVATE: {
@@ -252,7 +252,7 @@ function messageHandler (data, message, personId){
         }
             break;
         case PING: {
-            sender.sendToClient(personId, new Request({type:PING, request:null}));
+            sender.sendToClient(characters[personId].accountId, new Request({type:PING, request:null}));
         }
             break;
 	}

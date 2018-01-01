@@ -1,5 +1,5 @@
 const Animal = require('../Animal');
-function Rabbit (id, location, zoneId){
+function Rabbit (id, location, isAlive, timeToResurrection, zoneId){
     Animal.apply(this, arguments);
     this.name = 'rabbit';
     this.zoneId = zoneId;

@@ -2,19 +2,22 @@ const {
 	HUMAN_DELETE
 } = require('../../constants').messageTypes;
 const Request = require('../Request');
+const sender = require('../sender');
 
-function closeHandler(data, idCharacter){
-    clients = data.clients;
-    characters = data.characters;
-    inventories = data.inventories;
-	console.log('connection closed ' + idCharacter);
-	delete clients[idCharacter];
-	delete inventories[characters[idCharacter].idInventory];
-	let requestDelete = new Request({type:HUMAN_DELETE, request:characters[idCharacter]});
+function closeHandler(data, accountId){
+	console.log('connection closed ' + accountId);
+    accountId = parseInt(accountId);
+	if (accountId===undefined)return;
+	for (let key in data.characters){
+	    if (data.characters[key].accountId === accountId){
+            let requestDelete = new Request({type:HUMAN_DELETE, request:data.characters[key].id});
+            sender.sendByViewDistanceExcept(data.characters, requestDelete, data.characters[key].column, data.characters[key].row, accountId);
+            data.characters[key].isOnline=false;
+        }
+    }
 
-	for (let key in clients) {
-		clients[key].send(JSON.stringify(requestDelete));			
-	}
-	delete characters[idCharacter];
+
+
+    data.accounts[accountId].webSocket = null;
 }
 module.exports = closeHandler;

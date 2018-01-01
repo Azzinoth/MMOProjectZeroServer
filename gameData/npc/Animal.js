@@ -1,7 +1,7 @@
 const Npc = require('./Npc');
 const Location = require('../Location');
 const findPath = require('../../utils/findPath')
-function Animal (id, location){
+function Animal (id, location, isAlive, timeToResurrection){
     Npc.apply(this, arguments);
     this.zoneId = null;
     this.destination = null;
@@ -16,6 +16,7 @@ function Animal (id, location){
     this.fromX = -1;
     this.fromY = -1;
     this.isMovement = false;
+
 
 }
 Animal.prototype = Object.create(Npc.prototype);
@@ -97,6 +98,46 @@ Animal.prototype.move = function () {
             return 2;
         }
 }
+Animal.prototype.dead = function () {
+    this.isAlive = false;
+    this.location.column = null;
+    this.location.row = null;
+    this.location.top = null;
+    this.location.left = null;
+    this.timeToResurrection=500;
+    this.destination = null;
+    this.path = [];
+    this.currentTick=null;
+    this.lastTick=null;
+    this.timePassed=null;
+    this.timeToFinal=null;
+    this.distToFinal=null;
+    this.targetX = null;
+    this.targetY = null;
+    this.fromX = -1;
+    this.fromY = -1;
+    this.isMovement = false;
+}
 
-
+Animal.prototype.resurrect = function (zones) {
+    this.location.column = parseInt(Math.floor(Math.random() * (zones[this.zoneId].toColumn - zones[this.zoneId].fromColumn) + zones[this.zoneId].fromColumn));
+    this.location.row = parseInt(Math.floor(Math.random() * (zones[this.zoneId].toRow - zones[this.zoneId].fromRow) + zones[this.zoneId].fromRow));
+    this.location.top = parseInt(Math.random() * 64);
+    this.location.left = parseInt(Math.random() * 64);
+    this.health = 3;
+    this.isAlive = true;
+    this.timeToResurrection=null;
+    this.destination = null;
+    this.path = [];
+    this.currentTick=null;
+    this.lastTick=null;
+    this.timePassed=null;
+    this.timeToFinal=null;
+    this.distToFinal=null;
+    this.targetX = null;
+    this.targetY = null;
+    this.fromX = -1;
+    this.fromY = -1;
+    this.isMovement = false;
+}
 module.exports = Animal;

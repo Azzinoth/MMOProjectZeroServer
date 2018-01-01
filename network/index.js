@@ -1,5 +1,5 @@
 const server = require('./server');
-const initializeClient = require('./initializeClient');
+const initializeClient = require('./initialize');
 const Request = require('./Request');
 const requestInventory = require('./requestInventory');
 // const config = require('./config');

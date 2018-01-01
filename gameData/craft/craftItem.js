@@ -31,7 +31,7 @@ function craftItem(inventories, character, stacks, recipe, items){
         }
 
 	}
-    let tmp = stackUtils.addStack(inventories, character, stacks, recipe.craftedTypeId, recipe.outputAmount);
+    let tmp = stackUtils.addStack(inventories, character, stacks, recipe.craftedTypeId, recipe.outputAmount, );
     for (let i = 0; i<tmp.length; i++){
         result.push(tmp[i]);
     }

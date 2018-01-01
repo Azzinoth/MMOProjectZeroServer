@@ -1,4 +1,4 @@
-function Npc (id, location){
+function Npc (id, location, isAlive, timeToResurrection){
     this.id = id;
     this.name = null;
     this.size = null;
@@ -6,6 +6,8 @@ function Npc (id, location){
     this.location = location;
     this.health = null;
     this.strength = null;
+    this.isAlive = isAlive;
+    this.timeToResurrection=timeToResurrection;
 }
 Npc.prototype.getSpeed = function () {
     return this.speed;
@@ -19,4 +21,5 @@ Npc.prototype.getStrength = function () {
 Npc.prototype.getId = function () {
     return this.id;
 }
+
 module.exports = Npc;
