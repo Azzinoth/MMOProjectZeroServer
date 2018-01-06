@@ -26,4 +26,5 @@ module.exports = {
 	AUTORIZATION : 24,
     REGISTRATION : 25,
     DIE : 26,
+  	LOOTING : 27
 };

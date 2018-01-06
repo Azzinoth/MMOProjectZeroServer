@@ -2,9 +2,14 @@ let accounts = {};
 let characters = {};
 let inventories = {};
 let stacks = {};
-// let commonItems = {};
+let mapStacks = {};
+let mapInventories = {};
+let mapLoots = {};
 let items = {};
-let mapItems = {};
+let mapItemsCatalog = {};
+//let mapItems = {};
+let resources = {};
+let buildingParts = {};
 let cellsMap;
 let recipeList={};
 let identificators ={};
@@ -14,7 +19,11 @@ let firedAmmos =new Array(2000);
 
 const width = 48*3;
 const height = 48*3;
-const MapItem = require('./item/MapItem');
+const MapItem = require('./mapItem/MapItem');
+const Tree = require('./mapItem/resource/Tree');
+const Rock = require('./mapItem/resource/Rock');
+const WoodWall = require('./mapItem/buildingPart/wall/WoodWall');
+const StoneWall = require('./mapItem/buildingPart/wall/StoneWall');
 const Item = require('./item/Item');
 const CraftRecipe = require('./craft/CraftRecipe');
 const Character = require('./person/Character');
@@ -33,10 +42,15 @@ function fillId(sqlUtils){
     sqlUtils.selectAll('identificators', callBackTable);
 }
 function fillData(sqlUtils){
+    sqlUtils.selectAll('resources', callBackTable);
+    sqlUtils.selectAll('buildingParts', callBackTable);
     sqlUtils.selectAll('accounts', callBackTable);
 	sqlUtils.selectAll('items', callBackTable);
-	sqlUtils.selectAll('mapItems', callBackTable);
+	sqlUtils.selectAll('mapItemsCatalog', callBackTable);
 	sqlUtils.selectAll('mapCells', callBackTable);
+
+    sqlUtils.selectAll('resources', callBackTable);
+    sqlUtils.selectAll('buildingParts', callBackTable);
 
     sqlUtils.selectAll('inventories', callBackTable);
 	sqlUtils.selectAll('stacks', callBackTable);
@@ -51,10 +65,6 @@ function fillData(sqlUtils){
 
     sqlUtils.selectAll('zones', callBackTable);
     sqlUtils.selectAll('animals', callBackTable);
-
-
-
-
 
     for(let i =0; i<firedAmmos.length; i++){
         firedAmmos[i]=new FiredAmmo();
@@ -111,6 +121,7 @@ function getMap(){
 }
 
 function callBackTable(tableRows, tableName){
+
 	switch(tableName){
         case 'accounts':{
             for (let i =0; i<tableRows.length; i++){
@@ -135,9 +146,9 @@ function callBackTable(tableRows, tableName){
             }
 
 		break;
-		case 'mapItems':
+		case 'mapItemsCatalog':
 			for (let i =0; i<tableRows.length; i++){
-				mapItems[tableRows[i].id] = new MapItem({id:tableRows[i].id, type:tableRows[i].type, size:tableRows[i].size, objectId:tableRows[i].objectId});
+				mapItemsCatalog[tableRows[i].id] = new MapItem(tableRows[i].id, null, tableRows[i].typeId);
 			}
 		break;
 		case 'mapCells':{
@@ -147,11 +158,46 @@ function callBackTable(tableRows, tableName){
                 // tmpMapCells[i] = new Array();
             }
 			for (let i =0; i<tableRows.length; i++){	
-				tmpMapCells[tableRows[i].column][tableRows[i].row]=new Cell({movable : tableRows[i].movable==1?true:false, column : tableRows[i].column, row : tableRows[i].row, objectId:tableRows[i].objectId});
+				tmpMapCells[tableRows[i].column][tableRows[i].row]=new Cell(tableRows[i].column, tableRows[i].row, tableRows[i].movable==1?true:false, tableRows[i].objectId, tableRows[i].mapItemId);
 			}
 			cellsMap = tmpMapCells
         }
 		break;
+        case 'resources':
+            for (let i =0; i<tableRows.length; i++){
+                switch(tableRows[i].id){
+                    case 15:
+                    case 16:
+                    case 17:{
+                        resources[tableRows[i].mapItemId] = new Tree(tableRows[i].id, tableRows[i].mapItemId, tableRows[i].typeId);
+                    }
+                    break;
+                    case 8:
+                    case 9:
+                    case 10:{
+                        resources[tableRows[i].mapItemId] = new Rock(tableRows[i].id, tableRows[i].mapItemId, tableRows[i].typeId);
+                    }
+                        break;
+                }
+
+            }
+            break;
+        case 'buildingParts':
+            for (let i =0; i<tableRows.length; i++){
+                switch(tableRows[i].id){
+                    case 3:{
+                        buildingParts[tableRows[i].mapItemId] = new WoodWall(tableRows[i].id, tableRows[i].mapItemId, tableRows[i].typeId, tableRows[i].characterId);
+                        buildingParts[tableRows[i].mapItemId].durability = tableRows[i].durability;
+                    }
+                        break;
+                    case 4:{
+                        buildingParts[tableRows[i].mapItemId] = new StoneWall(tableRows[i].id, tableRows[i].mapItemId, tableRows[i].typeId, tableRows[i].characterId);
+                        buildingParts[tableRows[i].mapItemId].durability = tableRows[i].durability;
+                    }
+                        break;
+                }
+            }
+            break;
 		case 'characters':
 			for (let i =0; i<tableRows.length; i++){
 				characters[tableRows[i].id] = new Character(tableRows[i].id, tableRows[i].accountId, tableRows[i].inventoryId,
@@ -163,12 +209,12 @@ function callBackTable(tableRows, tableName){
 		break;
         case 'animals':
             for (let i =0; i<tableRows.length; i++){
-                switch (tableRows[i].name){
-                    case 'rabbit':
-                        animals[tableRows[i].id] = new Rabbit(tableRows[i].id, new Location(tableRows[i].column, tableRows[i].row, tableRows[i].top, tableRows[i].left), tableRows[i].isAlive==1?true:false, tableRows[i].timeToResurrection, tableRows[i].zoneId);
+                switch (tableRows[i].type){
+                    case 1:
+                        animals[tableRows[i].id] = new Rabbit(tableRows[i].id, new Location(tableRows[i].column, tableRows[i].row, tableRows[i].top, tableRows[i].left), tableRows[i].zoneId);
                         break;
-                    case 'bullsheep':
-                        animals[tableRows[i].id] = new BullSheep(tableRows[i].id, new Location(tableRows[i].column, tableRows[i].row, tableRows[i].top, tableRows[i].left), tableRows[i].isAlive==1?true:false, tableRows[i].timeToResurrection, tableRows[i].zoneId);
+                    case 2:
+                        animals[tableRows[i].id] = new BullSheep(tableRows[i].id, new Location(tableRows[i].column, tableRows[i].row, tableRows[i].top, tableRows[i].left), tableRows[i].zoneId);
                         break;
                 }
             }
@@ -228,6 +274,16 @@ function createInventory(size){
     }
     return inventoryId;
 }
+function createMapInventory(size){
+  let inventoryId = getId('inventory');
+  mapInventories[inventoryId] = new Inventory(inventoryId, size);
+  for (let i=0; i<mapInventories[inventoryId].stacks.length; i++){
+    let stackId = getId('stack');
+    mapStacks[stackId] = new Stack(stackId, inventoryId, i);
+    mapInventories[inventoryId].stacks[i] = stackId;
+  }
+  return inventoryId;
+}
 
 function createCharacter(accountId, column, row){
     let characterId = getId('character');
@@ -244,9 +300,14 @@ exports.accounts = accounts;
 exports.characters = characters;
 exports.inventories = inventories;
 exports.items = items;
-exports.mapItems = mapItems;
+exports.mapItemsCatalog = mapItemsCatalog;
+exports.resources = resources;
+exports.buildingParts = buildingParts;
 exports.recipeList=recipeList;
 exports.stacks = stacks;
+exports.mapInventories = mapInventories;
+exports.mapStacks = mapStacks;
+exports.mapLoots = mapLoots;
 exports.identificators=identificators;
 exports.firedAmmos = firedAmmos;
 exports.zones = zones;
@@ -259,3 +320,4 @@ exports.fillData = fillData;
 exports.fillId = fillId;
 exports.createInventory = createInventory;
 exports.createCharacter = createCharacter;
+exports.createMapInventory = createMapInventory;

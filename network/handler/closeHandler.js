@@ -6,8 +6,10 @@ const sender = require('../sender');
 
 function closeHandler(data, accountId){
 	console.log('connection closed ' + accountId);
-    accountId = parseInt(accountId);
-	if (accountId===undefined)return;
+  if (accountId===undefined||isNaN(accountId)){
+    return;
+  }
+  accountId = parseInt(accountId);
 	for (let key in data.characters){
 	    if (data.characters[key].accountId === accountId){
             let requestDelete = new Request({type:HUMAN_DELETE, request:data.characters[key].id});

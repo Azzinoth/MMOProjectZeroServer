@@ -19,26 +19,12 @@ function Character (id, accountId, inventoryId, armorInventoryId, hotBarId, acti
 		this.viewDistance = viewDistance;
 		this.craftRecipesId = [];
 		this.direction = -1;
+		this.timeToResurrection = null;
     	this.normalSpeed = 64;
     	this.currentSpeed = 64;
 		this.currentTick = null;
     	this.lastTick = null;
     	this.tmpDistanceWalked = 0;
-}
-let characterPtoto={
-    id : null,
-	inventoryId : null,
-	isPlayer : null,
-	size : 64,
-	column : null,
-	row : null,
-	top : null,
-	left : null,
-	level : null,
-	health : null,
-	strength : null,
-	isAlive : true,
-	craftRecipesId : []
 }
 Character.prototype.getNewCoord = function(){
 	this.currentTick = getTime.getTimeInMs();
@@ -98,15 +84,19 @@ Character.prototype.move = function(left, top, column, row){
 	this.left = left;
 	this.top = top;
 	this.column = column;
-    this.row = row;
+	this.row = row;
 }
-Character.prototype.dead = function(){
-    this.column = 10;
-    this.row = 10;
-    this.left = this.column*64;
-    this.top = this.row*64;
-    this.direction = -1;
-    this.health = 10;
-
+Character.prototype.dead = function(inventories, stacks){
+	this.column = 10;
+	this.row = 10;
+	this.isAlive=false;
+	this.left = this.column*64;
+	this.top = this.row*64;
+	this.direction = -1;
+	this.health = 10;
+  this.timeToResurrection = 10;
+  inventories[this.inventoryId].clear(stacks);
+  inventories[this.armorInventoryId].clear(stacks);
+  inventories[this.hotBarId].clear(stacks);
 }
 module.exports = Character;

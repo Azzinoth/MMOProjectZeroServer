@@ -1,11 +1,10 @@
 const Animal = require('../Animal');
-function Rabbit (id, location, isAlive, timeToResurrection, zoneId){
+function Rabbit (id, location, zoneId){
     Animal.apply(this, arguments);
-    this.name = 'rabbit';
     this.zoneId = zoneId;
     this.speed = 32;
     this.health = 3;
-
+    this.lootChance = new Array(new Array(7, 2, 100), new Array(8, 1, 50));
 }
 
 Rabbit.prototype = Object.create(Animal.prototype);

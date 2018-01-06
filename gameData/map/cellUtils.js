@@ -6,22 +6,29 @@ function isBuilderCell(cellsMap, column, row){
     }
 }
 function isMovableCell(cellsMap, fromRow, toRow, fromColumn, toColumn){
+  if (toRow<1||toColumn<1)return false;
 	if (Math.abs(fromRow-toRow)<2&&Math.abs(fromColumn-toColumn)<2){
 		return cellsMap[toColumn][toRow].movable;
 	}else{
 		return false;
 	}
 }
-function isGatheredCell(cellsMap, fromRow, fromColumn, toRow, toColumn, mapItems){
-    let objectId = cellsMap[toColumn][toRow].objectId;
-    if (Math.abs(fromRow-toRow)<2&&Math.abs(fromColumn-toColumn)<2&&objectId!==null&&mapItems[objectId].type==='RESOURCE'){
-		// cellsMap[toColumn][toRow].objectId=null;
-		// cellsMap[toColumn][toRow].movable = true;
+function isGatheredCell(cellsMap, fromRow, fromColumn, toRow, toColumn, resources){
+    let mapItemId = cellsMap[toColumn][toRow].mapItemId;
+    if (Math.abs(fromRow-toRow)<2&&Math.abs(fromColumn-toColumn)<2&&mapItemId!==null&&resources.hasOwnProperty(mapItemId)){
 		return true;
     }else{
         return false;
     }
 }
+function isNearCell(fromColumn, fromRow, toColumn, toRow, distance){
+  if (Math.abs(fromRow-toRow)<distance+1&&Math.abs(fromColumn-toColumn)<distance+1){
+    return true;
+  }else{
+    return false;
+  }
+}
 exports.isBuilderCell = isBuilderCell;
 exports.isMovableCell = isMovableCell;
 exports.isGatheredCell = isGatheredCell;
+exports.isNearCell = isNearCell;
