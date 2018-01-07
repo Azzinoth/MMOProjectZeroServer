@@ -37,6 +37,17 @@ function surroundAnimals (startColumn, startRow, distance, animals){
     }
     return arrayObjects;
 }
+
+function surroundLoots (startColumn, startRow, distance, mapLoots){
+  let arrayObjects = [];
+  for (let key in mapLoots){
+    if (Math.abs(startColumn-mapLoots[key].column)<distance&&(Math.abs(startRow-mapLoots[key].row)<distance)){
+      arrayObjects.push(mapLoots[key]);
+    }
+  }
+  return arrayObjects;
+}
+
 function isNewObjectInViewDistance(myLeft, myTop, fromLeft, fromTop, toLeft, toTop, viewDistance){
     let from = distanceUtils.distance(myLeft, myTop, fromLeft, fromTop);
     let to = distanceUtils.distance(myLeft, myTop, toLeft, toTop);
@@ -49,3 +60,4 @@ exports.surroundObjects = surroundObjects;
 exports.findCharacters = findCharacters;
 exports.surroundAnimals = surroundAnimals;
 exports.isNewObjectInViewDistance = isNewObjectInViewDistance;
+exports.surroundLoots = surroundLoots;

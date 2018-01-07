@@ -6,15 +6,7 @@ const visibleObjects = require('./gameData/visibleObjects');
 const cellUtils = require('./gameData/map/cellUtils');
 const initialize = require('./network/initialize');
 const MapLoot = require('./gameData/mapItem/MapLoot');
-const {
-  HIT,
-  NPC_MOVE,
-  NPC_DATA,
-  SHOT,
-  HUMAN_MOVE,
-  MAP_OBJECT,
-  DIE
-} = require('./constants').messageTypes;
+const MSG_TYPES = require('./constants/messageTypes');
 let startTime;
 let finishTime;
 let frameTime;
@@ -53,10 +45,10 @@ function moveCharacters(data) {
           for (let i = 0; i < visible.length; i++) {
             result.push(new Array(visible[i].column, visible[i].row, visible[i].objectId));
           }
-          request = new Request({type: MAP_OBJECT, request: result});
+          request = new Request({type: MSG_TYPES.MAP_OBJECT, request: result});
           sender.sendToClient(data.characters[key].accountId, request);
           let surrAnimals = visibleObjects.surroundAnimals(data.characters[key].column, data.characters[key].row, data.characters[key].viewDistance, data.animals);
-          request = new Request({type: NPC_DATA, request: surrAnimals});
+          request = new Request({type: MSG_TYPES.NPC_DATA, request: surrAnimals});
           sender.sendToClient(data.characters[key].accountId, request);
 
           let founderCharacters = visibleObjects.findCharacters(data.characters, data.characters[key].viewDistance, key);
@@ -64,14 +56,25 @@ function moveCharacters(data) {
           for (let i = 0; i < founderCharacters.length; i++) {
             resultChatacter = new Array(founderCharacters[i].id, founderCharacters[i].column, founderCharacters[i].row, founderCharacters[i].left, founderCharacters[i].top, founderCharacters[i].direction);
             sender.sendToClient(data.characters[key].accountId, new Request({
-              type: HUMAN_MOVE,
+              type: MSG_TYPES.HUMAN_MOVE,
               request: resultChatacter
             }));
             resultChatacter = new Array(data.characters[key].id, data.characters[key].column, data.characters[key].row, data.characters[key].left, data.characters[key].top, data.characters[key].direction);
             sender.sendToClient(data.characters[founderCharacters[i].id].accountId, new Request({
-              type: HUMAN_MOVE,
+              type: MSG_TYPES.HUMAN_MOVE,
               request: resultChatacter
             }));
+          }
+
+          let surroundLoots = visibleObjects.surroundLoots(data.characters[key].column, data.characters[key].row, data.characters[key].viewDistance, data.mapLoots);
+          for (let i = 0; i < surroundLoots.length; i++) {
+            request = new Request({
+              type: MSG_TYPES.MAP_LOOT,
+              request: new Array(surroundLoots[i].mapItemId, surroundLoots[i].inventoryId, surroundLoots[i].left, surroundLoots[i].top)
+            });
+            sender.sendToClient(data.characters[key].accountId, request);
+            request = new Request({type: MSG_TYPES.INVENTORY_DATA, request: data.inventories[surroundLoots[i].inventoryId]});
+            sender.sendToClient(data.characters[key].accountId, request);
           }
 
         } else continue;
@@ -95,7 +98,7 @@ function moveNpc(data) {
       continue;
     }
     //result.push(new Array(data.animals[key].location.left, data.animals[key].location.top));
-    if (data.animals[key].zone === null) {
+    if (data.animals[key].zoneId === null) {
       data.animals[key].randZone();
     }
     if (data.animals[key].destination === null) {
@@ -106,7 +109,7 @@ function moveNpc(data) {
       if (data.animals[key].findPath.length > 0) {
         result = new Array(data.animals[key].id, data.animals[key].path, data.animals[key].location.column, data.animals[key].location.row);
         sender.sendByViewDistance(data.characters, new Request({
-          type: NPC_MOVE,
+          type: MSG_TYPES.NPC_MOVE,
           request: result
         }), data.animals[key].location.column, data.animals[key].location.row);
       }
@@ -125,7 +128,7 @@ function moveNpc(data) {
           if (isNewVisible) {
             result.push(new Array(data.animals[key].id, data.animals[key].path, data.animals[key].location.column, data.animals[key].location.row, data.animals[key].location.left, data.animals[key].location.top));
             sender.sendToClient(data.characters[key2].accountId, new Request({
-              type: NPC_DATA,
+              type: MSG_TYPES.NPC_DATA,
               request: result
             }));
             result = [];
@@ -141,44 +144,63 @@ function fire(data) {
   let firedAmmos = data.firedAmmos;
   for (let i = 0; i < firedAmmos.length; i++) {
     if (firedAmmos[i].active) {
+
       let time = new Date().getTime();
       firedAmmos[i].currentTick = time;
       firedAmmos[i].timePassed += firedAmmos[i].currentTick - firedAmmos[i].lastTick;
       firedAmmos[i].lastTick = time;
-
       let fromColumn = Math.floor(firedAmmos[i].x / 64);
       let fromRow = Math.floor(firedAmmos[i].y / 64);
       firedAmmos[i].x = parseInt(firedAmmos[i].initialX + (firedAmmos[i].finalX - firedAmmos[i].initialX) * (firedAmmos[i].timePassed / firedAmmos[i].timeToFinal));
       firedAmmos[i].y = parseInt(firedAmmos[i].initialY + (firedAmmos[i].finalY - firedAmmos[i].initialY) * (firedAmmos[i].timePassed / firedAmmos[i].timeToFinal));
       let toColumn = Math.floor(firedAmmos[i].x / 64);
       let toRow = Math.floor(firedAmmos[i].y / 64);
+
+      if (Math.floor(firedAmmos[i].x / 64) < 0 || Math.floor(firedAmmos[i].x / 64) >= 43*3 ||
+        Math.floor(firedAmmos[i].y / 64) < 0 || Math.floor(firedAmmos[i].y / 64) >= 43*3){
+        data.firedAmmos[i].active = false;
+        return;
+      }
+
+      if (fromColumn != toColumn || fromRow !== toRow) {
+        if (!data.getMap()[toColumn][toRow].movable) {
+          data.firedAmmos[i].active = false;
+          return;
+        }
+      }
+
+      if (firedAmmos[i].timePassed > firedAmmos[i].maxTime) {
+        firedAmmos[i].active = false;
+        return;
+      }
+
       for (let key in data.characters) {
         if (data.characters[key].isOnline && data.characters[key].isAlive && key != data.firedAmmos[i].characterId) {
           let isHit = collision.isCollision(data.firedAmmos[i].x, data.firedAmmos[i].y, 3, 3, data.characters[key].left - 32, data.characters[key].top - 64, 32, 64);//shoot from center
           if (isHit) {
-            if (data.characters[key].health > 1) {
-              let damage = 2;
-              data.characters[key].health -= damage;
-              sender.sendByViewDistance(data.characters, new Request({
-                type: HIT,
-                request: new Array(0, data.characters[key].id, damage)
-              }), firedAmmos[i].x / 64, firedAmmos[i].y / 64);
-            } else {
-
-              let size = data.inventories[data.characters[key].inventoryId].size+data.inventories[data.characters[key].hotBarId].size;
-              let mapInventoryId = data.createMapInventory(size);
-              data.mapInventories[mapInventoryId].addAllFromInventory(data.inventories[data.characters[key].inventoryId]);
-              data.mapInventories[mapInventoryId].addAllFromInventory(data.inventories[data.characters[key].hotBarId]);
-              let mapLoot = new MapLoot(23, data.getId('mapItem'));
-              mapLoot.mapInventoryId = mapInventoryId;
-              data.mapLoots[mapLoot.mapItemId]=mapLoot;
-              data.getMap()[toColumn][toRow].objectId = mapLoot.id;
+            let damage = firedAmmos[i].damage;
+            data.characters[key].health -= damage;
+            sender.sendByViewDistance(data.characters, new Request({
+              type: MSG_TYPES.HIT,
+              request: new Array(0, data.characters[key].id, damage)
+            }), firedAmmos[i].x / 64, firedAmmos[i].y / 64);
+            if (data.characters[key].health <= 0) {
+              let size = data.inventories[data.characters[key].inventoryId].size + data.inventories[data.characters[key].hotBarId].size;
+              let inventoryId = data.createInventory(size);
+              data.inventories[inventoryId].addAllFromInventory(data.inventories[data.characters[key].inventoryId]);
+              data.inventories[inventoryId].addAllFromInventory(data.inventories[data.characters[key].hotBarId]);
+              let mapLoot = new MapLoot(data.getId('mapItem'), data.characters[key].left - 32, data.characters[key].top - 64, inventoryId);
+              data.mapLoots[mapLoot.mapItemId] = mapLoot;
               data.characters[key].dead(data.inventories, data.stacks);
-              sender.sendByViewDistance(data.characters,
-                new Request({type: MAP_OBJECT, request: new Array(data.getMap()[toColumn][toRow].column, data.getMap()[toColumn][toRow].row, data.getMap()[toColumn][toRow].objectId)}),
-                toColumn,
-                toRow);
-              sender.sendToAll(new Request({type: DIE, request: new Array(0, data.characters[key].id)}));
+              sender.sendByViewDistance(data.characters, new Request({type: MSG_TYPES.DIE, request: new Array(0, data.characters[key].id)}));
+              sender.sendByViewDistance(data.characters, new Request({
+                type: MSG_TYPES.MAP_LOOT,
+                request: new Array(mapLoot.mapItemId, mapLoot.inventoryId, mapLoot.left, mapLoot.top)
+              }), toColumn, toRow);
+              // sender.sendByViewDistance(data.characters, new Request({
+              //   type: INVENTORY_DATA,
+              //   request: data.inventories[inventoryId]
+              // }), toColumn, toRow);
               initialize(data, data.characters[key].accountId);
             }
             data.firedAmmos[i].active = false;
@@ -191,46 +213,36 @@ function fire(data) {
         if (data.firedAmmos[i].active && data.animals[key].isAlive) {
           let isHit = collision.isCollision(data.firedAmmos[i].x, data.firedAmmos[i].y, 3, 3, data.animals[key].location.left, data.animals[key].location.top, 40, 40);
           if (isHit) {
-            let damage = 2;
+            let damage = firedAmmos[i].damage;
             data.animals[key].health -= damage;
-            if (data.animals[key].health > 0) {
-              data.firedAmmos[i].active = false;
-              sender.sendByViewDistance(data.characters, new Request({
-                type: HIT,
-                request: new Array(1, data.animals[key].id, damage)
-              }), firedAmmos[i].x / 64, firedAmmos[i].y / 64);
-            } else {
-              let mapLoot = new MapLoot(23, data.getId('mapItem'));
-              mapLoot.mapInventoryId = data.animals[key].getLoot(data);
-              data.mapLoots[mapLoot.mapItemId]=mapLoot;
-              data.getMap()[toColumn][toRow].objectId = mapLoot.id;
+            data.firedAmmos[i].active = false;
+            sender.sendByViewDistance(data.characters, new Request({
+              type: MSG_TYPES.HIT,
+              request: new Array(1, data.animals[key].id, damage)
+            }), firedAmmos[i].x / 64, firedAmmos[i].y / 64);
+            if (data.animals[key].health <= 0) {
+              let inventoryId = data.animals[key].getLoot(data);
+              let mapLoot = new MapLoot(data.getId('mapItem'), data.animals[key].location.left, data.animals[key].location.top, inventoryId);
+              data.mapLoots[mapLoot.mapItemId] = mapLoot;
               data.animals[key].dead();
               data.firedAmmos[i].active = false;
               sender.sendByViewDistance(data.characters, new Request({
-                type: DIE,
+                type: MSG_TYPES.DIE,
                 request: new Array(1, data.animals[key].id)
               }), toColumn, toRow);
-              sender.sendByViewDistance(data.characters,
-                new Request({type: MAP_OBJECT, request: new Array(data.getMap()[toColumn][toRow].column, data.getMap()[toColumn][toRow].row, data.getMap()[toColumn][toRow].objectId)}),
-                toColumn,
-                toRow);
-
+              sender.sendByViewDistance(data.characters, new Request({
+                type: MSG_TYPES.MAP_LOOT,
+                request: new Array(mapLoot.mapItemId, mapLoot.inventoryId, mapLoot.left, mapLoot.top)
+              }), toColumn, toRow);
+              // sender.sendByViewDistance(data.characters, new Request({
+              //   type: INVENTORY_DATA,
+              //   request: data.inventories[inventoryId]
+              // }), toColumn, toRow);
             }
             break;
           }
 
         }
-      }
-
-      if (fromColumn != toColumn || fromRow !== toRow) {
-        if (!data.getMap()[toColumn][toRow].movable) {
-          data.firedAmmos[i].active = false;
-        }
-      }
-
-
-      if (firedAmmos[i].timePassed > firedAmmos[i].maxTime) {
-        firedAmmos[i].active = false;
       }
     }
   }

@@ -248,7 +248,7 @@ function insert(tableName, value, callBack) {
       break;
     case 'mapItemsCatalog':
     case 'mapItemsCatalogTmp':
-      addSql("run", tableName, "INSERT INTO " + tableName + " (id) VALUES" + " (" + value + ");");
+      addSql("run", tableName, "INSERT INTO " + tableName + " (id, typeId) VALUES" + " (" + value + ");");
       break;
     case 'mapCells':
     case 'mapCellsTmp':

@@ -1,4 +1,4 @@
-module.exports = {
+MSG_TYPES = {
 	SESSION_ID : 0,
     HUMAN_DATA : 1,
 	HUMAN_MOVE : 2,
@@ -26,5 +26,8 @@ module.exports = {
 	AUTORIZATION : 24,
     REGISTRATION : 25,
     DIE : 26,
-  	LOOTING : 27
+  	LOOTING : 27,
+  	MAP_LOOT : 28,
+		BUILDING_OBJECT : 29
 };
+module.exports = MSG_TYPES;

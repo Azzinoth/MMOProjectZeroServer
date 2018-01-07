@@ -20,6 +20,8 @@ Range.prototype.shot = function (firedAmmos, personId, initialX, initialY, toX, 
 
             for (let i = 0; i<firedAmmos.length; i++){
                 if (!firedAmmos[i].active){
+                    firedAmmos[i].damage = this.damage;
+                    firedAmmos[i].radius = 1;
                     firedAmmos[i].characterId = personId;
                     firedAmmos[i].speedPerSec = 750;
                     firedAmmos[i].initialX = initialX-5;

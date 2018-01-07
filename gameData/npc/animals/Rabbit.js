@@ -4,7 +4,7 @@ function Rabbit (id, location, zoneId){
     this.zoneId = zoneId;
     this.speed = 32;
     this.health = 3;
-    this.lootChance = new Array(new Array(7, 2, 100), new Array(8, 1, 50));
+    this.lootChance = new Array(new Array(8, 2, 100), new Array(10, 1, 50));
 }
 
 Rabbit.prototype = Object.create(Animal.prototype);

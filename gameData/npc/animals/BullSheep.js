@@ -6,7 +6,7 @@ function BullSheep(id, location, zoneId) {
   this.speed = 400;
   this.health = 340;
   this.strength = 180;
-  this.lootChance = new Array(new Array(7, 8, 100), new Array(8, 3, 50));
+  this.lootChance = new Array(new Array(8, 8, 100), new Array(10, 3, 50));
 }
 
 BullSheep.prototype = Object.create(Animal.prototype);

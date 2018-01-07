@@ -24,7 +24,7 @@ function Animal(id, location) {
 Animal.prototype = Object.create(Npc.prototype);
 
 Animal.prototype.chooseNewDestination = function (map, zones) {
-  if (Math.random() < 0) return null;
+  if (Math.random() < 0.98) return null;
 
   if (this.destination === null) this.destination = new Location();
   this.destination.column = parseInt(Math.random() * (zones[this.zoneId].toColumn - zones[this.zoneId].fromColumn) + zones[this.zoneId].fromColumn);
@@ -140,14 +140,14 @@ Animal.prototype.resurrect = function (zones) {
 
 Animal.prototype.getLoot = function (data) {
   if (this.lootChance === null) return;
-  let mapInventoryId = data.createMapInventory(this.lootChance.length);
+  let inventoryId = data.createInventory(this.lootChance.length);
   for (let i = 0; i < this.lootChance.length; i++) {
     let rand = Math.floor(Math.random() * (101));
     if (rand <= this.lootChance[i][2]) {
-      data.mapStacks[data.mapInventories[mapInventoryId].stacks[i]].item = itemUtils.createItem(this.lootChance[i][0]);
-      data.mapStacks[data.mapInventories[mapInventoryId].stacks[i]].size = this.lootChance[i][1];
+      data.stacks[data.inventories[inventoryId].stacks[i]].item = itemUtils.createItem(this.lootChance[i][0]);
+      data.stacks[data.inventories[inventoryId].stacks[i]].size = this.lootChance[i][1];
     }
   }
-  return mapInventoryId;
+  return inventoryId;
 }
 module.exports = Animal;

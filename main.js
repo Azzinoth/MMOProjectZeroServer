@@ -5,7 +5,8 @@ const sqlUtils = require('./sql/utils');
 const toDataBase = require('./sql/gameDataToDataBase');
 const send = require('./network/sender');
 const mainLoop = require('./loop');
-
+const Bow = require('./gameData/item/unique/weapon/range/Bow');
+const Item = require('./gameData/item/Item');
 sqlUtils.fill();
 // data.fillId(sqlUtils);
 // sqlUtils.pushDb(data.callBackTable).then(
@@ -106,6 +107,39 @@ function start() {
         server(data)
     });
 }
+function fillItemsCatalog(data) {
+  sqlUtils.drop('items');
+  data.items[1] = new Item(1, 'RESOURCE', 20);//wood
+  data.items[2] = new Item(2, 'RESOURCE', 20);//stone
+  data.items[3] = new Item(3, 'BUILDING_PART', 20);//wood wall
+  data.items[4] = new Item(4, 'BUILDING_PART', 20);//stone wall
+  data.items[5] = new Bow(5, 20);//bow
+  data.items[6] = new Item(6, 'AMMO', 20);//arrow
+  data.items[7] = new Item(7, 'BUILDING_PART', 20);//campFire
+  data.items[8] = new Item(8, 'RESOURCE', 20);//raw meat
+  data.items[9] = new Item(9, 'RESOURCE', 20);//coocked meat
+  data.items[10] = new Item(10, 'RESOURCE', 20);//leather
+  data.items[11] = new Item(11, 'BUILDING_PART', 20);//wood chest
+}
+
+function fillMapItemsCatalog() {
+  sqlUtils.drop('mapItemsCatalog');
+ sqlUtils.createTable('mapItemsCatalog');
+  let fs = require('fs');
+  fs.readFile('MapItemObjects.json', function (err, data) {
+    if (err) {
+      throw err;
+    }
+    let object = JSON.parse(data.toString());
+
+    for (let i = 0; i < object.length; i++) {
+      if (object[i].objectId !== -1) {
+        // data.mapItemsCatalog(object[i].id)
+        sqlUtils.insert('mapItemsCatalog', object[i].id+', '+ object[i].objectId);
+      }
+    }
+  });
+}
 
 function wipe() {
   return new Promise(function (resolve, reject) {
@@ -121,7 +155,7 @@ function wipe() {
     sqlUtils.drop('weaponsRangeTmp');
 
 
-    mapItemsCatalog();
+    fillMapItemsCatalog();
     buildingParts();
     let accountId = accounts();
     items();
@@ -173,8 +207,10 @@ function items() {
   sqlUtils.insert('items', 5 + ', \'WEAPON\', 1'); //bow
   sqlUtils.insert('items', 6 + ', \'AMMO\', 20'); //arrow
   sqlUtils.insert('items', 7 + ', \'BUILDING_PART\', 1'); //campFire
-  sqlUtils.insert('items', 8 + ', \'RESOURCE\', 20'); //meat
-  sqlUtils.insert('items', 9 + ', \'RESOURCE\', 20'); //leather
+  sqlUtils.insert('items', 8 + ', \'RESOURCE\', 20'); //raw meat
+  sqlUtils.insert('items', 9 + ', \'RESOURCE\', 20'); //coocked meat
+  sqlUtils.insert('items', 10 + ', \'RESOURCE\', 20'); //leather
+  sqlUtils.insert('items', 11 + ', \'BUILDING_PART\', 1'); //wood chest
 }
 
 function commonItems() {
@@ -189,23 +225,7 @@ function weaponsRange() {
 
 }
 
-function mapItemsCatalog() {
-  sqlUtils.drop('mapItemsCatalog');
-  sqlUtils.createTable('mapItemsCatalog');
-  let fs = require('fs');
-  fs.readFile('MapItemObjects.json', function (err, data) {
-    if (err) {
-      throw err;
-    }
-    let object = JSON.parse(data.toString());
 
-    for (let i = 0; i < object.length; i++) {
-      if (object[i].objectId !== -1) {
-        sqlUtils.insert('mapItemsCatalog', object[i].id, object[i].objectId);
-      }
-    }
-  });
-}
 
 //function resources(){
 
@@ -357,12 +377,12 @@ function animals() {
       id++;
       sqlUtils.insert('animals', id + ', ' + col + ', ' + row + ', ' + col * 64 + ', ' + row * 64 + ', ' + zoneId + ', ' + 1);
     }
-    for (let j = 0; j < 10; j++) {
-      let col = Math.floor(Math.random() * (toC - fromC) + fromC);
-      let row = Math.floor(Math.random() * (toR - fromR) + fromR);
-      id++;
-      sqlUtils.insert('animals', id + ', ' + col + ', ' + row + ', ' + col * 64 + ', ' + row * 64 + ', ' + zoneId + ', ' + 2);
-    }
+    // for (let j = 0; j < 10; j++) {
+    //   let col = Math.floor(Math.random() * (toC - fromC) + fromC);
+    //   let row = Math.floor(Math.random() * (toR - fromR) + fromR);
+    //   id++;
+    //   sqlUtils.insert('animals', id + ', ' + col + ', ' + row + ', ' + col * 64 + ', ' + row * 64 + ', ' + zoneId + ', ' + 2);
+    // }
   }
   return id
 }

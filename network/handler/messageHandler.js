@@ -3,36 +3,16 @@ const Request = require('../Request');
 const visibleObjects = require('../../gameData/visibleObjects');
 const craftItem = require('../../gameData/craft/craftItem');
 const Weapon = require('../../gameData/item/unique/Weapon');
+const Lootable = require('../../gameData/mapItem/buildingPart/Lootable');
 const cellUtils = require('../../gameData/map/cellUtils');
 const itemUtils = require('../../gameData/item/itemUtils');
 const sender = require('../sender');
 const collision = require('../../utils/collision');
 const getTime = require('../../utils/getTime');
+const log = require('../log');
+const MSG_TYPES = require('../../constants/messageTypes');
 const width = 48 * 3;
 const height = 48 * 3;
-const {
-  SESSION_ID,
-  HUMAN_DATA,
-  HUMAN_MOVE,
-  HUMAN_UPDATE,
-  HUMAN_DELETE,
-  GATHER,
-  MAP_OBJECT,
-  ERROR,
-  INVENTORY_CHANGE,
-  CRAFT,
-  ITEMS_LIST,
-  PLACE_ON_MAP,
-  SYSTEM_MESSAGE,
-  SHOT,
-  NPC_MOVE,
-  HOT_BAR_CHANGE,
-  HOT_BAR_CELL_ACTIVATE,
-  NPC_DATA,
-  RELOAD_WEAPON,
-  PING,
-  LOOTING
-} = require('../../constants').messageTypes;
 
 function messageHandler(data, message, personId) {
   let characters = data.characters;
@@ -49,22 +29,22 @@ function messageHandler(data, message, personId) {
   let column;
   let row;
   let request;
-  if (json.type !== HUMAN_UPDATE && json.type !== HUMAN_MOVE && json.type !== PING) console.log(message);
 
+  log(json.type, message, false, personId);
   switch (json.type) {
 
-    case HUMAN_MOVE: {
+    case MSG_TYPES.HUMAN_MOVE: {
       let direction = json.request;
       if (characters[personId].direction === -1)
         characters[personId].lastTick = getTime.getTimeInMs();
 
-      request = new Request({type: HUMAN_MOVE, request: new Array(personId, direction)});
+      request = new Request({type: MSG_TYPES.HUMAN_MOVE, request: new Array(personId, direction)});
       if (direction !== characters[personId].direction) {
         characters[personId].direction = direction;
         sender.sendByViewDistanceExcept(characters, request, characters[personId].column, characters[personId].row, characters[personId].accountId);
         characters[personId].tmpDistanceWalked = 0;
         request = new Request({
-          type: HUMAN_MOVE,
+          type: MSG_TYPES.HUMAN_MOVE,
           request: new Array(personId, characters[personId].column, characters[personId].row, characters[personId].left, characters[personId].top, characters[personId].direction)
         });
         sender.sendToClient(characters[personId].accountId, request);
@@ -72,7 +52,7 @@ function messageHandler(data, message, personId) {
 
     }
       break;
-    case GATHER: {
+    case MSG_TYPES.GATHER: {
 
       column = characters[personId].column;
       row = characters[personId].row;
@@ -94,43 +74,60 @@ function messageHandler(data, message, personId) {
           cellsMap[toColumn][toRow].movable = true;
           //delete reqStacks.isFull;
           // request = requestInventory (characters[personId].inventoryId, reqStacks, Object.getOwnPropertyNames(reqStacks).length);
-          request = new Request({type: INVENTORY_CHANGE, request: reqStacks});
+          request = new Request({type: MSG_TYPES.INVENTORY_CHANGE, request: reqStacks});
           sender.sendToClient(characters[personId].accountId, request);
 
           let tmpArray = [new Array(cellsMap[toColumn][toRow].column, cellsMap[toColumn][toRow].row, cellsMap[toColumn][toRow].objectId)];
-          request = new Request({type: MAP_OBJECT, request: tmpArray});
+          request = new Request({type: MSG_TYPES.MAP_OBJECT, request: tmpArray});
           sender.sendByViewDistance(characters, request, toColumn, toRow);
         } else {
-          request = new Request({type: SYSTEM_MESSAGE, request: 'Full inventory!'});
+          request = new Request({type: MSG_TYPES.SYSTEM_MESSAGE, request: 'Full inventory!'});
           sender.sendToClient(characters[personId].accountId, request);
         }
       } else {
-        request = new Request({type: SYSTEM_MESSAGE, request: 'Can not gather!'});
+        request = new Request({type: MSG_TYPES.SYSTEM_MESSAGE, request: 'Can not gather!'});
         sender.sendToClient(characters[personId].accountId, request);
       }
     }
       break;
-    case HUMAN_UPDATE: {
+    case MSG_TYPES.HUMAN_UPDATE: {
       let founderCharacters = visibleObjects.findCharacters(characters, characters[personId].viewDistance, personId);
       let resultCharacter = null;
       for (let i = 0; i < founderCharacters.length; i++) {
         resultCharacter = new Array(founderCharacters[i].id, founderCharacters[i].column, founderCharacters[i].row, founderCharacters[i].left, founderCharacters[i].top, founderCharacters[i].direction);
-        sender.sendToClient(characters[personId].accountId, new Request({type: HUMAN_MOVE, request: resultCharacter}));
+        sender.sendToClient(characters[personId].accountId, new Request({type: MSG_TYPES.HUMAN_MOVE, request: resultCharacter}));
       }
       request = new Request({
-        type: HUMAN_MOVE,
+        type: MSG_TYPES.HUMAN_MOVE,
         request: new Array(characters[personId].id, characters[personId].column, characters[personId].row, characters[personId].left, characters[personId].top, characters[personId].direction)
       });
       sender.sendToClient(characters[personId].accountId, request);
     }
       break;
-    case INVENTORY_CHANGE: {
+    case MSG_TYPES.INVENTORY_CHANGE: {
       let indexFrom = json.request[0];
       let indexTo = json.request[1];
-
-      if (stacks[indexFrom].inventoryId !== characters[personId].inventoryId && stacks[indexFrom].inventoryId !== characters[personId].hotBarId) break;
-      if (indexTo !== -1 && stacks[indexTo].inventoryId !== characters[personId].inventoryId && stacks[indexTo].inventoryId !== characters[personId].hotBarId) break;
-
+      let mapLootFrom = null;
+      let mapLootTo = null;
+      for (let key in data.mapLoots){
+        if (data.mapLoots[key].inventoryId === data.stacks[indexFrom].inventoryId)
+          mapLootFrom = data.mapLoots[key];
+        if (indexTo !== -1 && data.mapLoots[key].inventoryId === data.stacks[indexTo].inventoryId)
+          mapLootTo = data.mapLoots[key];
+      }
+      if (mapLootFrom === null && mapLootTo === null){
+        if (stacks[indexFrom].inventoryId !== characters[personId].inventoryId && stacks[indexFrom].inventoryId !== characters[personId].hotBarId) break;
+        if (indexTo !== -1 && stacks[indexTo].inventoryId !== characters[personId].inventoryId && stacks[indexTo].inventoryId !== characters[personId].hotBarId) break;
+      }else if (mapLootFrom !== null && mapLootTo !== null){
+        if (mapLootFrom.inventoryId!==mapLootTo.inventoryId) break;
+        if (!cellUtils.isNearCell(mapLootFrom.column, mapLootFrom.row, characters[personId].column, characters[personId].row, 1)) break;
+      }else if (mapLootFrom !== null){
+        if (indexTo !== -1 && stacks[indexTo].inventoryId !== characters[personId].inventoryId && stacks[indexTo].inventoryId !== characters[personId].hotBarId) break;
+        if (!cellUtils.isNearCell(mapLootFrom.column, mapLootFrom.row, characters[personId].column, characters[personId].row, 1)) break;
+      }else if (mapLootTo !== null){
+        if (stacks[indexFrom].inventoryId !== characters[personId].inventoryId && stacks[indexFrom].inventoryId !== characters[personId].hotBarId) break;
+        if (!cellUtils.isNearCell(mapLootTo.column, mapLootTo.row, characters[personId].column, characters[personId].row, 1)) break;
+      }
       let item = stacks[indexFrom].item;
       if (item === null) break;
       let toInventory = null;
@@ -139,12 +136,12 @@ function messageHandler(data, message, personId) {
       let swaps = stackUtils.swapStack(inventories[stacks[indexFrom].inventoryId], toInventory, stacks, indexFrom, indexTo);
 
       if (swaps !== 1) {
-        request = new Request({type: INVENTORY_CHANGE, request: swaps});
+        request = new Request({type: MSG_TYPES.INVENTORY_CHANGE, request: swaps});
         sender.sendToClient(characters[personId].accountId, request);
       }
     }
       break;
-    case CRAFT: {
+    case MSG_TYPES.CRAFT: {
       let craftId = +json.request;
       let craftRecipes = characters[personId].craftRecipesId;
 
@@ -152,14 +149,14 @@ function messageHandler(data, message, personId) {
         if (craftRecipes[i] === craftId) {
           let invent = craftItem(inventories, characters[personId], stacks, data.recipeList[craftRecipes[i]], items);
           if (invent !== 1 && invent !== 2 && invent !== 3) {
-            request = new Request({type: INVENTORY_CHANGE, request: invent});
+            request = new Request({type: MSG_TYPES.INVENTORY_CHANGE, request: invent});
             sender.sendToClient(characters[personId].accountId, request);
           }
         }
       }
     }
       break;
-    case PLACE_ON_MAP: {
+    case MSG_TYPES.PLACE_ON_MAP: {
       let stackId = json.request[0];
 
       column = json.request[1][0];
@@ -185,22 +182,25 @@ function messageHandler(data, message, personId) {
           break;
         }
       }
-      data.buildingParts[mapItemId] = itemUtils.createMapItem(catalogId, mapItemId, personId);
+      let mapObj = itemUtils.createMapItem(catalogId, personId);
+      data.buildingParts[mapObj.mapItemId] = mapObj;
       cellsMap[column][row].mapItemId = mapItemId;
       cellsMap[column][row].objectId = catalogId;
-      let result = [new Array(cellsMap[column][row].column, cellsMap[column][row].row, cellsMap[column][row].objectId)];
-      request = new Request({type: MAP_OBJECT, request: result});
+      inventoryId = null;
+      if (mapObj instanceof (Lootable)){
+        inventoryId = mapObj.inventoryId;
+      }
+      let result = [new Array(catalogId, mapItemId, column, row, inventoryId)];
+      request = new Request({type: MSG_TYPES.BUILDING_OBJECT, request: result});
       sender.sendByViewDistance(characters, request, column, row);
 
       sender.sendToClient(characters[personId].accountId, new Request({
-        type: INVENTORY_CHANGE,
+        type: MSG_TYPES.INVENTORY_CHANGE,
         request: new Array(stacks[stackId])
       }));
-
-
     }
       break;
-    case SHOT: {
+    case MSG_TYPES.SHOT: {
       let toX = json.request[0];
       let toY = json.request[1];
       let firedAmmos = data.firedAmmos;
@@ -217,7 +217,7 @@ function messageHandler(data, message, personId) {
         let removeItems = stackUtils.removeItems(quantity, findAmmo[1]);
         stacks[stackId].item.reloadWeapon(quantity);
         sender.sendToClient(characters[personId].accountId, new Request({
-          type: INVENTORY_CHANGE,
+          type: MSG_TYPES.INVENTORY_CHANGE,
           request: removeItems
         }));
         break;
@@ -231,11 +231,11 @@ function messageHandler(data, message, personId) {
       arr[2] = firedAmmo.initialY;
       arr[3] = firedAmmo.finalX;
       arr[4] = firedAmmo.finalY;
-      sender.sendToAll(new Request({type: SHOT, request: arr}));
+      sender.sendToAll(new Request({type: MSG_TYPES.SHOT, request: arr}));
 
     }
       break;
-    case HOT_BAR_CHANGE: {
+    case MSG_TYPES.HOT_BAR_CHANGE: {
       let indexFrom = json.request[0];
       let indexTo = json.request[1];
       let item = stacks[inventories[characters[personId].inventoryId].stacks[indexFrom]].item;
@@ -249,12 +249,12 @@ function messageHandler(data, message, personId) {
       }
 
       if (swaps !== 1) {
-        request = new Request({type: INVENTORY_CHANGE, request: swaps});
+        request = new Request({type: MSG_TYPES.INVENTORY_CHANGE, request: swaps});
         sender.sendToClient(characters[personId].accountId, request);
       }
     }
       break;
-    case RELOAD_WEAPON: {
+    case MSG_TYPES.RELOAD_WEAPON: {
       if (characters[personId].activeHotBarCell === null || stacks[characters[personId].activeHotBarCell].item === null) break;
       let stackId = characters[personId].activeHotBarCell;
       if (stacks[stackId].item.typeName !== 'WEAPON' || !stacks[stackId].item.isReloaded) break;
@@ -265,37 +265,39 @@ function messageHandler(data, message, personId) {
       if (findAmmo[0] < quantity) quantity = findAmmo[0];
       let removeItems = stackUtils.removeItems(quantity, findAmmo[1]);
       stacks[stackId].item.reloadWeapon(quantity);
-      sender.sendToClient(characters[personId].accountId, new Request({type: INVENTORY_CHANGE, request: removeItems}));
+      sender.sendToClient(characters[personId].accountId, new Request({type: MSG_TYPES.INVENTORY_CHANGE, request: removeItems}));
     }
       break;
-    case HOT_BAR_CELL_ACTIVATE: {
+    case MSG_TYPES.HOT_BAR_CELL_ACTIVATE: {
       let stackId = json.request;
       if (stacks[stackId].inventoryId !== characters[personId].hotBarId) break;
       characters[personId].activeHotBarCell = stackId;
     }
       break;
-    case LOOTING: {
-      let mapItemId = json.request[0];
-      let column = json.request[1];
-      let row = json.request[2];
-      if (data.getMap[column][row].mapItemId!==mapItemId ||
-        !data.mapLoots.hasOwnProperty(mapItemId) ||
-        !cellUtils.isNearCell(column, row, characters[personId].column, characters[personId].row, 1)) return;
-      let mapInventoryId = data.mapLoots[mapItemId].inventoryId;
+    case MSG_TYPES.LOOTING: {
+      let mapItemId = json.request;
+      data.buildingParts[mapItemId]...
+      if (!data.mapLoots.hasOwnProperty(mapItemId) ||
+        !cellUtils.isNearCell(data.mapLoots[mapItemId].column, data.mapLoots[mapItemId].row, characters[personId].column, characters[personId].row, 1)) return;
+      sender.sendToClient(data.characters[personId].accountId, new Request({
+          type: MSG_TYPES.INVENTORY_DATA,
+          request: data.inventories[data.mapLoots[mapItemId].inventoryId]
+        }), data.mapLoots[mapItemId].column, data.mapLoots[mapItemId].row);
+      let inventoryId = data.mapLoots[mapItemId].inventoryId;
       let result = [];
-      for (let i = 0; i< data.mapInventories[mapInventoryId].stacks.length; i++){
-        result.push(data.mapStacks[data.mapInventories[mapInventoryId].stacks[i]]);
+      for (let i = 0; i< data.inventories[inventoryId].stacks.length; i++){
+        result.push(data.stacks[data.inventories[inventoryId].stacks[i]]);
       }
-      sender.sendToClient(characters[personId].accountId, new Request({type: LOOTING, request: new Array(mapInventoryId, result)}));
+      sender.sendToClient(characters[personId].accountId, new Request({type: MSG_TYPES.INVENTORY_CHANGE, request: result}));
     }
       break;
-    case SYSTEM_MESSAGE: {
+    case MSG_TYPES.SYSTEM_MESSAGE: {
       console.log(json.request);
 
     }
       break;
-    case PING: {
-      sender.sendToClient(characters[personId].accountId, new Request({type: PING, request: null}));
+    case MSG_TYPES.PING: {
+      sender.sendToClient(characters[personId].accountId, new Request({type: MSG_TYPES.PING, request: null}));
     }
       break;
   }
