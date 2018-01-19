@@ -2,33 +2,46 @@
 <project version="4">
   <component name="BookmarkManager">
     <bookmark url="file://$PROJECT_DIR$/gameData/npc/animals/Rabbit.js" line="9" />
-    <bookmark url="file://$PROJECT_DIR$/gameData/inventory/Inventory.js" line="18" />
+    <bookmark url="file://$PROJECT_DIR$/gameData/inventory/Inventory.js" line="20" />
   </component>
   <component name="ChangeListManager">
     <list default="true" id="ed62a6e3-5542-496f-a173-1ecc7d08608d" name="Default" comment="">
+      <change type="DELETED" beforePath="$PROJECT_DIR$/gameData/item/common/CommonItem.js" afterPath="" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sql/tables/dataBase.db" afterPath="$PROJECT_DIR$/sql/tables/dataBase.db" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/MapItemObjects.json" afterPath="$PROJECT_DIR$/MapItemObjects.json" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Account.js" afterPath="$PROJECT_DIR$/Account.js" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/constants/messageTypes.js" afterPath="$PROJECT_DIR$/constants/messageTypes.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/gameData/Location.js" afterPath="$PROJECT_DIR$/gameData/Location.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/gameData/craft/CraftRecipe.js" afterPath="$PROJECT_DIR$/gameData/craft/CraftRecipe.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/gameData/craft/craftItem.js" afterPath="$PROJECT_DIR$/gameData/craft/craftItem.js" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/gameData/data.js" afterPath="$PROJECT_DIR$/gameData/data.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/gameData/inventory/Inventory.js" afterPath="$PROJECT_DIR$/gameData/inventory/Inventory.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/gameData/inventory/stackUtils.js" afterPath="$PROJECT_DIR$/gameData/inventory/stackUtils.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/gameData/item/Item.js" afterPath="$PROJECT_DIR$/gameData/item/Item.js" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/gameData/item/itemUtils.js" afterPath="$PROJECT_DIR$/gameData/item/itemUtils.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/gameData/item/unique/weapon/FiredAmmo.js" afterPath="$PROJECT_DIR$/gameData/item/unique/weapon/FiredAmmo.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/gameData/item/unique/weapon/Range.js" afterPath="$PROJECT_DIR$/gameData/item/unique/weapon/Range.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/gameData/item/unique/weapon/range/Bow.js" afterPath="$PROJECT_DIR$/gameData/item/unique/weapon/range/Bow.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/gameData/map/cellUtils.js" afterPath="$PROJECT_DIR$/gameData/map/cellUtils.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/gameData/mapItem/BuildingPart.js" afterPath="$PROJECT_DIR$/gameData/mapItem/BuildingPart.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/gameData/mapItem/MapItem.js" afterPath="$PROJECT_DIR$/gameData/mapItem/MapItem.js" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/gameData/mapItem/MapLoot.js" afterPath="$PROJECT_DIR$/gameData/mapItem/MapLoot.js" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/gameData/mapItem/Resource.js" afterPath="$PROJECT_DIR$/gameData/mapItem/Resource.js" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/gameData/mapItem/buildingPart/Lootable.js" afterPath="$PROJECT_DIR$/gameData/mapItem/buildingPart/Lootable.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/gameData/mapItem/buildingPart/Wall.js" afterPath="$PROJECT_DIR$/gameData/mapItem/buildingPart/Wall.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/gameData/mapItem/buildingPart/lootable/Production.js" afterPath="$PROJECT_DIR$/gameData/mapItem/buildingPart/lootable/Production.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/gameData/mapItem/buildingPart/lootable/WoodChest.js" afterPath="$PROJECT_DIR$/gameData/mapItem/buildingPart/lootable/WoodChest.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/gameData/mapItem/buildingPart/lootable/production/CampFire.js" afterPath="$PROJECT_DIR$/gameData/mapItem/buildingPart/lootable/production/CampFire.js" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/gameData/mapItem/buildingPart/wall/StoneWall.js" afterPath="$PROJECT_DIR$/gameData/mapItem/buildingPart/wall/StoneWall.js" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/gameData/mapItem/buildingPart/wall/WoodWall.js" afterPath="$PROJECT_DIR$/gameData/mapItem/buildingPart/wall/WoodWall.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/gameData/npc/Animal.js" afterPath="$PROJECT_DIR$/gameData/npc/Animal.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/gameData/npc/animals/BullSheep.js" afterPath="$PROJECT_DIR$/gameData/npc/animals/BullSheep.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/gameData/npc/animals/Rabbit.js" afterPath="$PROJECT_DIR$/gameData/npc/animals/Rabbit.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/gameData/mapItem/resource/Rock.js" afterPath="$PROJECT_DIR$/gameData/mapItem/resource/Rock.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/gameData/mapItem/resource/Tree.js" afterPath="$PROJECT_DIR$/gameData/mapItem/resource/Tree.js" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/gameData/visibleObjects.js" afterPath="$PROJECT_DIR$/gameData/visibleObjects.js" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/loop.js" afterPath="$PROJECT_DIR$/loop.js" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/main.js" afterPath="$PROJECT_DIR$/main.js" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/network/handler/messageHandler.js" afterPath="$PROJECT_DIR$/network/handler/messageHandler.js" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/network/initialize.js" afterPath="$PROJECT_DIR$/network/initialize.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/network/sender.js" afterPath="$PROJECT_DIR$/network/sender.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/network/server.js" afterPath="$PROJECT_DIR$/network/server.js" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sql/utils.js" afterPath="$PROJECT_DIR$/sql/utils.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/utils/bubbleSort.js" afterPath="$PROJECT_DIR$/utils/bubbleSort.js" />
     </list>
     <ignored path="$PROJECT_DIR$/.tmp/" />
     <ignored path="$PROJECT_DIR$/temp/" />
@@ -40,33 +53,31 @@
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
+  <component name="FavoritesManager">
+    <favorites_list name="data">
+      <favorite_root url="file://$PROJECT_DIR$/gameData/data.js" type="psiFile" klass="com.intellij.ide.projectView.impl.nodes.PsiFileNode" />
+    </favorites_list>
+    <favorites_list name="messageHandler">
+      <favorite_root url="file://$PROJECT_DIR$/network/handler/messageHandler.js" type="psiFile" klass="com.intellij.ide.projectView.impl.nodes.PsiFileNode" />
+    </favorites_list>
+  </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
       <file leaf-file-name="data.js" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/gameData/data.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-2048">
-              <caret line="11" column="17" lean-forward="false" selection-start-line="11" selection-start-column="4" selection-end-line="11" selection-end-column="17" />
+            <state relative-caret-position="-1700">
+              <caret line="31" column="17" lean-forward="false" selection-start-line="31" selection-start-column="4" selection-end-line="31" selection-end-column="17" />
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="loop.js" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/loop.js">
+      <file leaf-file-name="craftItem.js" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/gameData/craft/craftItem.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="177">
-              <caret line="15" column="4" lean-forward="false" selection-start-line="15" selection-start-column="4" selection-end-line="15" selection-end-column="4" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="MapLoot.js" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/gameData/mapItem/MapLoot.js">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="119">
-              <caret line="7" column="22" lean-forward="false" selection-start-line="7" selection-start-column="22" selection-end-line="7" selection-end-column="27" />
+            <state relative-caret-position="462">
+              <caret line="32" column="12" lean-forward="false" selection-start-line="32" selection-start-column="12" selection-end-line="32" selection-end-column="12" />
               <folding />
             </state>
           </provider>
@@ -75,28 +86,58 @@
       <file leaf-file-name="itemUtils.js" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/gameData/item/itemUtils.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="339">
-              <caret line="55" column="20" lean-forward="true" selection-start-line="55" selection-start-column="20" selection-end-line="55" selection-end-column="20" />
+            <state relative-caret-position="0">
+              <caret line="12" column="34" lean-forward="false" selection-start-line="12" selection-start-column="34" selection-end-line="12" selection-end-column="34" />
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="CampFire.js" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/gameData/mapItem/buildingPart/lootable/production/CampFire.js">
+      <file leaf-file-name="CraftRecipe.js" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/gameData/craft/CraftRecipe.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="34">
-              <caret line="2" column="76" lean-forward="true" selection-start-line="2" selection-start-column="76" selection-end-line="2" selection-end-column="76" />
+            <state relative-caret-position="425">
+              <caret line="20" column="17" lean-forward="false" selection-start-line="20" selection-start-column="4" selection-end-line="20" selection-end-column="17" />
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="Lootable.js" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/gameData/mapItem/buildingPart/Lootable.js">
+      <file leaf-file-name="MapItem.js" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/gameData/mapItem/MapItem.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="102">
-              <caret line="6" column="26" lean-forward="true" selection-start-line="6" selection-start-column="26" selection-end-line="6" selection-end-column="26" />
+            <state relative-caret-position="100">
+              <caret line="4" column="27" lean-forward="false" selection-start-line="4" selection-start-column="27" selection-end-line="4" selection-end-column="27" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="BuildingPart.js" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/gameData/mapItem/BuildingPart.js">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="25">
+              <caret line="1" column="53" lean-forward="false" selection-start-line="1" selection-start-column="45" selection-end-line="1" selection-end-column="53" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="Inventory.js" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/gameData/inventory/Inventory.js">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="-727">
+              <caret line="111" column="30" lean-forward="false" selection-start-line="111" selection-start-column="20" selection-end-line="111" selection-end-column="30" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="loop.js" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/loop.js">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="300">
+              <caret line="39" column="15" lean-forward="false" selection-start-line="39" selection-start-column="8" selection-end-line="39" selection-end-column="15" />
               <folding />
             </state>
           </provider>
@@ -105,38 +146,18 @@
       <file leaf-file-name="messageHandler.js" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/network/handler/messageHandler.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="238">
-              <caret line="275" column="12" lean-forward="true" selection-start-line="275" selection-start-column="12" selection-end-line="275" selection-end-column="12" />
+            <state relative-caret-position="-2364">
+              <caret line="80" column="43" lean-forward="false" selection-start-line="80" selection-start-column="43" selection-end-line="80" selection-end-column="43" />
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="server.js" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/network/server.js">
+      <file leaf-file-name="Production.js" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/gameData/mapItem/buildingPart/lootable/Production.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="186">
-              <caret line="73" column="2" lean-forward="false" selection-start-line="73" selection-start-column="2" selection-end-line="73" selection-end-column="2" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="sender.js" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/network/sender.js">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="289">
-              <caret line="17" column="46" lean-forward="false" selection-start-line="17" selection-start-column="46" selection-end-line="17" selection-end-column="46" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="log.js" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/network/log.js">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="102">
-              <caret line="6" column="12" lean-forward="true" selection-start-line="6" selection-start-column="12" selection-end-line="6" selection-end-column="12" />
+            <state relative-caret-position="1037">
+              <caret line="50" column="30" lean-forward="false" selection-start-line="50" selection-start-column="30" selection-end-line="50" selection-end-column="30" />
               <folding />
             </state>
           </provider>
@@ -153,22 +174,6 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>h(</find>
-      <find>find</find>
-      <find>MAP_OBJECT</find>
-      <find>setData</find>
-      <find>sendToClient</find>
-      <find>se</find>
-      <find>swapStack</find>
-      <find>items</find>
-      <find>itemId</find>
-      <find>itemsType</find>
-      <find>itemsTy</find>
-      <find>requestInventory</find>
-      <find>addStack</find>
-      <find>findItems</find>
-      <find>addS</find>
-      <find>NPC_DATA</find>
       <find>HUMAN_MOVE</find>
       <find>MAP_OB</find>
       <find>findCharacters</find>
@@ -183,6 +188,22 @@
       <find>mapIn</find>
       <find>mapInv</find>
       <find>mapS</find>
+      <find>sur</find>
+      <find>surro</find>
+      <find>surr</find>
+      <find>Comm</find>
+      <find>createItem</find>
+      <find>add</find>
+      <find>width</find>
+      <find>Heig</find>
+      <find>cre</find>
+      <find>crea</find>
+      <find>createMapItem</find>
+      <find>createI</find>
+      <find>createIt</find>
+      <find>addS</find>
+      <find>craft</find>
+      <find>stackUtils</find>
     </findStrings>
     <dirStrings>
       <dir>E:\Learn\server-mmorpg\gameData</dir>
@@ -197,56 +218,56 @@
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
       <list>
-        <option value="$PROJECT_DIR$/gameData/craft/craftItem.js" />
-        <option value="$PROJECT_DIR$/gameData/inventory/stackUtils.js" />
-        <option value="$PROJECT_DIR$/gameData/item/BuldingPart.js" />
-        <option value="$PROJECT_DIR$/sql/gameDataToDataBase.js" />
-        <option value="$PROJECT_DIR$/gameData/item/MapItem.js" />
-        <option value="$PROJECT_DIR$/gameData/item/BuildingPart.js" />
-        <option value="$PROJECT_DIR$/gameData/item/Resource.js" />
-        <option value="$PROJECT_DIR$/gameData/item/Rock.js" />
-        <option value="$PROJECT_DIR$/gameData/item/Tree.js" />
-        <option value="$PROJECT_DIR$/gameData/item/Wall.js" />
-        <option value="$PROJECT_DIR$/gameData/item/StoneWall.js" />
-        <option value="$PROJECT_DIR$/gameData/item/WoodWall.js" />
         <option value="$PROJECT_DIR$/gameData/mapItem/buildingPart/StoneWall.js" />
-        <option value="$PROJECT_DIR$/gameData/mapItem/MapItem.js" />
-        <option value="$PROJECT_DIR$/gameData/mapItem/BuildingPart.js" />
-        <option value="$PROJECT_DIR$/gameData/mapItem/resource/Rock.js" />
-        <option value="$PROJECT_DIR$/gameData/mapItem/buildingPart/Wall.js" />
-        <option value="$PROJECT_DIR$/gameData/mapItem/resource/Tree.js" />
         <option value="$PROJECT_DIR$/network/handler/closeHandler.js" />
         <option value="$PROJECT_DIR$/gameData/person/Character.js" />
-        <option value="$PROJECT_DIR$/gameData/inventory/Inventory.js" />
         <option value="$PROJECT_DIR$/gameData/map/Cell.js" />
-        <option value="$PROJECT_DIR$/gameData/map/cellUtils.js" />
         <option value="$PROJECT_DIR$/gameData/npc/Npc.js" />
         <option value="$PROJECT_DIR$/gameData/item/unique/weapon/FiredAmmo.js" />
         <option value="$PROJECT_DIR$/gameData/item/unique/weapon/Range.js" />
         <option value="$PROJECT_DIR$/gameData/mapItem/buildingPart/lootable/CampFire.js" />
         <option value="$PROJECT_DIR$/gameData/mapItem/buildingPart/lootable/production.js" />
-        <option value="$PROJECT_DIR$/gameData/mapItem/buildingPart/lootable/Production.js" />
-        <option value="$PROJECT_DIR$/gameData/mapItem/buildingPart/wall/StoneWall.js" />
-        <option value="$PROJECT_DIR$/gameData/mapItem/buildingPart/wall/WoodWall.js" />
-        <option value="$PROJECT_DIR$/gameData/mapItem/buildingPart/lootable/WoodChest.js" />
-        <option value="$PROJECT_DIR$/gameData/mapItem/buildingPart/lootable/production/CampFire.js" />
-        <option value="$PROJECT_DIR$/gameData/item/Item.js" />
-        <option value="$PROJECT_DIR$/gameData/mapItem/MapLoot.js" />
-        <option value="$PROJECT_DIR$/gameData/data.js" />
-        <option value="$PROJECT_DIR$/gameData/mapItem/Resource.js" />
         <option value="$PROJECT_DIR$/gameData/npc/animals/Rabbit.js" />
         <option value="$PROJECT_DIR$/gameData/npc/animals/BullSheep.js" />
         <option value="$PROJECT_DIR$/gameData/npc/Animal.js" />
-        <option value="$PROJECT_DIR$/sql/utils.js" />
-        <option value="$PROJECT_DIR$/gameData/visibleObjects.js" />
-        <option value="$PROJECT_DIR$/gameData/item/itemUtils.js" />
-        <option value="$PROJECT_DIR$/main.js" />
-        <option value="$PROJECT_DIR$/constants/messageTypes.js" />
-        <option value="$PROJECT_DIR$/network/initialize.js" />
-        <option value="$PROJECT_DIR$/loop.js" />
         <option value="$PROJECT_DIR$/network/sender.js" />
         <option value="$PROJECT_DIR$/network/log.js" />
+        <option value="$PROJECT_DIR$/gameData/mapItem/MapItem.js" />
+        <option value="$PROJECT_DIR$/gameData/mapItem/BuildingPart.js" />
+        <option value="$PROJECT_DIR$/gameData/mapItem/Resource.js" />
+        <option value="$PROJECT_DIR$/gameData/mapItem/buildingPart/Wall.js" />
+        <option value="$PROJECT_DIR$/gameData/mapItem/resource/Rock.js" />
+        <option value="$PROJECT_DIR$/gameData/mapItem/resource/Tree.js" />
+        <option value="$PROJECT_DIR$/gameData/Location.js" />
+        <option value="$PROJECT_DIR$/constants/Constans.js" />
+        <option value="$PROJECT_DIR$/constants/constans.js" />
+        <option value="$PROJECT_DIR$/gameData/map/cellUtils.js" />
+        <option value="$PROJECT_DIR$/gameData/mapItem/buildingPart/wall/WoodWall.js" />
+        <option value="$PROJECT_DIR$/gameData/mapItem/buildingPart/wall/StoneWall.js" />
         <option value="$PROJECT_DIR$/gameData/mapItem/buildingPart/Lootable.js" />
+        <option value="$PROJECT_DIR$/gameData/mapItem/buildingPart/lootable/WoodChest.js" />
+        <option value="$PROJECT_DIR$/gameData/item/itemUtils.js" />
+        <option value="$PROJECT_DIR$/gameData/mapItem/MapLoot.js" />
+        <option value="$PROJECT_DIR$/gameData/visibleObjects.js" />
+        <option value="$PROJECT_DIR$/gameData/item/Item.js" />
+        <option value="$PROJECT_DIR$/gameData/item/unique/weapon/range/Bow.js" />
+        <option value="$PROJECT_DIR$/constants/errorTypes.js" />
+        <option value="$PROJECT_DIR$/Account.js" />
+        <option value="$PROJECT_DIR$/constants/messageTypes.js" />
+        <option value="$PROJECT_DIR$/constants/systemStatus.js" />
+        <option value="$PROJECT_DIR$/network/server.js" />
+        <option value="$PROJECT_DIR$/gameData/mapItem/buildingPart/lootable/production/CampFire.js" />
+        <option value="$PROJECT_DIR$/sql/utils.js" />
+        <option value="$PROJECT_DIR$/gameData/craft/CraftRecipe.js" />
+        <option value="$PROJECT_DIR$/network/initialize.js" />
+        <option value="$PROJECT_DIR$/gameData/inventory/stackUtils.js" />
+        <option value="$PROJECT_DIR$/utils/bubbleSort.js" />
+        <option value="$PROJECT_DIR$/gameData/inventory/Inventory.js" />
+        <option value="$PROJECT_DIR$/gameData/craft/craftItem.js" />
+        <option value="$PROJECT_DIR$/main.js" />
+        <option value="$PROJECT_DIR$/gameData/data.js" />
+        <option value="$PROJECT_DIR$/gameData/mapItem/buildingPart/lootable/Production.js" />
+        <option value="$PROJECT_DIR$/loop.js" />
         <option value="$PROJECT_DIR$/network/handler/messageHandler.js" />
       </list>
     </option>
@@ -265,10 +286,26 @@
     <sorting>DEFINITION_ORDER</sorting>
   </component>
   <component name="ProjectFrameBounds" extendedState="6">
-    <option name="x" value="507" />
-    <option name="y" value="132" />
-    <option name="width" value="1176" />
+    <option name="x" value="-7" />
+    <option name="y" value="13" />
+    <option name="width" value="1038" />
     <option name="height" value="726" />
+  </component>
+  <component name="ProjectInspectionProfilesVisibleTreeState">
+    <entry key="Project Default">
+      <profile-state>
+        <expanded-state>
+          <State>
+            <id />
+          </State>
+        </expanded-state>
+        <selected-state>
+          <State>
+            <id>AngularJS</id>
+          </State>
+        </selected-state>
+      </profile-state>
+    </entry>
   </component>
   <component name="ProjectLevelVcsManager">
     <ConfirmationsSetting value="1" id="Add" />
@@ -288,7 +325,6 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
-      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <expand>
@@ -310,7 +346,43 @@
               <item name="mmorpgServer" type="b2602c69:ProjectViewProjectNode" />
               <item name="mmorpgServer" type="462c0819:PsiDirectoryNode" />
               <item name="gameData" type="462c0819:PsiDirectoryNode" />
+              <item name="craft" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="mmorpgServer" type="b2602c69:ProjectViewProjectNode" />
+              <item name="mmorpgServer" type="462c0819:PsiDirectoryNode" />
+              <item name="gameData" type="462c0819:PsiDirectoryNode" />
+              <item name="inventory" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="mmorpgServer" type="b2602c69:ProjectViewProjectNode" />
+              <item name="mmorpgServer" type="462c0819:PsiDirectoryNode" />
+              <item name="gameData" type="462c0819:PsiDirectoryNode" />
               <item name="item" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="mmorpgServer" type="b2602c69:ProjectViewProjectNode" />
+              <item name="mmorpgServer" type="462c0819:PsiDirectoryNode" />
+              <item name="gameData" type="462c0819:PsiDirectoryNode" />
+              <item name="item" type="462c0819:PsiDirectoryNode" />
+              <item name="unique" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="mmorpgServer" type="b2602c69:ProjectViewProjectNode" />
+              <item name="mmorpgServer" type="462c0819:PsiDirectoryNode" />
+              <item name="gameData" type="462c0819:PsiDirectoryNode" />
+              <item name="item" type="462c0819:PsiDirectoryNode" />
+              <item name="unique" type="462c0819:PsiDirectoryNode" />
+              <item name="weapon" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="mmorpgServer" type="b2602c69:ProjectViewProjectNode" />
+              <item name="mmorpgServer" type="462c0819:PsiDirectoryNode" />
+              <item name="gameData" type="462c0819:PsiDirectoryNode" />
+              <item name="item" type="462c0819:PsiDirectoryNode" />
+              <item name="unique" type="462c0819:PsiDirectoryNode" />
+              <item name="weapon" type="462c0819:PsiDirectoryNode" />
+              <item name="range" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
               <item name="mmorpgServer" type="b2602c69:ProjectViewProjectNode" />
@@ -358,8 +430,7 @@
               <item name="mmorpgServer" type="b2602c69:ProjectViewProjectNode" />
               <item name="mmorpgServer" type="462c0819:PsiDirectoryNode" />
               <item name="gameData" type="462c0819:PsiDirectoryNode" />
-              <item name="npc" type="462c0819:PsiDirectoryNode" />
-              <item name="animals" type="462c0819:PsiDirectoryNode" />
+              <item name="person" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
               <item name="mmorpgServer" type="b2602c69:ProjectViewProjectNode" />
@@ -369,19 +440,31 @@
             <path>
               <item name="mmorpgServer" type="b2602c69:ProjectViewProjectNode" />
               <item name="mmorpgServer" type="462c0819:PsiDirectoryNode" />
+              <item name="network" type="462c0819:PsiDirectoryNode" />
+              <item name="handler" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="mmorpgServer" type="b2602c69:ProjectViewProjectNode" />
+              <item name="mmorpgServer" type="462c0819:PsiDirectoryNode" />
               <item name="sql" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="mmorpgServer" type="b2602c69:ProjectViewProjectNode" />
+              <item name="mmorpgServer" type="462c0819:PsiDirectoryNode" />
+              <item name="utils" type="462c0819:PsiDirectoryNode" />
             </path>
           </expand>
           <select />
         </subPane>
       </pane>
       <pane id="Scratches" />
+      <pane id="Scope" />
     </panes>
   </component>
   <component name="PropertiesComponent">
     <property name="WebServerToolWindowFactoryState" value="false" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/../node_modules/eslint" />
-    <property name="settings.editor.selected.configurable" value="settings.javascript.linters.eslint" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+    <property name="settings.editor.selected.configurable" value="preferences.sourceCode" />
     <property name="JavaScriptPreferStrict" value="false" />
     <property name="JavaScriptWeakerCompletionTypeGuess" value="true" />
     <property name="nodejs_interpreter_path" value="E:/Program Files/nodejs/node" />
@@ -470,31 +553,37 @@
       <workItem from="1514974779568" duration="3721000" />
       <workItem from="1515153484811" duration="2295000" />
       <workItem from="1515233357245" duration="36590000" />
-      <workItem from="1515316953557" duration="39471000" />
+      <workItem from="1515316953557" duration="39858000" />
+      <workItem from="1515401009135" duration="14465000" />
+      <workItem from="1515489975289" duration="13768000" />
+      <workItem from="1515576296763" duration="22651000" />
+      <workItem from="1515672851340" duration="16200000" />
+      <workItem from="1515839155316" duration="7292000" />
+      <workItem from="1516365908167" duration="17379000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="743670000" />
+    <option name="totallyTimeSpent" value="835812000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-8" y="-8" width="1936" height="1056" extended-state="6" />
     <layout>
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.18018967" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.18018967" sideWeight="0.7032609" order="0" side_tool="false" content_ui="combo" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33913043" sideWeight="0.5021075" order="7" side_tool="true" content_ui="tabs" />
-      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32875264" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
-      <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="9" side_tool="false" content_ui="tabs" />
       <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.35652173" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
-      <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="9" side_tool="false" content_ui="tabs" />
+      <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.24973656" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32934782" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
-      <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
-      <window_info id="Debug" active="true" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.33913043" sideWeight="0.49789253" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.3097826" sideWeight="0.49789253" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.18018967" sideWeight="0.29673913" order="2" side_tool="true" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
       <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
+      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32826087" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
     </layout>
   </component>
@@ -506,15 +595,7 @@
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
-      <breakpoints>
-        <line-breakpoint enabled="true" type="javascript">
-          <url>file://$PROJECT_DIR$/network/handler/messageHandler.js</url>
-          <line>279</line>
-          <properties />
-          <option name="timeStamp" value="1032" />
-        </line-breakpoint>
-      </breakpoints>
-      <option name="time" value="1033" />
+      <option name="time" value="1063" />
     </breakpoint-manager>
     <watches-manager>
       <configuration name="NodeJSConfigurationType">
@@ -523,86 +604,10 @@
     </watches-manager>
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/gameData/craft/CraftRecipe.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="408">
-          <caret line="24" column="23" lean-forward="true" selection-start-line="24" selection-start-column="23" selection-end-line="24" selection-end-column="23" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/../mmorpg/main.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Account.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="85">
-          <caret line="5" column="1" lean-forward="true" selection-start-line="5" selection-start-column="1" selection-end-line="5" selection-end-column="1" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/gameData/craft/craftItem.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="561">
-          <caret line="33" column="72" lean-forward="false" selection-start-line="33" selection-start-column="66" selection-end-line="33" selection-end-column="72" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/gameData/inventory/Stack.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="85">
-          <caret line="5" column="28" lean-forward="false" selection-start-line="5" selection-start-column="20" selection-end-line="5" selection-end-column="28" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/network/handler/closeHandler.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="238">
-          <caret line="14" column="65" lean-forward="true" selection-start-line="14" selection-start-column="65" selection-end-line="14" selection-end-column="65" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/gameData/inventory/Inventory.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="289">
-          <caret line="17" column="39" lean-forward="false" selection-start-line="17" selection-start-column="20" selection-end-line="17" selection-end-column="39" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/gameData/person/Character.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="193">
-          <caret line="84" column="7" lean-forward="false" selection-start-line="84" selection-start-column="7" selection-end-line="84" selection-end-column="7" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/gameData/map/Cell.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="85">
-          <caret line="5" column="2" lean-forward="false" selection-start-line="5" selection-start-column="2" selection-end-line="5" selection-end-column="2" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/gameData/npc/Npc.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="136">
-          <caret line="8" column="24" lean-forward="true" selection-start-line="8" selection-start-column="24" selection-end-line="8" selection-end-column="24" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/utils/findPath.js">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="186">
           <caret line="87" column="20" lean-forward="false" selection-start-line="87" selection-start-column="20" selection-end-line="87" selection-end-column="20" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -610,7 +615,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="68">
           <caret line="4" column="4" lean-forward="false" selection-start-line="4" selection-start-column="4" selection-end-line="4" selection-end-column="4" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -622,67 +626,10 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/gameData/item/unique/Weapon.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/gameData/item/unique/weapon/FiredAmmo.js">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="323">
           <caret line="19" column="1" lean-forward="false" selection-start-line="19" selection-start-column="1" selection-end-line="19" selection-end-column="1" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/gameData/item/unique/weapon/Range.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="306">
-          <caret line="24" column="42" lean-forward="false" selection-start-line="24" selection-start-column="42" selection-end-line="24" selection-end-column="42" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/gameData/mapItem/buildingPart/lootable/Production.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="68">
-          <caret line="4" column="27" lean-forward="false" selection-start-line="4" selection-start-column="27" selection-end-line="4" selection-end-column="27" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/gameData/mapItem/buildingPart/lootable/WoodChest.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="17">
-          <caret line="1" column="58" lean-forward="false" selection-start-line="1" selection-start-column="47" selection-end-line="1" selection-end-column="58" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/gameData/mapItem/buildingPart/wall/WoodWall.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="17">
-          <caret line="1" column="39" lean-forward="true" selection-start-line="1" selection-start-column="39" selection-end-line="1" selection-end-column="39" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/gameData/mapItem/buildingPart/Wall.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="85">
-          <caret line="5" column="22" lean-forward="true" selection-start-line="5" selection-start-column="22" selection-end-line="5" selection-end-column="22" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/gameData/mapItem/MapItem.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="17">
-          <caret line="1" column="4" lean-forward="false" selection-start-line="1" selection-start-column="4" selection-end-line="3" selection-end-column="25" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -690,47 +637,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="68">
           <caret line="4" column="18" lean-forward="false" selection-start-line="4" selection-start-column="9" selection-end-line="4" selection-end-column="18" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/gameData/item/unique/weapon/range/Bow.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="17">
-          <caret line="1" column="27" lean-forward="false" selection-start-line="1" selection-start-column="21" selection-end-line="1" selection-end-column="27" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/gameData/mapItem/resource/Rock.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="51">
-          <caret line="3" column="54" lean-forward="true" selection-start-line="3" selection-start-column="54" selection-end-line="3" selection-end-column="54" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/gameData/mapItem/resource/Tree.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="17">
-          <caret line="1" column="35" lean-forward="false" selection-start-line="1" selection-start-column="29" selection-end-line="1" selection-end-column="35" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/gameData/mapItem/buildingPart/wall/StoneWall.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="34">
-          <caret line="2" column="68" lean-forward="true" selection-start-line="2" selection-start-column="68" selection-end-line="2" selection-end-column="68" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/gameData/mapItem/BuildingPart.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="17">
-          <caret line="1" column="43" lean-forward="false" selection-start-line="1" selection-start-column="37" selection-end-line="1" selection-end-column="43" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -738,15 +644,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="194">
           <caret line="56" column="20" lean-forward="false" selection-start-line="56" selection-start-column="20" selection-end-line="56" selection-end-column="20" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/gameData/mapItem/Resource.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="527">
-          <caret line="31" column="42" lean-forward="true" selection-start-line="31" selection-start-column="42" selection-end-line="31" selection-end-column="42" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -754,174 +651,326 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="119">
           <caret line="7" column="22" lean-forward="true" selection-start-line="7" selection-start-column="22" selection-end-line="7" selection-end-column="22" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/gameData/item/common/CommonItem.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="51">
-          <caret line="3" column="0" lean-forward="false" selection-start-line="3" selection-start-column="0" selection-end-line="3" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/gameData/item/Item.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="68">
-          <caret line="4" column="0" lean-forward="false" selection-start-line="4" selection-start-column="0" selection-end-line="4" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/sql/utils.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="126">
-          <caret line="362" column="39" lean-forward="false" selection-start-line="362" selection-start-column="39" selection-end-line="362" selection-end-column="39" />
-          <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/gameData/npc/animals/Rabbit.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="102">
-          <caret line="6" column="42" lean-forward="true" selection-start-line="6" selection-start-column="42" selection-end-line="6" selection-end-column="43" />
+        <state relative-caret-position="17">
+          <caret line="1" column="29" lean-forward="false" selection-start-line="1" selection-start-column="21" selection-end-line="1" selection-end-column="29" />
           <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/gameData/mapItem/resource/Tree.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="85">
+          <caret line="5" column="51" lean-forward="true" selection-start-line="5" selection-start-column="51" selection-end-line="5" selection-end-column="51" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/constants/constans.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="85">
+          <caret line="5" column="28" lean-forward="true" selection-start-line="5" selection-start-column="28" selection-end-line="5" selection-end-column="28" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/gameData/mapItem/Resource.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="306">
+          <caret line="18" column="104" lean-forward="false" selection-start-line="18" selection-start-column="94" selection-end-line="18" selection-end-column="104" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/gameData/Location.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="34">
+          <caret line="2" column="19" lean-forward="false" selection-start-line="2" selection-start-column="19" selection-end-line="2" selection-end-column="19" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/gameData/mapItem/resource/Rock.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="51">
+          <caret line="3" column="51" lean-forward="false" selection-start-line="3" selection-start-column="51" selection-end-line="3" selection-end-column="51" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/gameData/mapItem/buildingPart/Wall.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="34">
+          <caret line="2" column="40" lean-forward="true" selection-start-line="2" selection-start-column="40" selection-end-line="2" selection-end-column="40" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/gameData/item/common/CommonItem.js" />
+    <entry file="file://$PROJECT_DIR$/gameData/item/unique/Weapon.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="16" lean-forward="false" selection-start-line="0" selection-start-column="6" selection-end-line="0" selection-end-column="16" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/gameData/mapItem/buildingPart/lootable/WoodChest.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="102">
+          <caret line="6" column="32" lean-forward="false" selection-start-line="6" selection-start-column="23" selection-end-line="6" selection-end-column="32" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/gameData/mapItem/buildingPart/wall/StoneWall.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="119">
+          <caret line="7" column="1" lean-forward="false" selection-start-line="7" selection-start-column="1" selection-end-line="7" selection-end-column="1" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/gameData/mapItem/buildingPart/wall/WoodWall.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="119">
+          <caret line="7" column="51" lean-forward="true" selection-start-line="7" selection-start-column="51" selection-end-line="7" selection-end-column="51" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/gameData/mapItem/buildingPart/Lootable.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="68">
+          <caret line="4" column="20" lean-forward="false" selection-start-line="4" selection-start-column="7" selection-end-line="4" selection-end-column="20" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/network/sender.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="170">
+          <caret line="10" column="4" lean-forward="false" selection-start-line="10" selection-start-column="4" selection-end-line="10" selection-end-column="4" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/network/log.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="17">
+          <caret line="1" column="45" lean-forward="false" selection-start-line="1" selection-start-column="39" selection-end-line="1" selection-end-column="45" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/gameData/mapItem/MapLoot.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="34">
+          <caret line="2" column="25" lean-forward="false" selection-start-line="2" selection-start-column="25" selection-end-line="2" selection-end-column="25" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/gameData/npc/Animal.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="357">
-          <caret line="144" column="0" lean-forward="false" selection-start-line="144" selection-start-column="0" selection-end-line="144" selection-end-column="0" />
-          <folding />
+        <state relative-caret-position="-1531">
+          <caret line="5" column="28" lean-forward="false" selection-start-line="5" selection-start-column="20" selection-end-line="5" selection-end-column="28" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/gameData/visibleObjects.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="194">
-          <caret line="41" column="21" lean-forward="false" selection-start-line="41" selection-start-column="21" selection-end-line="41" selection-end-column="21" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/gameData/inventory/stackUtils.js">
-      <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="441">
-          <caret line="155" column="2" lean-forward="false" selection-start-line="155" selection-start-column="2" selection-end-line="155" selection-end-column="2" />
-          <folding />
+          <caret line="41" column="28" lean-forward="false" selection-start-line="41" selection-start-column="28" selection-end-line="41" selection-end-column="28" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/gameData/map/cellUtils.js">
+    <entry file="file://$PROJECT_DIR$/gameData/item/unique/weapon/Range.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="311">
-          <caret line="23" column="9" lean-forward="false" selection-start-line="23" selection-start-column="9" selection-end-line="23" selection-end-column="9" />
+        <state relative-caret-position="102">
+          <caret line="6" column="30" lean-forward="true" selection-start-line="6" selection-start-column="30" selection-end-line="6" selection-end-column="30" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/gameData/item/unique/weapon/range/Bow.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="255">
+          <caret line="15" column="19" lean-forward="true" selection-start-line="15" selection-start-column="19" selection-end-line="15" selection-end-column="19" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/gameData/item/Item.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="204">
+          <caret line="12" column="1" lean-forward="true" selection-start-line="12" selection-start-column="1" selection-end-line="12" selection-end-column="1" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/gameData/person/Character.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="2200">
+          <caret line="88" column="53" lean-forward="false" selection-start-line="88" selection-start-column="53" selection-end-line="88" selection-end-column="53" />
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/constants/messageTypes.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="431">
-          <caret line="32" column="27" lean-forward="false" selection-start-line="32" selection-start-column="27" selection-end-line="32" selection-end-column="27" />
-          <folding />
+        <state relative-caret-position="800">
+          <caret line="32" column="17" lean-forward="false" selection-start-line="32" selection-start-column="4" selection-end-line="32" selection-end-column="17" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/main.js">
+    <entry file="file://$PROJECT_DIR$/Account.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="442">
-          <caret line="26" column="0" lean-forward="true" selection-start-line="26" selection-start-column="0" selection-end-line="26" selection-end-column="0" />
-          <folding />
+        <state relative-caret-position="150">
+          <caret line="6" column="30" lean-forward="false" selection-start-line="6" selection-start-column="18" selection-end-line="6" selection-end-column="30" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/network/handler/closeHandler.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="200">
+          <caret line="8" column="5" lean-forward="false" selection-start-line="8" selection-start-column="5" selection-end-line="8" selection-end-column="5" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/gameData/map/cellUtils.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="300">
+          <caret line="12" column="17" lean-forward="true" selection-start-line="12" selection-start-column="17" selection-end-line="12" selection-end-column="17" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/constants/systemStatus.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="125">
+          <caret line="5" column="17" lean-forward="false" selection-start-line="5" selection-start-column="2" selection-end-line="5" selection-end-column="17" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/network/initialize.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="357">
-          <caret line="21" column="16" lean-forward="false" selection-start-line="21" selection-start-column="16" selection-end-line="21" selection-end-column="16" />
+        <state relative-caret-position="100">
+          <caret line="4" column="55" lean-forward="false" selection-start-line="4" selection-start-column="55" selection-end-line="4" selection-end-column="55" />
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/gameData/mapItem/MapLoot.js">
+    <entry file="file://$PROJECT_DIR$/sql/utils.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="119">
-          <caret line="7" column="22" lean-forward="false" selection-start-line="7" selection-start-column="22" selection-end-line="7" selection-end-column="27" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/gameData/mapItem/buildingPart/Lootable.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="102">
-          <caret line="6" column="26" lean-forward="true" selection-start-line="6" selection-start-column="26" selection-end-line="6" selection-end-column="26" />
+        <state relative-caret-position="1310">
+          <caret line="163" column="27" lean-forward="false" selection-start-line="163" selection-start-column="27" selection-end-line="163" selection-end-column="27" />
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/network/server.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="186">
-          <caret line="73" column="2" lean-forward="false" selection-start-line="73" selection-start-column="2" selection-end-line="73" selection-end-column="2" />
+        <state relative-caret-position="700">
+          <caret line="28" column="18" lean-forward="false" selection-start-line="28" selection-start-column="18" selection-end-line="28" selection-end-column="18" />
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/loop.js">
+    <entry file="file://$PROJECT_DIR$/utils/bubbleSort.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="177">
-          <caret line="15" column="4" lean-forward="false" selection-start-line="15" selection-start-column="4" selection-end-line="15" selection-end-column="4" />
+        <state relative-caret-position="350">
+          <caret line="14" column="14" lean-forward="true" selection-start-line="14" selection-start-column="14" selection-end-line="14" selection-end-column="14" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/gameData/inventory/stackUtils.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="450">
+          <caret line="18" column="28" lean-forward="true" selection-start-line="18" selection-start-column="28" selection-end-line="18" selection-end-column="28" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/main.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="435">
+          <caret line="152" column="46" lean-forward="false" selection-start-line="152" selection-start-column="35" selection-end-line="152" selection-end-column="46" />
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/gameData/mapItem/buildingPart/lootable/production/CampFire.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="34">
-          <caret line="2" column="76" lean-forward="true" selection-start-line="2" selection-start-column="76" selection-end-line="2" selection-end-column="76" />
+        <state relative-caret-position="150">
+          <caret line="6" column="31" lean-forward="false" selection-start-line="6" selection-start-column="22" selection-end-line="6" selection-end-column="31" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/gameData/mapItem/MapItem.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="100">
+          <caret line="4" column="27" lean-forward="false" selection-start-line="4" selection-start-column="27" selection-end-line="4" selection-end-column="27" />
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/gameData/item/itemUtils.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="339">
-          <caret line="55" column="20" lean-forward="true" selection-start-line="55" selection-start-column="20" selection-end-line="55" selection-end-column="20" />
+        <state relative-caret-position="0">
+          <caret line="12" column="34" lean-forward="false" selection-start-line="12" selection-start-column="34" selection-end-line="12" selection-end-column="34" />
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/network/log.js">
+    <entry file="file://$PROJECT_DIR$/gameData/craft/craftItem.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="102">
-          <caret line="6" column="12" lean-forward="true" selection-start-line="6" selection-start-column="12" selection-end-line="6" selection-end-column="12" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/network/sender.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="289">
-          <caret line="17" column="46" lean-forward="false" selection-start-line="17" selection-start-column="46" selection-end-line="17" selection-end-column="46" />
+        <state relative-caret-position="462">
+          <caret line="32" column="12" lean-forward="false" selection-start-line="32" selection-start-column="12" selection-end-line="32" selection-end-column="12" />
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/gameData/data.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-2048">
-          <caret line="11" column="17" lean-forward="false" selection-start-line="11" selection-start-column="4" selection-end-line="11" selection-end-column="17" />
+        <state relative-caret-position="-1700">
+          <caret line="31" column="17" lean-forward="false" selection-start-line="31" selection-start-column="4" selection-end-line="31" selection-end-column="17" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/gameData/craft/CraftRecipe.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="425">
+          <caret line="20" column="17" lean-forward="false" selection-start-line="20" selection-start-column="4" selection-end-line="20" selection-end-column="17" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/gameData/mapItem/BuildingPart.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="25">
+          <caret line="1" column="53" lean-forward="false" selection-start-line="1" selection-start-column="45" selection-end-line="1" selection-end-column="53" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/gameData/mapItem/buildingPart/lootable/Production.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1037">
+          <caret line="50" column="30" lean-forward="false" selection-start-line="50" selection-start-column="30" selection-end-line="50" selection-end-column="30" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/loop.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="300">
+          <caret line="39" column="15" lean-forward="false" selection-start-line="39" selection-start-column="8" selection-end-line="39" selection-end-column="15" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/gameData/inventory/Inventory.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-727">
+          <caret line="111" column="30" lean-forward="false" selection-start-line="111" selection-start-column="20" selection-end-line="111" selection-end-column="30" />
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/network/handler/messageHandler.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="238">
-          <caret line="275" column="12" lean-forward="true" selection-start-line="275" selection-start-column="12" selection-end-line="275" selection-end-column="12" />
+        <state relative-caret-position="-2364">
+          <caret line="80" column="43" lean-forward="false" selection-start-line="80" selection-start-column="43" selection-end-line="80" selection-end-column="43" />
           <folding />
         </state>
       </provider>

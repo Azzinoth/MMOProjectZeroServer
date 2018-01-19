@@ -7,11 +7,10 @@ const initialize = require ('./initialize');
 const Request = require('./Request');
 const Account = require('../Account');
 const WebSocketServer = new require('ws');
-const {
-    AUTORIZATION,
-	REGISTRATION,
-    SYSTEM_MESSAGE
-} = require('../constants').messageTypes;
+const log = require('./log');
+const MSG = require('../constants/messageTypes');
+const STATUS = require('../constants/systemStatus');
+
 const webSocketServer = new WebSocketServer.Server({
 	port: 8082
 });
@@ -31,32 +30,39 @@ function server(data){
         console.log("new connection");
 
 		ws.on('message', function(message){
+
             if (isAutorizated){
                 messageHandler(data, message, characterId);
             }else{
                 let json = JSON.parse(message);
+                log(json.type, message, false, null);
                 switch (json.type){
-                    case AUTORIZATION:{
+                    case MSG.AUTORIZATION:{
                         for (let key in data.accounts){
                             if (data.accounts[key].email===json.request[0]&&data.accounts[key].password===json.request[1]){
                                 console.log("connected " + json.request[0]);
-                                ws.id = key;
+                                let character = data.accounts[key].getCharacter(data.characters);
+                                if (character === null) break;
+                                if (character.isOnline) {
+                                  break;
+                                }
+                                ws.id = parseInt(key);
                                 data.accounts[key].webSocket = ws;
-                                characterId = setCharacterOnline(data, data.accounts[key].id);
-                                if (characterId === null) break;
+                                character.isOnline = true;
+                                characterId = character.id;
                                 initialize(data, data.accounts[key].id);
                                 isAutorizated = true;
-
                                 break;
                             }
                         }
+                      if (!isAutorizated)ws.send(JSON.stringify(new Request({type:MSG.SYSTEM_STATUS, request:STATUS.LOGIN_FAILED})));
                     }
                     break;
-                    case REGISTRATION:{
+                    case MSG.REGISTRATION:{
                         let isExist = false;
                         for (let key in data.accounts){
                             if (data.accounts[key].email==json.request[0]){
-                                ws.send(JSON.stringify(new Request({type:SYSTEM_MESSAGE, request:'Account already exist'})));
+                                ws.send(JSON.stringify(new Request({type:MSG.SYSTEM_STATUS, request:STATUS.LOGIN_EXIST})));
                                 isExist = true;
                                 break;
                             }
@@ -66,8 +72,21 @@ function server(data){
                             let accountId = data.getId('account');
                             data.accounts[accountId] = new Account(accountId, json.request[0], json.request[1]);
                             data.createCharacter(accountId, 10, 10);
+                            ws.send(JSON.stringify(new Request({type:MSG.SYSTEM_STATUS, request:STATUS.REG_SUCCESS})));
                         }
                     }
+                    break;
+                  case MSG.ISLOGIN_EXIST:{
+                    let isExist = false;
+                    for (let key in data.accounts){
+                      if (data.accounts[key].email===json.request){
+                        ws.send(JSON.stringify(new Request({type:MSG.SYSTEM_STATUS, request:STATUS.LOGIN_NOT_AVAILABLE})));
+                        isExist = true;
+                        break;
+                      }
+                    }
+                    if (!isExist) ws.send(JSON.stringify(new Request({type:MSG.SYSTEM_STATUS, request:STATUS.LOGIN_AVAILABLE})));
+                  }
                     break;
                 }
             }
@@ -78,14 +97,5 @@ function server(data){
 		})
 
     });
-}
-function setCharacterOnline(data, accountId){
-	for (let key in data.characters){
-		if (data.characters[key].accountId===accountId){
-            data.characters[key].isOnline = true;
-            return data.characters[key].id;
-		}
-	}
-    return null;
 }
 module.exports = server;

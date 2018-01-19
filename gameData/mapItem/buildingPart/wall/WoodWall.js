@@ -1,6 +1,9 @@
 const Wall = require('../Wall')
-function WoodWall(id, mapItemId, characterId) {
-    Wall.apply(this, new Array(id, mapItemId, 3, characterId, 20));
+function WoodWall(mapItemId, location, characterId) {
+    Wall.apply(this, new Array(22, mapItemId, 3, location, characterId, 20));
+}
+WoodWall.prototype.create = function (mapItemId, location, characterId) {
+  return new WoodWall(arguments);
 }
 WoodWall.prototype = Object.create(Wall.prototype);
 module.exports = WoodWall;

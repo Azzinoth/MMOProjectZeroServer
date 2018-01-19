@@ -1,5 +1,5 @@
 const MapItem = require('./MapItem')
-function BuildingPart(id, mapItemId, typeId, characterId, durability) {
+function BuildingPart(id, mapItemId, typeId, location, characterId, durability) {
     MapItem.apply(this, arguments);
     this.characterId = characterId;
     this.durability = durability;

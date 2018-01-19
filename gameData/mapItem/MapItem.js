@@ -1,8 +1,8 @@
-function MapItem(id, mapItemId, typeId) {
-    this.id = id;
-    this.mapItemId = mapItemId;
-    this.typeId = typeId;
-    //this.type = type;
+function MapItem(id, mapItemId, typeId, location) {
+  this.id = id;
+  this.mapItemId = mapItemId;
+  this.typeId = typeId;
+  this.location = location;
 }
 
 module.exports = MapItem;

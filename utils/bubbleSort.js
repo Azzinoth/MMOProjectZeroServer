@@ -12,7 +12,7 @@ function bubbleSort(arr){
 			}
 		}
    }
-   return(arr);
+   return arr;
 }
 function bubbleSortDown(arr){
     for (let i = 0; i<arr.length; i++){

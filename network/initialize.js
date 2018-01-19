@@ -3,8 +3,6 @@ const visibleObjects = require('../gameData/visibleObjects');
 const stackUtils = require('../gameData/inventory/stackUtils');
 const sender = require('./sender');
 const MSG_TYPES = require('../constants/messageTypes');
-const width = 48 * 3;
-const height = 48 * 3;
 
 function initialize(data, accountId) {
 
@@ -59,24 +57,28 @@ function initialize(data, accountId) {
     }
   }
 
-  let nearbyObjects = visibleObjects.surroundObjects(data.characters[characterId].column, data.characters[characterId].row, data.characters[characterId].viewDistance, width, height, data.getMap());
-  let result = [];
-  for (let i = 0; i < nearbyObjects.length; i++) {
-    result.push(new Array(nearbyObjects[i].column, nearbyObjects[i].row, nearbyObjects[i].objectId));
+  let surroundObjects = visibleObjects.surroundObjects(data.characters[characterId].column, data.characters[characterId].row, data.characters[characterId].viewDistance, data);
+  if (surroundObjects[0].length>0){
+    request = new Request({
+      type: MSG_TYPES.MAP_OBJECT,
+      request: surroundObjects[0]
+    });
+    sender.sendToClient(accountId, request);
   }
-  let surroundLoots = visibleObjects.surroundLoots(data.characters[characterId].column, data.characters[characterId].row, data.characters[characterId].viewDistance, data.mapLoots);
-  for (let i = 0; i < surroundLoots.length; i++) {
+  if (surroundObjects[1].length>0){
+    request = new Request({
+      type: MSG_TYPES.BUILDING_OBJECT,
+      request: surroundObjects[1]
+    });
+    sender.sendToClient(accountId, request);
+  }
+  if (surroundObjects[2].length>0){
     request = new Request({
       type: MSG_TYPES.MAP_LOOT,
-      request: new Array(surroundLoots[i].mapItemId, surroundLoots[i].inventoryId, surroundLoots[i].left, surroundLoots[i].top)
+      request: surroundObjects[2]
     });
-    sender.sendToClient(data.characters[characterId].accountId, request);
-    request = new Request({type: MSG_TYPES.INVENTORY_DATA, request: data.inventories[surroundLoots[i].inventoryId]});
-    sender.sendToClient(data.characters[characterId].accountId, request);
+    sender.sendToClient(accountId, request);
   }
-
-  request = new Request({type: MSG_TYPES.MAP_OBJECT, request: result});
-  sender.sendToClient(data.characters[characterId].accountId, request)
 
   let surAnimals = visibleObjects.surroundAnimals(data.characters[characterId].column, data.characters[characterId].row, data.characters[characterId].viewDistance, data.animals);
   if (surAnimals.length > 0) {
@@ -84,10 +86,11 @@ function initialize(data, accountId) {
     sender.sendToClient(data.characters[characterId].accountId, request);
   }
 
-  stackUtils.addStack(data.inventories, data.characters[characterId], data.stacks, 1, 60);
+  data.inventories[data.characters[characterId].inventoryId].addItem(data.stacks, 1, 60);
   // request = new Request({type:INVENTORY_CHANGE, request:stacks});
   // sender.sendToClient(data.characters[characterId].accountId, request);
-  stackUtils.addStack(data.inventories, data.characters[characterId], data.stacks, 2, 60);
+  data.inventories[data.characters[characterId].inventoryId].addItem(data.stacks, 2, 60);
+  data.inventories[data.characters[characterId].inventoryId].addItem(data.stacks, 5, 1);
   let allInventory = [];
   let mainInventory = data.inventories[data.characters[characterId].inventoryId];
   let hotBar = data.inventories[data.characters[characterId].hotBarId];

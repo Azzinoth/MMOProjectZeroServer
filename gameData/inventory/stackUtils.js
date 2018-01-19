@@ -1,78 +1,66 @@
 const itemUtils = require('../item/itemUtils');
 const utils = require('../../utils/bubbleSort');
 
-function findItems(typeId, inventories, character, stacks){
+function findItems(typeId, fromInventories, stacks){
     let result = [2];
     result[0] = 0;
     result[1] = [];
-
-    for (let i =0; i<inventories[character.inventoryId].stacks.length; i++){
-        if(stacks[inventories[character.inventoryId].stacks[i]].item!==null&&stacks[inventories[character.inventoryId].stacks[i]].item.typeId===typeId){
-            result[0]+=stacks[inventories[character.inventoryId].stacks[i]].size;
-            result[1].push(stacks[inventories[character.inventoryId].stacks[i]]);
+    for (let i = 0; i<fromInventories.length; i++){
+      for (let j =0; j<fromInventories[i].stacks.length; j++){
+        if(stacks[fromInventories[i].stacks[j]].item!==null&&stacks[fromInventories[i].stacks[j]].item.typeId===typeId){
+          result[0]+=stacks[fromInventories[i].stacks[j]].size;
+          result[1].push(stacks[fromInventories[i].stacks[j]]);
         }
+      }
     }
-    for (let i =0; i<inventories[character.hotBarId].stacks.length; i++){
-        if(stacks[inventories[character.hotBarId].stacks[i]].item!==null&&stacks[inventories[character.hotBarId].stacks[i]].item.typeId===typeId){
-            result[0]+=stacks[inventories[character.hotBarId].stacks[i]].size;
-            result[1].push(stacks[inventories[character.hotBarId].stacks[i]]);
-        }
-    }
-
     if (result[1].length>1)result[1]=utils.bubbleSort(result[1]);
     return result;
-
 }
-function checkFreeSpace(item, inventories, character, stacks){
+function checkFreeSpace(item, fromInventories, stacks){
     let result=0;
+    for (let i = 0; i<fromInventories.length; i++){
+      for (let j =0; j<fromInventories[i].stacks.length; j++){
+        if (stacks[fromInventories[i].stacks[j]].item===null){
+          result+=item.stackSize;
+        }else if(stacks[fromInventories[i].stacks[j]].item!==null&&stacks[fromInventories[i].stacks[j]].item.typeId===item.typeId){
+          result+=item.stackSize - stacks[fromInventories[i].stacks[j]].size;
+        }
+      }
+    }
 
-    for (let i =0; i<inventories[character.inventoryId].stacks.length; i++){
-        if (stacks[inventories[character.inventoryId].stacks[i]].item===null){
-            result+=item.stackSize;
-        }else if(stacks[inventories[character.inventoryId].stacks[i]].item!==null&&stacks[inventories[character.inventoryId].stacks[i]].item.typeId===item.typeId){
-            result+=item.stackSize - stacks[inventories[character.inventoryId].stacks[i]].size;
-        }
-    }
-    for (let i =0; i<inventories[character.hotBarId].stacks.length; i++){
-        if (stacks[inventories[character.hotBarId].stacks[i]].item===null){
-            result+=item.stackSize;
-        }else if(stacks[inventories[character.hotBarId].stacks[i]].item!==null&&stacks[inventories[character.hotBarId].stacks[i]].item.typeId===item.typeId){
-            result+=item.stackSize - stacks[inventories[character.hotBarId].stacks[i]].size;
-        }
-    }
     return result;
 }
 
 function removeItems(size, arrayStacks){
-    let result = [];
+  let result = [];
 
-    let tmpQuantity=0;
-    for(let i = 0; i<arrayStacks.length; i++){
-        if (arrayStacks[i].size>=size-tmpQuantity){
-            arrayStacks[i].size-=(size-tmpQuantity);
-            if (arrayStacks[i].size==0){
-                arrayStacks[i].item = null;
-                arrayStacks[i].size = null;
-            }
-            tmpQuantity=size;
-            result.push(arrayStacks[i]);
-            break;
-        }else{
-            tmpQuantity+= arrayStacks[i].size;
-            arrayStacks[i].size=null;
-            arrayStacks[i].item = null;
-            result.push(arrayStacks[i]);
-        }
-    }
-    return result;
-
+  let tmpQuantity=0;
+  for(let i = 0; i<arrayStacks.length; i++){
+      if (arrayStacks[i].size>=size-tmpQuantity){
+          arrayStacks[i].size-=(size-tmpQuantity);
+          if (arrayStacks[i].size==0){
+              arrayStacks[i].item = null;
+              arrayStacks[i].size = null;
+          }
+          tmpQuantity=size;
+          result.push(arrayStacks[i]);
+          break;
+      }else{
+          tmpQuantity+= arrayStacks[i].size;
+          arrayStacks[i].size=null;
+          arrayStacks[i].item = null;
+          result.push(arrayStacks[i]);
+      }
+  }
+  return result;
 }
 
-function addStack (inventories, character, stacks, typeId, size){
+function addStack (toInventories, stacks, typeId, size){
 	let result = [];
 
     let inventory = inventories[character.inventoryId];
     let hotBar = inventories[character.hotBarId];
+
 	for (let i = 0; i<inventory.stacks.length; i++){
 		let stackId = inventory.stacks[i];
 		if (stacks[stackId].item!==null&&stacks[stackId].item.typeId==typeId&&stacks[stackId].item.stackSize>stacks[stackId].size){

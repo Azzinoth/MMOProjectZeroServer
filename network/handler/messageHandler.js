@@ -11,8 +11,9 @@ const collision = require('../../utils/collision');
 const getTime = require('../../utils/getTime');
 const log = require('../log');
 const MSG_TYPES = require('../../constants/messageTypes');
-const width = 48 * 3;
-const height = 48 * 3;
+const Location = require('../../gameData/Location');
+const Character = require('../../gameData/person/Character');
+const bubbleSort = require('../../utils/bubbleSort');
 
 function messageHandler(data, message, personId) {
   let characters = data.characters;
@@ -20,8 +21,6 @@ function messageHandler(data, message, personId) {
   let stacks = data.stacks;
   let cellsMap = data.getMap();
   let items = data.items;
-  // let items = data.items;
-  // let commonItems = data.commonItems;
   let animals = data.animals;
   let resources = data.resources;
   let buildingParts = data.buildingParts;
@@ -66,7 +65,7 @@ function messageHandler(data, message, personId) {
         let items = resources[mapItemId].getLoot(data);
         let reqStacks = [];
         for (let i = 0; i < items.length; i++) {
-          let addedStacks = stackUtils.addStack(inventories, characters[personId], stacks, items[i][0], items[i][1]);
+          let addedStacks = inventories[data.characters[personId].inventoryId].addItem(stacks, items[i][0], items[i][1]);
           reqStacks = reqStacks.concat(addedStacks);
         }
         if (reqStacks.length > 0) {
@@ -95,7 +94,10 @@ function messageHandler(data, message, personId) {
       let resultCharacter = null;
       for (let i = 0; i < founderCharacters.length; i++) {
         resultCharacter = new Array(founderCharacters[i].id, founderCharacters[i].column, founderCharacters[i].row, founderCharacters[i].left, founderCharacters[i].top, founderCharacters[i].direction);
-        sender.sendToClient(characters[personId].accountId, new Request({type: MSG_TYPES.HUMAN_MOVE, request: resultCharacter}));
+        sender.sendToClient(characters[personId].accountId, new Request({
+          type: MSG_TYPES.HUMAN_MOVE,
+          request: resultCharacter
+        }));
       }
       request = new Request({
         type: MSG_TYPES.HUMAN_MOVE,
@@ -109,24 +111,24 @@ function messageHandler(data, message, personId) {
       let indexTo = json.request[1];
       let mapLootFrom = null;
       let mapLootTo = null;
-      for (let key in data.mapLoots){
+      for (let key in data.mapLoots) {
         if (data.mapLoots[key].inventoryId === data.stacks[indexFrom].inventoryId)
           mapLootFrom = data.mapLoots[key];
         if (indexTo !== -1 && data.mapLoots[key].inventoryId === data.stacks[indexTo].inventoryId)
           mapLootTo = data.mapLoots[key];
       }
-      if (mapLootFrom === null && mapLootTo === null){
+      if (mapLootFrom === null && mapLootTo === null) {
         if (stacks[indexFrom].inventoryId !== characters[personId].inventoryId && stacks[indexFrom].inventoryId !== characters[personId].hotBarId) break;
         if (indexTo !== -1 && stacks[indexTo].inventoryId !== characters[personId].inventoryId && stacks[indexTo].inventoryId !== characters[personId].hotBarId) break;
-      }else if (mapLootFrom !== null && mapLootTo !== null){
-        if (mapLootFrom.inventoryId!==mapLootTo.inventoryId) break;
-        if (!cellUtils.isNearCell(mapLootFrom.column, mapLootFrom.row, characters[personId].column, characters[personId].row, 1)) break;
-      }else if (mapLootFrom !== null){
+      } else if (mapLootFrom !== null && mapLootTo !== null) {
+        if (mapLootFrom.inventoryId !== mapLootTo.inventoryId) break;
+        if (!cellUtils.isNearCell(mapLootFrom.location.column, mapLootFrom.location.row, characters[personId].column, characters[personId].row, 1)) break;
+      } else if (mapLootFrom !== null) {
         if (indexTo !== -1 && stacks[indexTo].inventoryId !== characters[personId].inventoryId && stacks[indexTo].inventoryId !== characters[personId].hotBarId) break;
-        if (!cellUtils.isNearCell(mapLootFrom.column, mapLootFrom.row, characters[personId].column, characters[personId].row, 1)) break;
-      }else if (mapLootTo !== null){
+        if (!cellUtils.isNearCell(mapLootFrom.location.column, mapLootFrom.location.row, characters[personId].column, characters[personId].row, 1)) break;
+      } else if (mapLootTo !== null) {
         if (stacks[indexFrom].inventoryId !== characters[personId].inventoryId && stacks[indexFrom].inventoryId !== characters[personId].hotBarId) break;
-        if (!cellUtils.isNearCell(mapLootTo.column, mapLootTo.row, characters[personId].column, characters[personId].row, 1)) break;
+        if (!cellUtils.isNearCell(mapLootTo.location.column, mapLootTo.location.row, characters[personId].column, characters[personId].row, 1)) break;
       }
       let item = stacks[indexFrom].item;
       if (item === null) break;
@@ -141,17 +143,39 @@ function messageHandler(data, message, personId) {
       }
     }
       break;
+    case MSG_TYPES.INVENTORY_ALL: {
+      let inventoryIdFrom = json.request[0];
+      let inventoryIdTo = json.request[1];
+      let lootableObjectFrom = data.inventories[inventoryIdFrom].findOwner(data);
+      let lootableObjectTo = data.inventories[inventoryIdTo].findOwner(data);
+      let result = [];
+      if (lootableObjectFrom === null || lootableObjectTo === null) return;
+      if (lootableObjectFrom instanceof (Character) && data.characters[personId].inventoryId === inventoryIdFrom) {
+        if (!cellUtils.isNearCell(data.characters[personId].column, data.characters[personId].row, lootableObjectTo.location.column, lootableObjectTo.location.row, data.characters[personId].viewDistance)) return;
+        result = data.inventories[inventoryIdTo].addAllFromInventory(data.inventories[inventoryIdFrom], data.stacks);
+      }else if (lootableObjectTo instanceof (Character) && data.characters[personId].inventoryId === inventoryIdTo){
+        if (!cellUtils.isNearCell(data.characters[personId].column, data.characters[personId].row, lootableObjectFrom.location.column, lootableObjectFrom.location.row, data.characters[personId].viewDistance)) return;
+        result = data.inventories[inventoryIdTo].addAllFromInventory(data.inventories[inventoryIdFrom], data.stacks);
+      } else break;
+
+      if (result.length === 0) break;
+      request = new Request({type: MSG_TYPES.INVENTORY_CHANGE, request: result});
+      sender.sendToClient(characters[personId].accountId, request);
+    }
+      break;
     case MSG_TYPES.CRAFT: {
       let craftId = +json.request;
       let craftRecipes = characters[personId].craftRecipesId;
 
       for (let i = 0; i < craftRecipes.length; i++) {
         if (craftRecipes[i] === craftId) {
-          let invent = craftItem(inventories, characters[personId], stacks, data.recipeList[craftRecipes[i]], items);
-          if (invent !== 1 && invent !== 2 && invent !== 3) {
-            request = new Request({type: MSG_TYPES.INVENTORY_CHANGE, request: invent});
+          let craftResult = craftItem(inventories[characters[personId].inventoryId], stacks, data.recipeList[craftRecipes[i]], items);
+          if (craftResult !== 1 && craftResult !== 2 && craftResult !== 3) {
+            craftResult = craftResult.concat(inventories[characters[personId].inventoryId].addItem(stacks, data.recipeList[craftRecipes[i]].craftedTypeId, data.recipeList[craftRecipes[i]].outputAmount));
+            request = new Request({type: MSG_TYPES.INVENTORY_CHANGE, request: craftResult});
             sender.sendToClient(characters[personId].accountId, request);
           }
+          break;
         }
       }
     }
@@ -182,12 +206,12 @@ function messageHandler(data, message, personId) {
           break;
         }
       }
-      let mapObj = itemUtils.createMapItem(catalogId, personId);
+      let mapObj = itemUtils.createMapItem(catalogId, personId, new Location(column, row, column * 64, row * 64));
       data.buildingParts[mapObj.mapItemId] = mapObj;
       cellsMap[column][row].mapItemId = mapItemId;
       cellsMap[column][row].objectId = catalogId;
       inventoryId = null;
-      if (mapObj instanceof (Lootable)){
+      if (mapObj instanceof (Lootable)) {
         inventoryId = mapObj.inventoryId;
       }
       let result = [new Array(catalogId, mapItemId, column, row, inventoryId)];
@@ -260,12 +284,20 @@ function messageHandler(data, message, personId) {
       if (stacks[stackId].item.typeName !== 'WEAPON' || !stacks[stackId].item.isReloaded) break;
       let quantity = stacks[stackId].item.magazineSize - stacks[stackId].item.currentMagazine;
       if (quantity === 0) break;
-      let findAmmo = stackUtils.findItems(stacks[stackId].item.ammoId, inventories, characters[personId], stacks);
-      if (findAmmo[0] == 0) break;
+      let findAmmo = data.inventories[data.characters[personId].inventoryId].findItems(stacks[stackId].item.ammoId, stacks);
+      let tmp = data.inventories[data.characters[personId].hotBarId].findItems(stacks[stackId].item.ammoId, stacks);
+      findAmmo[0] += tmp[0];
+      findAmmo[1] = findAmmo[1].concat(tmp[1]);
+      if (findAmmo[0] == 0)break;
+      if (findAmmo[1].length>1)findAmmo[1] = bubbleSort.bubbleSort(findAmmo[1]);
+
       if (findAmmo[0] < quantity) quantity = findAmmo[0];
-      let removeItems = stackUtils.removeItems(quantity, findAmmo[1]);
+      let removeItems = stackUtils.removeStacks(findAmmo[1], quantity);
       stacks[stackId].item.reloadWeapon(quantity);
-      sender.sendToClient(characters[personId].accountId, new Request({type: MSG_TYPES.INVENTORY_CHANGE, request: removeItems}));
+      sender.sendToClient(characters[personId].accountId, new Request({
+        type: MSG_TYPES.INVENTORY_CHANGE,
+        request: removeItems
+      }));
     }
       break;
     case MSG_TYPES.HOT_BAR_CELL_ACTIVATE: {
@@ -276,19 +308,36 @@ function messageHandler(data, message, personId) {
       break;
     case MSG_TYPES.LOOTING: {
       let mapItemId = json.request;
-      data.buildingParts[mapItemId]...
-      if (!data.mapLoots.hasOwnProperty(mapItemId) ||
-        !cellUtils.isNearCell(data.mapLoots[mapItemId].column, data.mapLoots[mapItemId].row, characters[personId].column, characters[personId].row, 1)) return;
+      let column = null;
+      let row = null;
+      let object = null
+      if (data.mapLoots.hasOwnProperty(mapItemId)) {
+        column = data.mapLoots[mapItemId].location.column;
+        row = data.mapLoots[mapItemId].location.row;
+        object = data.mapLoots[mapItemId];
+      }
+      if (data.buildingParts.hasOwnProperty(mapItemId)) {
+        column = data.buildingParts[mapItemId].location.column;
+        row = data.buildingParts[mapItemId].location.row;
+        object = data.mapLoots[mapItemId];
+      }
+
+      if (object === null ||
+        !cellUtils.isNearCell(column, row, characters[personId].column, characters[personId].row, 1)) return;
+
       sender.sendToClient(data.characters[personId].accountId, new Request({
-          type: MSG_TYPES.INVENTORY_DATA,
-          request: data.inventories[data.mapLoots[mapItemId].inventoryId]
-        }), data.mapLoots[mapItemId].column, data.mapLoots[mapItemId].row);
-      let inventoryId = data.mapLoots[mapItemId].inventoryId;
+        type: MSG_TYPES.INVENTORY_DATA,
+        request: data.inventories[data.mapLoots[mapItemId].inventoryId]
+      }));
+      let inventoryId = object.inventoryId;
       let result = [];
-      for (let i = 0; i< data.inventories[inventoryId].stacks.length; i++){
+      for (let i = 0; i < data.inventories[inventoryId].stacks.length; i++) {
         result.push(data.stacks[data.inventories[inventoryId].stacks[i]]);
       }
-      sender.sendToClient(characters[personId].accountId, new Request({type: MSG_TYPES.INVENTORY_CHANGE, request: result}));
+      sender.sendToClient(characters[personId].accountId, new Request({
+        type: MSG_TYPES.INVENTORY_CHANGE,
+        request: result
+      }));
     }
       break;
     case MSG_TYPES.SYSTEM_MESSAGE: {

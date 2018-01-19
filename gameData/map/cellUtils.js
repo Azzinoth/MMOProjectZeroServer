@@ -1,12 +1,14 @@
+const constans = require('../../constants/constans');
 function isBuilderCell(cellsMap, column, row){
-    if (cellsMap[column][row].objectId===undefined||cellsMap[column][row].objectId===null){
+  if (row<1||column<1||row>constans.mapHeight-2||column>constans.mapWidth-2)return false;
+    if (cellsMap[column][row].objectId===null){
         return true;
     }else{
         return false;
     }
 }
 function isMovableCell(cellsMap, fromRow, toRow, fromColumn, toColumn){
-  if (toRow<1||toColumn<1)return false;
+  if (toRow<1||toColumn<1||toRow>constans.mapHeight-2||toColumn>constans.mapWidth-2)return false;
 	if (Math.abs(fromRow-toRow)<2&&Math.abs(fromColumn-toColumn)<2){
 		return cellsMap[toColumn][toRow].movable;
 	}else{
@@ -14,6 +16,7 @@ function isMovableCell(cellsMap, fromRow, toRow, fromColumn, toColumn){
 	}
 }
 function isGatheredCell(cellsMap, fromRow, fromColumn, toRow, toColumn, resources){
+    if (toRow<1||toColumn<1||toRow>constans.mapHeight-2||toColumn>constans.mapWidth-2)return false;
     let mapItemId = cellsMap[toColumn][toRow].mapItemId;
     if (Math.abs(fromRow-toRow)<2&&Math.abs(fromColumn-toColumn)<2&&mapItemId!==null&&resources.hasOwnProperty(mapItemId)){
 		return true;

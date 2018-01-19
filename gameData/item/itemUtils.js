@@ -1,62 +1,37 @@
-const CommonItem = require('./common/CommonItem');
 const Bow = require('./unique/weapon/range/Bow');
 const WoodWall = require('../mapItem/buildingPart/wall/WoodWall');
 const StoneWall = require('../mapItem/buildingPart/wall/StoneWall');
 const WoodChest = require('../mapItem/buildingPart/lootable/WoodChest');
 const CampFire = require('../mapItem/buildingPart/lootable/production/CampFire');
+const UniqueItem = require('./unique/UniqueItem');
+const Lootable = require('../mapItem/buildingPart/Lootable');
 const data = require('../data');
 
+
 function createItem(typeId) {
-  let obj;
-  switch (typeId) {
-    case 1:
-    case 2:
-    case 8:
-    case 9:
-    case 10:
-      obj = new CommonItem(typeId, 'RESOURCE', 20);
-      break;
-    case 3:
-      obj = new CommonItem(typeId, 'BUILDING_PART', 1);
-      break;
-    case 4:
-      obj = new CommonItem(typeId, 'BUILDING_PART', 1);
-      break;
-    case 5:
-      let itemId = data.getId('item');
-      obj = new Bow(typeId, itemId);
-      break;
-    case 6:
-      obj = new CommonItem(typeId, 'AMMO', 20);
-      break;
-    case 7:
-      obj = new CommonItem(typeId, 'BUILDING_PART', 1);
-      break;
+  if (data.items[typeId] instanceof (UniqueItem)){
+    let itemId = data.getId('item');
+    return data.items[typeId].create(itemId);
+  }else{
+    return data.items[typeId].create();
   }
-  return obj;
+  // for (let key in items){
+  //   if (key == items.typeId){
+  //
+  //     return items[key].create(itemId);
+  //   }
+  // }
+  // return null;
 }
 
-function createMapItem(catalogId, characterId) {
-  let obj;
+function createMapItem(catalogId, characterId, location) {
   let mapItemId = data.getId('mapItem');
-  let inventoryId = null;
-  switch (catalogId) {
-    case 22:
-      obj = new WoodWall(catalogId, mapItemId, characterId);
-      break;
-    case 26:
-      obj = new StoneWall(catalogId, mapItemId, characterId);
-      break;
-    case 23:
-      inventoryId = data.createInventory(8);
-      obj = new WoodChest(catalogId, mapItemId, characterId, inventoryId);
-      break;
-    case 25:
-      inventoryId = data.createInventory(6);
-      obj = new CampFire(catalogId, mapItemId, characterId, inventoryId);
-      break;
+  if (data.mapItemsCatalog[catalogId] instanceof (Lootable)){
+    let inventoryId = data.createInventory(data.mapItemsCatalog[catalogId].inventorySize);
+    return data.mapItemsCatalog[catalogId].create(mapItemId, location, characterId, inventoryId);
+  }else{
+    return data.mapItemsCatalog[catalogId].create(mapItemId, location, characterId);
   }
-  return obj;
 }
 
 exports.createItem = createItem;

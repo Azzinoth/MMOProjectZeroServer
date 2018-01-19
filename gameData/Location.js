@@ -1,13 +1,7 @@
-function Location (column, row, top, left){
+function Location (column, row, left, top){
     this.column = column;
     this.row = row;
-    this.top = top;
     this.left = left;
-}
-let locationPtoto={
-    column : null,
-    row : null,
-    top : null,
-    left : null
+    this.top = top;
 }
 module.exports = Location;

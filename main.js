@@ -7,6 +7,14 @@ const send = require('./network/sender');
 const mainLoop = require('./loop');
 const Bow = require('./gameData/item/unique/weapon/range/Bow');
 const Item = require('./gameData/item/Item');
+const WoodWall = require('./gameData/mapItem/buildingPart/wall/WoodWall');
+const StoneWall = require('./gameData/mapItem/buildingPart/wall/StoneWall');
+const CampFire = require('./gameData/mapItem/buildingPart/lootable/production/CampFire');
+const WoodChest = require('./gameData/mapItem/buildingPart/lootable/WoodChest');
+const Location = require('./gameData/Location');
+const recipes = require('./gameData/craft/CraftRecipe');
+
+
 sqlUtils.fill();
 // data.fillId(sqlUtils);
 // sqlUtils.pushDb(data.callBackTable).then(
@@ -19,11 +27,11 @@ sqlUtils.fill();
 // system();
 // sqlUtils.pushDb();
 
-// wipe().then(
-//   result => recover()
-// )
+wipe().then(
+  result => recover()
+)
 
-recover();
+// recover();
 
 
 function recover() {
@@ -97,6 +105,9 @@ function callBack(tableRows, tableName) {
 }
 
 function start() {
+  fillItemsCatalog(data);
+  fillMapItemsCatalog(data);
+  craftRecipes(data);
   data.fillId(sqlUtils);
   data.fillData(sqlUtils);
   sqlUtils.pushDb(data.callBackTable).then(
@@ -108,12 +119,12 @@ function start() {
     });
 }
 function fillItemsCatalog(data) {
-  sqlUtils.drop('items');
+
   data.items[1] = new Item(1, 'RESOURCE', 20);//wood
   data.items[2] = new Item(2, 'RESOURCE', 20);//stone
   data.items[3] = new Item(3, 'BUILDING_PART', 20);//wood wall
   data.items[4] = new Item(4, 'BUILDING_PART', 20);//stone wall
-  data.items[5] = new Bow(5, 20);//bow
+  data.items[5] = new Bow(null);//bow
   data.items[6] = new Item(6, 'AMMO', 20);//arrow
   data.items[7] = new Item(7, 'BUILDING_PART', 20);//campFire
   data.items[8] = new Item(8, 'RESOURCE', 20);//raw meat
@@ -122,23 +133,47 @@ function fillItemsCatalog(data) {
   data.items[11] = new Item(11, 'BUILDING_PART', 20);//wood chest
 }
 
-function fillMapItemsCatalog() {
-  sqlUtils.drop('mapItemsCatalog');
- sqlUtils.createTable('mapItemsCatalog');
-  let fs = require('fs');
-  fs.readFile('MapItemObjects.json', function (err, data) {
-    if (err) {
-      throw err;
-    }
-    let object = JSON.parse(data.toString());
+function craftRecipes(data) {
+  let ingredients = new Array(new recipes.Ingredient(1, 4));
+  data.recipeList[1] = new recipes.CraftRecipe(1, 3, 'Wood wall',ingredients, 1, 'Building', true, null);
 
-    for (let i = 0; i < object.length; i++) {
-      if (object[i].objectId !== -1) {
-        // data.mapItemsCatalog(object[i].id)
-        sqlUtils.insert('mapItemsCatalog', object[i].id+', '+ object[i].objectId);
-      }
-    }
-  });
+  ingredients = new Array(new recipes.Ingredient(1, 3), new recipes.Ingredient(2, 3));
+  data.recipeList[2] = new recipes.CraftRecipe(2, 4, 'Stone wall',ingredients, 1, 'Building', true, null);
+
+  ingredients = new Array(new recipes.Ingredient(1, 12), new recipes.Ingredient(1, 5));
+  data.recipeList[3] = new recipes.CraftRecipe(3, 5, 'Bow',ingredients, 1, 'Weapon', true, null);
+
+  ingredients = new Array(new recipes.Ingredient(1,10), new recipes.Ingredient(2, 5));
+  data.recipeList[4] = new recipes.CraftRecipe(4, 6, 'Arrow',ingredients, 50, 'Ammo', true, null);
+
+  ingredients = new Array(new recipes.Ingredient(1, 10), new recipes.Ingredient(2, 5));
+  data.recipeList[5] = new recipes.CraftRecipe(5, 7, 'Camp fire',ingredients, 1, 'Building', true, null);
+
+  ingredients = new Array(new recipes.Ingredient(8, 1));
+  data.recipeList[6] = new recipes.CraftRecipe(6, 9, 'Coocked meat',ingredients, 1, 'Consumble', true, 25);
+}
+
+function fillMapItemsCatalog() {
+
+  data.mapItemsCatalog[22]= new WoodWall(null, null, null);
+  data.mapItemsCatalog[23]= new WoodChest(null, null, null);
+  data.mapItemsCatalog[25]= new CampFire(null, null, null);
+  data.mapItemsCatalog[26]= new StoneWall(null, null, null);
+  //sqlUtils.createTable('mapItemsCatalog');
+  // let fs = require('fs');
+  // fs.readFile('MapItemObjects.json', function (err, data) {
+  //   if (err) {
+  //     throw err;
+  //   }
+  //   let object = JSON.parse(data.toString());
+  //
+  //   for (let i = 0; i < object.length; i++) {
+  //     if (object[i].objectId !== -1) {
+  //       //data.mapItemsCatalog[object[i].id]= new
+  //       //sqlUtils.insert('mapItemsCatalog', object[i].id+', '+ object[i].objectId);
+  //     }
+  //   }
+  // });
 }
 
 function wipe() {
@@ -154,17 +189,14 @@ function wipe() {
     sqlUtils.drop('commonItemsTmp');
     sqlUtils.drop('weaponsRangeTmp');
 
-
-    fillMapItemsCatalog();
     buildingParts();
     let accountId = accounts();
-    items();
     commonItems();
     let itemId = weaponsRange();
     let stackId = stacks();
     let inventoryId = inventories();
-    ingredients();
-    let recipeId = craftRecipes();
+    // ingredients();
+    // let recipeId = craftRecipes();
     characterRecipes();
     let characterId = characters();
     let zoneId = zones();
@@ -173,7 +205,7 @@ function wipe() {
     mapCells().then(
       result => {
         mapItemId = result,
-          sqlUtils.insert('identificators', accountId + ', ' + characterId + ', ' + animalId + ', ' + itemId + ', ' + mapItemId + ', ' + recipeId + ', ' + inventoryId + ', ' + stackId + ', ' + zoneId),
+          sqlUtils.insert('identificators', accountId + ', ' + characterId + ', ' + animalId + ', ' + itemId + ', ' + mapItemId + ', ' + inventoryId + ', ' + stackId),
           sqlUtils.updateById('system', null, 0),
           sqlUtils.pushDb().then(
             result =>
@@ -268,7 +300,7 @@ function mapCells() {
           result[map[i].cell.column][map[i].cell.row].movable = false;
           result[map[i].cell.column][map[i].cell.row].objectId = map[i].type.id;
           result[map[i].cell.column][map[i].cell.row].mapItemId = mapItemId;
-          resources[mapItemId] = {id:map[i].type.id, mapItemId:mapItemId, typeId:map[i].type.objectId};
+          resources[mapItemId] = {id:map[i].type.id, mapItemId:mapItemId, typeId:map[i].type.objectId, location:new Location(map[i].cell.column, map[i].cell.row, map[i].cell.column*64, map[i].cell.row*64)};
         }
       }
       // for (let i = 0; i < result.length; i++) {
@@ -301,30 +333,18 @@ function inventories() {
   return 0;
 }
 
-function ingredients() {
-  sqlUtils.drop('ingredients');
-  sqlUtils.createTable('ingredients');
-  sqlUtils.insert('ingredients', '1, 4, 1'); //wood wall
-  sqlUtils.insert('ingredients', '2, 3, 2'); //stone wall
-  sqlUtils.insert('ingredients', '1, 3, 2'); //stone wall
-  sqlUtils.insert('ingredients', '1, 12, 3'); //bow
-  sqlUtils.insert('ingredients', '1, 5, 3'); //bow
-  sqlUtils.insert('ingredients', '1, 10, 4'); //arrows
-  sqlUtils.insert('ingredients', '2, 5, 4'); //arrows
-  sqlUtils.insert('ingredients', '1, 10, 5'); //camp fire
-  sqlUtils.insert('ingredients', '2, 5, 5'); //camp fire
-}
 
-function craftRecipes() {
-  sqlUtils.drop('craftRecipes');
-  sqlUtils.createTable('craftRecipes');
-  sqlUtils.insert('craftRecipes', 1 + ', 3, \'Wood wall\', 1, \'Building\'');
-  sqlUtils.insert('craftRecipes', 2 + ', 4, \'Stone wall\', 1, \'Building\'');
-  sqlUtils.insert('craftRecipes', 3 + ', 5, \'Bow\', 1, \'Armor\'');
-  sqlUtils.insert('craftRecipes', 4 + ', 6, \'Arrows\', 5, \'Armor\'');
-  sqlUtils.insert('craftRecipes', 5 + ', 7, \'Camp fire\', 1, \'Building\'');
-  return 5
-}
+
+// function craftRecipes() {
+//   sqlUtils.drop('craftRecipes');
+//   sqlUtils.createTable('craftRecipes');
+//   sqlUtils.insert('craftRecipes', 1 + ', 3, \'Wood wall\', 1, \'Building\'');
+//   sqlUtils.insert('craftRecipes', 2 + ', 4, \'Stone wall\', 1, \'Building\'');
+//   sqlUtils.insert('craftRecipes', 3 + ', 5, \'Bow\', 1, \'Armor\'');
+//   sqlUtils.insert('craftRecipes', 4 + ', 6, \'Arrows\', 5, \'Armor\'');
+//   sqlUtils.insert('craftRecipes', 5 + ', 7, \'Camp fire\', 1, \'Building\'');
+//   return 5
+// }
 
 function characterRecipes() {
   sqlUtils.drop('characterRecipes');
@@ -395,7 +415,6 @@ function zones() {
   sqlUtils.insert('zones', 3 + ', 50, 60, 80, 80, \'forest\'');
   sqlUtils.insert('zones', 4 + ', 108, 12, 144, 50, \'forest\'');
   sqlUtils.insert('zones', 5 + ', 120, 70, 134, 90, \'rocks\'');
-  return 5;
 }
 
 function system() {

@@ -1,6 +1,9 @@
 const Lootable = require('../Lootable')
-function WoodChest(id, mapItemId, characterId, inventoryId) {
-  Lootable.apply(this, new Array(id, mapItemId, 10, characterId, 5, inventoryId));
+function WoodChest(mapItemId, location, characterId, inventoryId) {
+  Lootable.apply(this, new Array(23, mapItemId, 10, location, characterId, 5, inventoryId, 8));
 }
 WoodChest.prototype = Object.create(Lootable.prototype);
+WoodChest.prototype.create = function (mapItemId, location, characterId, inventoryId) {
+  return new WoodChest(arguments);
+}
 module.exports = WoodChest;

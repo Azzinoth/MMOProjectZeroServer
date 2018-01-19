@@ -138,7 +138,7 @@ function createTable(tableName, callBack) {
       break;
     case 'identificators':
     case 'identificatorsTmp':
-      addSql("run", tableName, "CREATE TABLE " + tableName + " (accountId INTEGER, characterId INTEGER, animalId INTEGER, itemId INTEGER, mapItemId INTEGER, recipeId INTEGER, inventoryId INTEGER, stackId INTEGER, zoneId INTEGER);");
+      addSql("run", tableName, "CREATE TABLE " + tableName + " (accountId INTEGER, characterId INTEGER, animalId INTEGER, itemId INTEGER, mapItemId INTEGER, inventoryId INTEGER, stackId INTEGER);");
       break;
     case 'characters':
     case 'charactersTmp':
@@ -178,11 +178,11 @@ function createTable(tableName, callBack) {
       break;
     case 'resources':
     case 'resourcesTmp':
-      addSql("run", tableName, "CREATE TABLE " + tableName + " (id INTEGER, mapItemId INTEGER primary key, typeId INTEGER);");
+      addSql("run", tableName, "CREATE TABLE " + tableName + " (id INTEGER, mapItemId INTEGER primary key, typeId INTEGER, column INTEGER, row INTEGER, left INTEGER, top INTEGER);");
       break;
     case 'buildingParts':
     case 'buildingPartsTmp':
-      addSql("run", tableName, "CREATE TABLE " + tableName + " (id INTEGER, mapItemId INTEGER primary key, typeId INTEGER, characterId INTEGER, durability INTEGER);");
+      addSql("run", tableName, "CREATE TABLE " + tableName + " (id INTEGER, mapItemId INTEGER primary key, typeId INTEGER, column INTEGER, row INTEGER, left INTEGER, top INTEGER, characterId INTEGER, durability INTEGER);");
       break;
     case 'craftRecipes':
     case 'craftRecipesTmp':
@@ -216,7 +216,7 @@ function insert(tableName, value, callBack) {
       break;
     case 'identificators':
     case 'identificatorsTmp':
-      addSql("run", tableName, "INSERT INTO " + tableName + " (accountId, characterId, animalId, itemId, mapItemId, recipeId, inventoryId, stackId, zoneId) VALUES" + " (" + value + ");");
+      addSql("run", tableName, "INSERT INTO " + tableName + " (accountId, characterId, animalId, itemId, mapItemId, inventoryId, stackId) VALUES" + " (" + value + ");");
       break;
     case 'characters':
     case 'charactersTmp':
@@ -256,11 +256,11 @@ function insert(tableName, value, callBack) {
       break;
     case 'resources':
     case 'resourcesTmp':
-      addSql("run", tableName, "INSERT INTO " + tableName + " (id, mapItemId, typeId) VALUES" + " (" + value + ");");
+      addSql("run", tableName, "INSERT INTO " + tableName + " (id, mapItemId, typeId, column, row, left, top) VALUES" + " (" + value + ");");
       break;
     case 'buildingParts':
     case 'buildingPartsTmp':
-      addSql("run", tableName, "INSERT INTO " + tableName + " (id, mapItemId, typeId, characterId, durability) VALUES" + " (" + value + ");");
+      addSql("run", tableName, "INSERT INTO " + tableName + " (id, mapItemId, typeId, column, row, left, top, characterId, durability) VALUES" + " (" + value + ");");
       break;
     case 'craftRecipes':
     case 'craftRecipesTmp':
@@ -305,7 +305,7 @@ function insertAll(tableName, array, callBack) {
       break;
     case 'identificators':
     case 'identificatorsTmp': {
-      insert(tableName, array.accountId + ', ' + array.characterId + ', ' + array.animalId + ', ' + array.itemId + ', ' + array.mapItemId + ', ' + array.recipeId + ', ' + array.inventoryId + ', ' + array.stackId + ', ' + array.zoneId);
+      insert(tableName, array.accountId + ', ' + array.characterId + ', ' + array.animalId + ', ' + array.itemId + ', ' + array.mapItemId + ', ' + array.inventoryId + ', ' + array.stackId);
     }
 
       break;
@@ -388,13 +388,17 @@ function insertAll(tableName, array, callBack) {
         let id = array[key].id;
         let mapItemId = array[key].mapItemId;
         let typeId = array[key].typeId;
+        let column = array[key].location.column;
+        let row = array[key].location.row;
+        let left = array[key].location.left;
+        let top = array[key].location.top;
         if (sqlQuery === null){
-          sqlQuery = "(" + id + ', ' + mapItemId + ', ' + typeId + ")";
+          sqlQuery = "(" + id + ', ' + mapItemId + ', ' + typeId + ', ' +column+ ', ' +row+ ', ' +left+ ', ' +top +")";
         }else{
-          sqlQuery += ", (" + id + ', ' + mapItemId + ', ' + typeId + ")";
+          sqlQuery += ", (" + id + ', ' + mapItemId + ', ' + typeId + ', ' +column+ ', ' +row+ ', ' +left+ ', ' +top +")";
         }
       }
-      addSql("run", tableName, "INSERT INTO " + tableName + " (id, mapItemId, typeId) VALUES " + sqlQuery);
+      addSql("run", tableName, "INSERT INTO " + tableName + " (id, mapItemId, typeId, column, row, left, top) VALUES " + sqlQuery);
     }
       break;
     case 'buildingParts':
@@ -402,10 +406,14 @@ function insertAll(tableName, array, callBack) {
       for (let key in array) {
         let id = array[key].id;
         let mapItemId = array[key].mapItemId;
-        let typeId = array[key].typeId;
+        let typeId = array[key].typeId
+        let column = array[key].location.column;
+        let row = array[key].location.row;
+        let left = array[key].location.left;
+        let top = array[key].location.top;
         let characterId = array[key].characterId;
         let durability = array[key].durability;
-        insert(tableName, id + ', ' + mapItemId + ', ' + typeId + ', ' + characterId + ', ' + durability);
+        insert(tableName, id + ', ' + mapItemId + ', ' + typeId  + ', ' +column+ ', ' +row+ ', ' +left + ', ' + top + ', ' + characterId + ', ' + durability);
       }
       break;
     case 'mapCells':

@@ -1,63 +1,85 @@
 const Request = require('../network/Request');
 const sender = require('../network/sender');
 const distanceUtils = require('../utils/distanceUtils');
+const constans = require('../constants/constans');
+const Lootable = require('./mapItem/buildingPart/Lootable');
 const {
-    HUMAN_MOVE
+  HUMAN_MOVE
 } = require('../constants').messageTypes;
 
 function findCharacters(characters, distance, id) {
-    let result = [];
-    let character = characters[id];
-    for (let key in characters){
-        if (characters[key].isOnline&&key!=id&&(Math.abs(character.column-characters[key].column)<distance&&Math.abs(character.row-characters[key].row)<distance)){
-            result.push(characters[key]);
-        }
+  let result = [];
+  let character = characters[id];
+  for (let key in characters) {
+    if (characters[key].isOnline && key != id && (Math.abs(character.column - characters[key].column) < distance && Math.abs(character.row - characters[key].row) < distance)) {
+      result.push(characters[key]);
     }
-    return result;
+  }
+  return result;
 }
 
-function surroundObjects (startColumn, startRow, distance, width, height, cellsMap){
-    let arrayObjects = [];
-    for (let i =startColumn-Math.floor(distance); i<=startColumn+Math.floor(distance); i++){
-        for (let j =startRow-Math.floor(distance); j<=startRow+Math.floor(distance); j++){
-
-            if (i<width&&j<height&&i>=0&&j>=0&&cellsMap[i][j].objectId!=null){
-                arrayObjects.push(cellsMap[i][j]);
-            }
+function surroundObjects(startColumn, startRow, distance, data) {
+  let result = [];
+  let resources = [];
+  let buildingParts = [];
+  let mapLoots = [];
+  let mapItemId = null;
+  let inventoryId = null;
+  for (let i = startColumn - Math.floor(distance); i <= startColumn + Math.floor(distance); i++) {
+    for (let j = startRow - Math.floor(distance); j <= startRow + Math.floor(distance); j++) {
+      if (i < constans.mapWidth && j < constans.mapHeight && i >= 0 && j >= 0 && data.getMap()[i][j].objectId != null) {
+        mapItemId = data.getMap()[i][j].mapItemId;
+        if (data.buildingParts.hasOwnProperty(mapItemId)) {
+          if (data.buildingParts[mapItemId] instanceof (Lootable)) inventoryId = data.buildingParts[mapItemId].inventoryId;
+          buildingParts.push(new Array(data.buildingParts[mapItemId].id, mapItemId, data.buildingParts[mapItemId].location.column, data.buildingParts[mapItemId].location.row, inventoryId));
+        } else {
+          resources.push(new Array(i, j, data.getMap()[i][j].objectId));
         }
+      }
     }
-    return arrayObjects;
-}
-function surroundAnimals (startColumn, startRow, distance, animals){
-    let arrayObjects = [];
-    for (let key in animals){
-        if (animals[key].isAlive&&Math.abs(startColumn-animals[key].location.column)<distance&&(Math.abs(startRow-animals[key].location.row)<distance)){
-            arrayObjects.push(new Array(animals[key].id, animals[key].path, animals[key].location.column, animals[key].location.row, animals[key].location.left, animals[key].location.top));
-        }
+  }
+  for (let key in data.mapLoots){
+    if (Math.abs(startColumn-data.mapLoots[key].location.column)<distance&&(Math.abs(startRow-data.mapLoots[key].location.row)<distance)){
+      mapLoots.push(new Array(parseInt(key), data.mapLoots[key].inventoryId, data.mapLoots[key].location.left, data.mapLoots[key].location.top));
     }
-    return arrayObjects;
+  }
+  result[0] = resources;
+  result[1] = buildingParts;
+  result[2] = mapLoots;
+  return result;
 }
 
-function surroundLoots (startColumn, startRow, distance, mapLoots){
+function surroundAnimals(startColumn, startRow, distance, animals) {
   let arrayObjects = [];
-  for (let key in mapLoots){
-    if (Math.abs(startColumn-mapLoots[key].column)<distance&&(Math.abs(startRow-mapLoots[key].row)<distance)){
-      arrayObjects.push(mapLoots[key]);
+  for (let key in animals) {
+    if (animals[key].isAlive && Math.abs(startColumn - animals[key].location.column) <= distance && (Math.abs(startRow - animals[key].location.row) <= distance)) {
+      arrayObjects.push(new Array(animals[key].id, animals[key].path, animals[key].location.column, animals[key].location.row, animals[key].location.left, animals[key].location.top));
     }
   }
   return arrayObjects;
 }
 
-function isNewObjectInViewDistance(myLeft, myTop, fromLeft, fromTop, toLeft, toTop, viewDistance){
-    let from = distanceUtils.distance(myLeft, myTop, fromLeft, fromTop);
-    let to = distanceUtils.distance(myLeft, myTop, toLeft, toTop);
-    let first =from<viewDistance*64;
-    let second = to<viewDistance*64;
-    if (!first&&second)return true;
-    return false;
+function viewNewObjects(startColumn, startRow, toColumn, toRow, distance, animals) {
+  let arrayObjects = [];
+  for (let key in animals) {
+    if (animals[key].isAlive && Math.abs(startColumn - animals[key].location.column) < distance && (Math.abs(startRow - animals[key].location.row) < distance)) {
+      arrayObjects.push(new Array(animals[key].id, animals[key].path, animals[key].location.column, animals[key].location.row, animals[key].location.left, animals[key].location.top));
+    }
+  }
+  return arrayObjects;
 }
+
+
+function isNewObjectInViewDistance(myLeft, myTop, fromLeft, fromTop, toLeft, toTop, viewDistance) {
+  let from = distanceUtils.distance(myLeft, myTop, fromLeft, fromTop);
+  let to = distanceUtils.distance(myLeft, myTop, toLeft, toTop);
+  let first = from < viewDistance * 64;
+  let second = to < viewDistance * 64;
+  if (!first && second) return true;
+  return false;
+}
+
 exports.surroundObjects = surroundObjects;
 exports.findCharacters = findCharacters;
 exports.surroundAnimals = surroundAnimals;
 exports.isNewObjectInViewDistance = isNewObjectInViewDistance;
-exports.surroundLoots = surroundLoots;
