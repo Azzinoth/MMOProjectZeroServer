@@ -27,11 +27,11 @@ sqlUtils.fill();
 // system();
 // sqlUtils.pushDb();
 
-wipe().then(
-  result => recover()
-)
+// wipe().then(
+//   result => recover()
+// )
 
-// recover();
+recover();
 
 
 function recover() {
@@ -157,7 +157,7 @@ function fillMapItemsCatalog() {
 
   data.mapItemsCatalog[22]= new WoodWall(null, null, null);
   data.mapItemsCatalog[23]= new WoodChest(null, null, null);
-  data.mapItemsCatalog[25]= new CampFire(null, null, null);
+  data.mapItemsCatalog[25]= new CampFire(null, null, null, null);
   data.mapItemsCatalog[26]= new StoneWall(null, null, null);
   //sqlUtils.createTable('mapItemsCatalog');
   // let fs = require('fs');

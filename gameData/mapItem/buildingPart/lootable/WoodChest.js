@@ -4,6 +4,6 @@ function WoodChest(mapItemId, location, characterId, inventoryId) {
 }
 WoodChest.prototype = Object.create(Lootable.prototype);
 WoodChest.prototype.create = function (mapItemId, location, characterId, inventoryId) {
-  return new WoodChest(arguments);
+  return new WoodChest(mapItemId, location, characterId, inventoryId);
 }
 module.exports = WoodChest;

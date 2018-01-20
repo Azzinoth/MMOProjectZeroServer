@@ -4,6 +4,7 @@ const visibleObjects = require('../../gameData/visibleObjects');
 const craftItem = require('../../gameData/craft/craftItem');
 const Weapon = require('../../gameData/item/unique/Weapon');
 const Lootable = require('../../gameData/mapItem/buildingPart/Lootable');
+const Production = require('../../gameData/mapItem/buildingPart/lootable/Production');
 const cellUtils = require('../../gameData/map/cellUtils');
 const itemUtils = require('../../gameData/item/itemUtils');
 const sender = require('../sender');
@@ -109,26 +110,35 @@ function messageHandler(data, message, personId) {
     case MSG_TYPES.INVENTORY_CHANGE: {
       let indexFrom = json.request[0];
       let indexTo = json.request[1];
-      let mapLootFrom = null;
-      let mapLootTo = null;
-      for (let key in data.mapLoots) {
-        if (data.mapLoots[key].inventoryId === data.stacks[indexFrom].inventoryId)
-          mapLootFrom = data.mapLoots[key];
-        if (indexTo !== -1 && data.mapLoots[key].inventoryId === data.stacks[indexTo].inventoryId)
-          mapLootTo = data.mapLoots[key];
+      let objectFrom = null;
+      let objectTo = null;
+      for (let key in data.buildingParts) {
+        if (data.buildingParts[key].inventoryId === data.stacks[indexFrom].inventoryId)
+          objectFrom = data.buildingParts[key];
+        if (indexTo !== -1 && data.buildingParts[key].inventoryId === data.stacks[indexTo].inventoryId)
+          objectTo = data.buildingParts[key];
       }
-      if (mapLootFrom === null && mapLootTo === null) {
+      if (objectFrom===null && objectTo===null){
+        for (let key in data.mapLoots) {
+          if (data.mapLoots[key].inventoryId === data.stacks[indexFrom].inventoryId)
+            objectFrom = data.mapLoots[key];
+          if (indexTo !== -1 && data.mapLoots[key].inventoryId === data.stacks[indexTo].inventoryId)
+            objectTo = data.mapLoots[key];
+        }
+      }
+
+      if (objectFrom === null && objectTo === null) {
         if (stacks[indexFrom].inventoryId !== characters[personId].inventoryId && stacks[indexFrom].inventoryId !== characters[personId].hotBarId) break;
         if (indexTo !== -1 && stacks[indexTo].inventoryId !== characters[personId].inventoryId && stacks[indexTo].inventoryId !== characters[personId].hotBarId) break;
-      } else if (mapLootFrom !== null && mapLootTo !== null) {
-        if (mapLootFrom.inventoryId !== mapLootTo.inventoryId) break;
-        if (!cellUtils.isNearCell(mapLootFrom.location.column, mapLootFrom.location.row, characters[personId].column, characters[personId].row, 1)) break;
-      } else if (mapLootFrom !== null) {
+      } else if (objectFrom !== null && objectTo !== null) {
+        if (objectFrom.inventoryId !== objectTo.inventoryId) break;
+        if (!cellUtils.isNearCell(objectFrom.location.column, objectFrom.location.row, characters[personId].column, characters[personId].row, 1)) break;
+      } else if (objectFrom !== null) {
         if (indexTo !== -1 && stacks[indexTo].inventoryId !== characters[personId].inventoryId && stacks[indexTo].inventoryId !== characters[personId].hotBarId) break;
-        if (!cellUtils.isNearCell(mapLootFrom.location.column, mapLootFrom.location.row, characters[personId].column, characters[personId].row, 1)) break;
-      } else if (mapLootTo !== null) {
+        if (!cellUtils.isNearCell(objectFrom.location.column, objectFrom.location.row, characters[personId].column, characters[personId].row, 1)) break;
+      } else if (objectTo !== null) {
         if (stacks[indexFrom].inventoryId !== characters[personId].inventoryId && stacks[indexFrom].inventoryId !== characters[personId].hotBarId) break;
-        if (!cellUtils.isNearCell(mapLootTo.location.column, mapLootTo.location.row, characters[personId].column, characters[personId].row, 1)) break;
+        if (!cellUtils.isNearCell(objectTo.location.column, objectTo.location.row, characters[personId].column, characters[personId].row, 1)) break;
       }
       let item = stacks[indexFrom].item;
       if (item === null) break;
@@ -198,7 +208,7 @@ function messageHandler(data, message, personId) {
       }
 
       cellsMap[column][row].movable = false;
-      let mapItemId = data.getId('mapItem');
+      //let mapItemId = data.getId('mapItem');
       let catalogId = null;
       for (let key in data.mapItemsCatalog) {
         if (data.mapItemsCatalog[key].typeId === typeId) {
@@ -208,13 +218,14 @@ function messageHandler(data, message, personId) {
       }
       let mapObj = itemUtils.createMapItem(catalogId, personId, new Location(column, row, column * 64, row * 64));
       data.buildingParts[mapObj.mapItemId] = mapObj;
-      cellsMap[column][row].mapItemId = mapItemId;
+      cellsMap[column][row].mapItemId = mapObj.mapItemId;
       cellsMap[column][row].objectId = catalogId;
       inventoryId = null;
-      if (mapObj instanceof (Lootable)) {
-        inventoryId = mapObj.inventoryId;
-      }
-      let result = [new Array(catalogId, mapItemId, column, row, inventoryId)];
+      let isActive = null;
+      if (mapObj instanceof (Lootable)) inventoryId = mapObj.inventoryId;
+      if (mapObj instanceof (Production)) isActive = mapObj.isInAction;
+
+      let result = [new Array(catalogId, mapObj.mapItemId, column, row, inventoryId, isActive)];
       request = new Request({type: MSG_TYPES.BUILDING_OBJECT, request: result});
       sender.sendByViewDistance(characters, request, column, row);
 
@@ -319,7 +330,7 @@ function messageHandler(data, message, personId) {
       if (data.buildingParts.hasOwnProperty(mapItemId)) {
         column = data.buildingParts[mapItemId].location.column;
         row = data.buildingParts[mapItemId].location.row;
-        object = data.mapLoots[mapItemId];
+        object = data.buildingParts[mapItemId];
       }
 
       if (object === null ||
@@ -327,7 +338,7 @@ function messageHandler(data, message, personId) {
 
       sender.sendToClient(data.characters[personId].accountId, new Request({
         type: MSG_TYPES.INVENTORY_DATA,
-        request: data.inventories[data.mapLoots[mapItemId].inventoryId]
+        request: data.inventories[object.inventoryId]
       }));
       let inventoryId = object.inventoryId;
       let result = [];
@@ -338,6 +349,25 @@ function messageHandler(data, message, personId) {
         type: MSG_TYPES.INVENTORY_CHANGE,
         request: result
       }));
+    }
+      break;
+    case MSG_TYPES.USE: {
+     let mapItemId = json.request;
+      if (!data.buildingParts.hasOwnProperty(mapItemId) || !cellUtils.isNearCell(data.buildingParts[mapItemId].location.column, data.buildingParts[mapItemId].location.row, characters[personId].column, characters[personId].row, 1)) break;
+      if (data.buildingParts[mapItemId] instanceof (Production)){
+        let res = data.buildingParts[mapItemId].onOff(inventories[data.buildingParts[mapItemId].inventoryId], stacks);
+        if (res[0]){
+          request = new Request({type:MSG_TYPES.USE, request:new Array(mapItemId, data.buildingParts[mapItemId].isInAction)});
+          sender.sendByViewDistance(characters, request, data.buildingParts[mapItemId].location.column, data.buildingParts[mapItemId].location.row);
+        }
+        if (res[1].length>0){
+          request = new Request({
+            type: MSG_TYPES.INVENTORY_CHANGE,
+            request: res[1]
+          });
+          sender.sendByViewDistance(data.characters, request, data.buildingParts[mapItemId].location.column, data.buildingParts[mapItemId].location.row);
+        }
+      }
     }
       break;
     case MSG_TYPES.SYSTEM_MESSAGE: {

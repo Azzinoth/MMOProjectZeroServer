@@ -4,6 +4,6 @@ function StoneWall(mapItemId, location, characterId) {
 }
 StoneWall.prototype = Object.create(Wall.prototype);
 StoneWall.prototype.create = function (mapItemId, location, characterId) {
-  return new StoneWall(arguments);
+  return new StoneWall(mapItemId, location, characterId);
 }
 module.exports = StoneWall;

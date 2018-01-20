@@ -23,7 +23,7 @@ function craftItem(inventory, stacks, recipe, items){
 
 /////////////Get items from inventory and stacks by recipe
 	for (let i = 0; i<recipe.ingredients.length; i++){
-    let remove = inventory.removeItems(stacks, recipe.ingredients[i].typeId, recipe.ingredients[i].amount);
+    let remove = inventory.removeItem(stacks, recipe.ingredients[i].typeId, recipe.ingredients[i].amount);
     result = result.concat(remove);
 	}
   // let tmp = inventory.addStack(inventories, character, stacks, recipe.craftedTypeId, recipe.outputAmount, );

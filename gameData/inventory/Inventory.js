@@ -114,7 +114,7 @@ Inventory.prototype.removeItem = function(stacks, typeId, size){
   let tmpQuantity=0;
   let tmpStacks = [];
   for(let i = 0; i<this.stacks.length; i++){
-    if (stacks[this.stacks[i]].item.typeId===typeId){
+    if (stacks[this.stacks[i]].item!==null && stacks[this.stacks[i]].item.typeId===typeId){
       if (tmpStacks.length===0)tmpStacks.push(stacks[this.stacks[i]]);
       else {
         for (let j = 0; j < tmpStacks.length; j++) {
@@ -122,7 +122,10 @@ Inventory.prototype.removeItem = function(stacks, typeId, size){
             tmpStacks.splice(j, 0, stacks[this.stacks[i]]);
             break;
           }
-          if (j === tmpStacks.length-1) tmpStacks.push(stacks[this.stacks[i]]);
+          if (j === tmpStacks.length-1){
+            tmpStacks.push(stacks[this.stacks[i]]);
+            break;
+          }
         }
       }
     }

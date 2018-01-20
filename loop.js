@@ -35,11 +35,17 @@ function buildingsAction(data) {
   let request = null;
   for (let key in data.buildingParts) {
     if (data.buildingParts[key] instanceof (Production)&&data.buildingParts[key].isInAction){
-      let productStacks = data.buildingParts[key].tick(data.inventories[data.buildingParts[key].inventoryId], data.stacks, data.recipeList);
-      if (productStacks.length>0){
+      let productStacks = data.buildingParts[key].tick(data.inventories[data.buildingParts[key].inventoryId], data.stacks, data.recipeList, data.items);
+      if (productStacks[0]){
+        request = new Request({
+          type: MSG_TYPES.USE,
+          request: new Array(key, data.buildingParts[key].isInAction)
+        });
+        sender.sendByViewDistance(data.characters, request, data.buildingParts[key].location.column, data.buildingParts[key].location.row);
+      }else if (productStacks[1].length>0){
         request = new Request({
           type: MSG_TYPES.INVENTORY_CHANGE,
-          request: productStacks
+          request: productStacks[1]
         });
         sender.sendByViewDistance(data.characters, request, data.buildingParts[key].location.column, data.buildingParts[key].location.row);
       }

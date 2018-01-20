@@ -3,6 +3,7 @@ const sender = require('../network/sender');
 const distanceUtils = require('../utils/distanceUtils');
 const constans = require('../constants/constans');
 const Lootable = require('./mapItem/buildingPart/Lootable');
+const Production = require('./mapItem/buildingPart/lootable/Production');
 const {
   HUMAN_MOVE
 } = require('../constants').messageTypes;
@@ -25,13 +26,15 @@ function surroundObjects(startColumn, startRow, distance, data) {
   let mapLoots = [];
   let mapItemId = null;
   let inventoryId = null;
+  let isActive = null;
   for (let i = startColumn - Math.floor(distance); i <= startColumn + Math.floor(distance); i++) {
     for (let j = startRow - Math.floor(distance); j <= startRow + Math.floor(distance); j++) {
       if (i < constans.mapWidth && j < constans.mapHeight && i >= 0 && j >= 0 && data.getMap()[i][j].objectId != null) {
         mapItemId = data.getMap()[i][j].mapItemId;
         if (data.buildingParts.hasOwnProperty(mapItemId)) {
           if (data.buildingParts[mapItemId] instanceof (Lootable)) inventoryId = data.buildingParts[mapItemId].inventoryId;
-          buildingParts.push(new Array(data.buildingParts[mapItemId].id, mapItemId, data.buildingParts[mapItemId].location.column, data.buildingParts[mapItemId].location.row, inventoryId));
+          if (data.buildingParts[mapItemId] instanceof (Production)) isActive = data.buildingParts[mapItemId].isInAction;
+          buildingParts.push(new Array(data.buildingParts[mapItemId].id, mapItemId, data.buildingParts[mapItemId].location.column, data.buildingParts[mapItemId].location.row, inventoryId, isActive));
         } else {
           resources.push(new Array(i, j, data.getMap()[i][j].objectId));
         }
