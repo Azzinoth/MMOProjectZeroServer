@@ -1,6 +1,5 @@
 const Request = require('./Request');
 const visibleObjects = require('../gameData/visibleObjects');
-const stackUtils = require('../gameData/inventory/stackUtils');
 const sender = require('./sender');
 const MSG_TYPES = require('../constants/messageTypes');
 
@@ -40,7 +39,7 @@ function initialize(data, accountId) {
   sender.sendToClient(data.characters[characterId].accountId, request);
 
   request = new Request({type: MSG_TYPES.HUMAN_DATA, request: characterId});
-  sender.sendAllExcept(request, data.characters[characterId].accountId);
+  sender.sendAllExcept(data.characters, request, data.characters[characterId].accountId);
   for (let key in data.characters) {
     if (+key !== characterId) {
       let founderCharacters = visibleObjects.findCharacters(data.characters, data.characters[key].viewDistance, key);

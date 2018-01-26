@@ -1,4 +1,6 @@
 const constans = require('../../constants/constans');
+const data = require ('../data');
+const Door = require ('../mapItem/buildingPart/Door');
 function isBuilderCell(cellsMap, column, row){
   if (row<1||column<1||row>constans.mapHeight-2||column>constans.mapWidth-2)return false;
     if (cellsMap[column][row].objectId===null){
@@ -7,11 +9,19 @@ function isBuilderCell(cellsMap, column, row){
         return false;
     }
 }
-function isMovableCell(cellsMap, fromRow, toRow, fromColumn, toColumn){
+function isMovableCell(cellsMap, fromRow, toRow, fromColumn, toColumn, npcId=null){
   if (toRow<1||toColumn<1||toRow>constans.mapHeight-2||toColumn>constans.mapWidth-2)return false;
 	if (Math.abs(fromRow-toRow)<2&&Math.abs(fromColumn-toColumn)<2){
-		return cellsMap[toColumn][toRow].movable;
+	  if (cellsMap[toColumn][toRow].movable){
+      return true;
+    }else if (npcId!==null &&
+        data.buildingParts[cellsMap[toColumn][toRow].mapItemId] instanceof (Door) &&
+        data.buildingParts[cellsMap[toColumn][toRow].mapItemId].characterId === npcId){
+        return true;
+    }else return false;
+
 	}else{
+
 		return false;
 	}
 }

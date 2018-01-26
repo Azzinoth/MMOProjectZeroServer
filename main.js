@@ -6,9 +6,14 @@ const toDataBase = require('./sql/gameDataToDataBase');
 const send = require('./network/sender');
 const mainLoop = require('./loop');
 const Bow = require('./gameData/item/unique/weapon/range/Bow');
+const Spear = require('./gameData/item/unique/weapon/melee/Spear');
+const Hatchet = require('./gameData/item/unique/instruments/Hatchet');
+const Pick = require('./gameData/item/unique/instruments/Pick');
 const Item = require('./gameData/item/Item');
 const WoodWall = require('./gameData/mapItem/buildingPart/wall/WoodWall');
 const StoneWall = require('./gameData/mapItem/buildingPart/wall/StoneWall');
+const WoodDoor = require('./gameData/mapItem/buildingPart/door/WoodDoor');
+const StoneDoor = require('./gameData/mapItem/buildingPart/door/StoneDoor');
 const CampFire = require('./gameData/mapItem/buildingPart/lootable/production/CampFire');
 const WoodChest = require('./gameData/mapItem/buildingPart/lootable/WoodChest');
 const Location = require('./gameData/Location');
@@ -26,7 +31,7 @@ sqlUtils.fill();
 // clear();
 // system();
 // sqlUtils.pushDb();
-
+//
 // wipe().then(
 //   result => recover()
 // )
@@ -131,6 +136,13 @@ function fillItemsCatalog(data) {
   data.items[9] = new Item(9, 'RESOURCE', 20);//coocked meat
   data.items[10] = new Item(10, 'RESOURCE', 20);//leather
   data.items[11] = new Item(11, 'BUILDING_PART', 20);//wood chest
+  data.items[12] = new Item(12, 'BUILDING_PART', 20);//wood door
+  data.items[13] = new Item(13, 'BUILDING_PART', 20);//stone door
+  data.items[14] = new Hatchet(null);//Hatchet
+  data.items[15] = new Pick(null);//Pick
+  data.items[16] = new Spear(null);//Spear
+  data.items[17] = new Item(17, 'RESOURCE', 20);//stick
+  data.items[18] = new Item(18, 'RESOURCE', 20);//berry
 }
 
 function craftRecipes(data) {
@@ -151,6 +163,21 @@ function craftRecipes(data) {
 
   ingredients = new Array(new recipes.Ingredient(8, 1));
   data.recipeList[6] = new recipes.CraftRecipe(6, 9, 'Coocked meat',ingredients, 1, 'Consumble', true, 25);
+
+  ingredients = new Array(new recipes.Ingredient(1, 12));
+  data.recipeList[7] = new recipes.CraftRecipe(7, 12, 'Wood door',ingredients, 1, 'Building', true, null);
+
+  ingredients = new Array(new recipes.Ingredient(1, 12));
+  data.recipeList[8] = new recipes.CraftRecipe(8, 13, 'Stone door',ingredients, 1, 'Building', true, null);
+
+  ingredients = new Array(new recipes.Ingredient(1, 12), new recipes.Ingredient(2, 5));
+  data.recipeList[9] = new recipes.CraftRecipe(9, 16, 'Spear',ingredients, 1, 'Weapon', true, null);
+
+  ingredients = new Array(new recipes.Ingredient(1, 8), new recipes.Ingredient(2, 3));
+  data.recipeList[10] = new recipes.CraftRecipe(10, 14, 'Hatchet',ingredients, 1, 'Instruments', true, null);
+
+  ingredients = new Array(new recipes.Ingredient(1, 9), new recipes.Ingredient(2, 6));
+  data.recipeList[11] = new recipes.CraftRecipe(11, 15, 'Pick',ingredients, 1, 'Instruments', true, null);
 }
 
 function fillMapItemsCatalog() {
@@ -159,6 +186,8 @@ function fillMapItemsCatalog() {
   data.mapItemsCatalog[23]= new WoodChest(null, null, null);
   data.mapItemsCatalog[25]= new CampFire(null, null, null, null);
   data.mapItemsCatalog[26]= new StoneWall(null, null, null);
+  data.mapItemsCatalog[27]= new WoodDoor(null, null, null);
+  data.mapItemsCatalog[28]= new StoneDoor(null, null, null);
   //sqlUtils.createTable('mapItemsCatalog');
   // let fs = require('fs');
   // fs.readFile('MapItemObjects.json', function (err, data) {

@@ -1,4 +1,3 @@
-const stackUtils = require('../../gameData/inventory/stackUtils');
 const Request = require('../Request');
 const visibleObjects = require('../../gameData/visibleObjects');
 const craftItem = require('../../gameData/craft/craftItem');
@@ -15,7 +14,8 @@ const MSG_TYPES = require('../../constants/messageTypes');
 const Location = require('../../gameData/Location');
 const Character = require('../../gameData/person/Character');
 const bubbleSort = require('../../utils/bubbleSort');
-
+const Instruments = require ('../../gameData/item/unique/Instruments');
+const initialize = require('../initialize');
 function messageHandler(data, message, personId) {
   let characters = data.characters;
   let inventories = data.inventories;
@@ -62,6 +62,17 @@ function messageHandler(data, message, personId) {
       // let changedInventory;
 
       if (cellUtils.isGatheredCell(cellsMap, row, column, toRow, toColumn, resources)) {
+        let stackId = characters[personId].activeHotBarCell;
+        let mapCatalogId = cellsMap[toColumn][toRow].objectId;
+        let isUseInstrument = false;
+        if (stackId === null || !stacks[stackId].item instanceof (Instruments)) break;
+        for (let i = 0; i<stacks[stackId].item.usableObjId.length; i++){
+          if (stacks[stackId].item.usableObjId[i] == mapCatalogId){
+            isUseInstrument = true;
+            break;
+          }
+        }
+        if (!isUseInstrument)break;
         let mapItemId = cellsMap[toColumn][toRow].mapItemId;
         let items = resources[mapItemId].getLoot(data);
         let reqStacks = [];
@@ -145,7 +156,7 @@ function messageHandler(data, message, personId) {
       let toInventory = null;
       if (indexTo !== -1) toInventory = inventories[stacks[indexTo].inventoryId];
 
-      let swaps = stackUtils.swapStack(inventories[stacks[indexFrom].inventoryId], toInventory, stacks, indexFrom, indexTo);
+      let swaps = inventories[stacks[indexFrom].inventoryId].swapStack(stacks, indexFrom, indexTo);
 
       if (swaps !== 1) {
         request = new Request({type: MSG_TYPES.INVENTORY_CHANGE, request: swaps});
@@ -225,7 +236,7 @@ function messageHandler(data, message, personId) {
       if (mapObj instanceof (Lootable)) inventoryId = mapObj.inventoryId;
       if (mapObj instanceof (Production)) isActive = mapObj.isInAction;
 
-      let result = [new Array(catalogId, mapObj.mapItemId, column, row, inventoryId, isActive)];
+      let result = [new Array(catalogId, mapObj.mapItemId, column, row, inventoryId, isActive, mapObj.characterId)];
       request = new Request({type: MSG_TYPES.BUILDING_OBJECT, request: result});
       sender.sendByViewDistance(characters, request, column, row);
 
@@ -243,13 +254,16 @@ function messageHandler(data, message, personId) {
       let stackId = characters[personId].activeHotBarCell;
       if (stacks[stackId].item.typeName !== 'WEAPON') break;
 
-
       if (stacks[stackId].item.isReloaded && stacks[stackId].item.currentMagazine === 0) {
         let quantity = stacks[stackId].item.magazineSize - stacks[stackId].item.currentMagazine;
-        let findAmmo = stackUtils.findItems(stacks[stackId].item.ammoId, inventories, characters[personId], stacks);
-        if (findAmmo[0] == 0) break;
-        if (findAmmo[0] < quantity) quantity = findAmmo[0];
-        let removeItems = stackUtils.removeItems(quantity, findAmmo[1]);
+        let findAmmo = data.inventories[data.characters[personId].inventoryId].findItems(stacks[stackId].item.ammoId, stacks);
+        // let tmp = data.inventories[data.characters[personId].hotBarId].findItems(stacks[stackId].item.ammoId, stacks);
+        // findAmmo[0] += tmp[0];
+        // findAmmo[1] = findAmmo[1].concat(tmp[1]);
+        let removeItems = null;
+        if (findAmmo[0] === 0)break;
+        if (findAmmo[0] < quantity)quantity = findAmmo[0];
+        removeItems = data.inventories[data.characters[personId].inventoryId].removeItem(stacks, stacks[stackId].item.ammoId, quantity);
         stacks[stackId].item.reloadWeapon(quantity);
         sender.sendToClient(characters[personId].accountId, new Request({
           type: MSG_TYPES.INVENTORY_CHANGE,
@@ -266,7 +280,7 @@ function messageHandler(data, message, personId) {
       arr[2] = firedAmmo.initialY;
       arr[3] = firedAmmo.finalX;
       arr[4] = firedAmmo.finalY;
-      sender.sendToAll(new Request({type: MSG_TYPES.SHOT, request: arr}));
+      sender.sendByViewDistance(data.characters, new Request({type: MSG_TYPES.SHOT, request: arr}), characters[personId].column, characters[personId].row);
 
     }
       break;
@@ -274,14 +288,10 @@ function messageHandler(data, message, personId) {
       let indexFrom = json.request[0];
       let indexTo = json.request[1];
       let item = stacks[inventories[characters[personId].inventoryId].stacks[indexFrom]].item;
-
+      if (stacks[indexFrom].inventoryId!==characters[personId].inventoryId&&stacks[indexFrom].inventoryId!==characters[personId].hotBarId) break;
+      if (indexTo!==-1&&stacks[indexTo].inventoryId!==characters[personId].inventoryId&&stacks[indexTo].inventoryId!==characters[personId].hotBarId)break;
       if (item === null) break;
-      let swaps;
-      if (indexTo == -1) {
-        swaps = stackUtils.swapStack(inventories[characters[personId].hotBarId], null, stacks, indexFrom, indexTo);
-      } else {
-        swaps = stackUtils.swapStack(inventories[characters[personId].inventoryId], inventories[characters[personId].hotBarId], stacks, indexFrom, indexTo);
-      }
+      let swaps = inventories[characters[personId].inventoryId].swapStack(stacks, indexFrom, indexTo);
 
       if (swaps !== 1) {
         request = new Request({type: MSG_TYPES.INVENTORY_CHANGE, request: swaps});
@@ -296,14 +306,14 @@ function messageHandler(data, message, personId) {
       let quantity = stacks[stackId].item.magazineSize - stacks[stackId].item.currentMagazine;
       if (quantity === 0) break;
       let findAmmo = data.inventories[data.characters[personId].inventoryId].findItems(stacks[stackId].item.ammoId, stacks);
-      let tmp = data.inventories[data.characters[personId].hotBarId].findItems(stacks[stackId].item.ammoId, stacks);
-      findAmmo[0] += tmp[0];
-      findAmmo[1] = findAmmo[1].concat(tmp[1]);
-      if (findAmmo[0] == 0)break;
-      if (findAmmo[1].length>1)findAmmo[1] = bubbleSort.bubbleSort(findAmmo[1]);
+      //let tmp = data.inventories[data.characters[personId].hotBarId].findItems(stacks[stackId].item.ammoId, stacks);
+      //findAmmo[0] += tmp[0];
+      //findAmmo[1] = findAmmo[1].concat(tmp[1]);
+      if (findAmmo[0] === 0)break;
+      //if (findAmmo[1].length>1)findAmmo[1] = bubbleSort.bubbleSort(findAmmo[1]);
 
       if (findAmmo[0] < quantity) quantity = findAmmo[0];
-      let removeItems = stackUtils.removeStacks(findAmmo[1], quantity);
+      let removeItems = data.inventories[data.characters[personId].inventoryId].removeItem(stacks, stacks[stackId].item.ammoId, quantity);
       stacks[stackId].item.reloadWeapon(quantity);
       sender.sendToClient(characters[personId].accountId, new Request({
         type: MSG_TYPES.INVENTORY_CHANGE,
@@ -321,7 +331,7 @@ function messageHandler(data, message, personId) {
       let mapItemId = json.request;
       let column = null;
       let row = null;
-      let object = null
+      let object = null;
       if (data.mapLoots.hasOwnProperty(mapItemId)) {
         column = data.mapLoots[mapItemId].location.column;
         row = data.mapLoots[mapItemId].location.row;
@@ -368,6 +378,10 @@ function messageHandler(data, message, personId) {
           sender.sendByViewDistance(data.characters, request, data.buildingParts[mapItemId].location.column, data.buildingParts[mapItemId].location.row);
         }
       }
+    }
+      break;
+    case MSG_TYPES.RESPAWN: {
+      data.characters[personId].respawn(data);
     }
       break;
     case MSG_TYPES.SYSTEM_MESSAGE: {

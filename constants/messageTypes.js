@@ -31,6 +31,7 @@ MSG_TYPES = {
 		BUILDING_OBJECT : 29,
   	INVENTORY_ALL : 30,
   	ISLOGIN_EXIST : 31,
-		USE : 32
+		USE : 32,
+  	RESPAWN : 33
 };
 module.exports = MSG_TYPES;

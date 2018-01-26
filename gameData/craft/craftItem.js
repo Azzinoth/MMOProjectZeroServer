@@ -1,5 +1,3 @@
-const bubbleSort = require('../../utils/bubbleSort');
-const stackUtils = require('../inventory/stackUtils');
 function craftItem(inventory, stacks, recipe, items){
 	let result = [];
 	let isEnoughtItem = false;

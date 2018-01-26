@@ -1,14 +1,14 @@
-const Bow = require('./unique/weapon/range/Bow');
-const WoodWall = require('../mapItem/buildingPart/wall/WoodWall');
-const StoneWall = require('../mapItem/buildingPart/wall/StoneWall');
 const WoodChest = require('../mapItem/buildingPart/lootable/WoodChest');
 const CampFire = require('../mapItem/buildingPart/lootable/production/CampFire');
 const UniqueItem = require('./unique/UniqueItem');
+const Instruments = require('./unique/Instruments');
 const Lootable = require('../mapItem/buildingPart/Lootable');
 const data = require('../data');
 
 
 function createItem(typeId) {
+  console.log(data.items[typeId] instanceof (UniqueItem));
+  console.log(data.items[typeId] instanceof (Instruments));
   if (data.items[typeId] instanceof (UniqueItem)){
     let itemId = data.getId('item');
     return data.items[typeId].create(itemId);

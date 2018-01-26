@@ -12,7 +12,7 @@ function findCharacters(characters, distance, id) {
   let result = [];
   let character = characters[id];
   for (let key in characters) {
-    if (characters[key].isOnline && key != id && (Math.abs(character.column - characters[key].column) < distance && Math.abs(character.row - characters[key].row) < distance)) {
+    if (characters[key].isOnline && characters[key].isAlive && key != id && (Math.abs(character.column - characters[key].column) < distance && Math.abs(character.row - characters[key].row) < distance)) {
       result.push(characters[key]);
     }
   }
@@ -34,7 +34,7 @@ function surroundObjects(startColumn, startRow, distance, data) {
         if (data.buildingParts.hasOwnProperty(mapItemId)) {
           if (data.buildingParts[mapItemId] instanceof (Lootable)) inventoryId = data.buildingParts[mapItemId].inventoryId;
           if (data.buildingParts[mapItemId] instanceof (Production)) isActive = data.buildingParts[mapItemId].isInAction;
-          buildingParts.push(new Array(data.buildingParts[mapItemId].id, mapItemId, data.buildingParts[mapItemId].location.column, data.buildingParts[mapItemId].location.row, inventoryId, isActive));
+          buildingParts.push(new Array(data.buildingParts[mapItemId].id, mapItemId, data.buildingParts[mapItemId].location.column, data.buildingParts[mapItemId].location.row, inventoryId, isActive, data.buildingParts[mapItemId].characterId));
         } else {
           resources.push(new Array(i, j, data.getMap()[i][j].objectId));
         }

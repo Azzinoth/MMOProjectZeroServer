@@ -1,6 +1,5 @@
 const Lootable = require('../mapItem/buildingPart/Lootable');
 const itemUtils = require('../item/itemUtils');
-const utils = require('../../utils/bubbleSort');
 function Inventory(id, size) {
   this.id = id;
   this.size = size;
@@ -20,7 +19,9 @@ Inventory.prototype.addAllFromInventory = function (inventory, stacks) {
   let result = [];
   for (let i = 0; i < inventory.stacks.length; i++) {
 		if (stacks[inventory.stacks[i]].item !== null){
-      result = result.concat(this.addStack(stacks, stacks[inventory.stacks[i]]));
+      result = result.concat(this.addItem(stacks, stacks[inventory.stacks[i]].item.typeId, stacks[inventory.stacks[i]].size));
+      stacks[inventory.stacks[i]].item = null;
+      stacks[inventory.stacks[i]].size = null;
       result.push(stacks[inventory.stacks[i]]);
     }
   }
@@ -183,6 +184,69 @@ Inventory.prototype.availableFreeSpace=function(item, stacks){
       result+=item.stackSize;
     }else if(stacks[this.stacks[j]].item!==null&&stacks[this.stacks[j]].item.typeId===item.typeId){
       result+=item.stackSize - stacks[this.stacks[j]].size;
+    }
+  }
+  return result;
+}
+Inventory.prototype.swapStack = function (stacks, fromId, toId){
+  let result = [];
+  // let array={};
+  // let fromId = fromId;
+  // let toId;
+  // if (toId!==-1)toId = toId;
+  if (stacks[fromId]===stacks[toId]) return result;
+  let typeId;
+  if(stacks[fromId].item!==null){
+    typeId = stacks[fromId].item.typeId;
+  }else{
+    return 1;
+  }
+  if (stacks[fromId].item!==null){
+    if (toId===-1){
+      stacks[fromId].item=null;
+      stacks[fromId].size=null;
+      //array = stacks[fromId];
+      result.push(stacks[fromId]);
+    }else if (stacks[toId].item===null){
+
+
+      //let obj = stacks[fromId].item;
+      stacks[toId].item = stacks[fromId].item;
+      stacks[toId].size = stacks[fromId].size;
+      stacks[fromId].item = null;
+      stacks[fromId].size = null;
+      //array[indexTo]=stacks[toId];
+      //array[indexFrom] = stacks[fromId];
+      result.push(stacks[fromId]);
+      result.push(stacks[toId]);
+    }else if (stacks[toId].item.typeId===typeId&&stacks[toId].size<stacks[toId].item.stackSize){
+      let quantity = stacks[toId].item.stackSize - (stacks[toId].size + stacks[fromId].size);
+      if (quantity>0){
+        stacks[toId].size += stacks[fromId].size;
+        // array[indexTo] = stacks[toId];
+        result.push(stacks[toId]);
+        stacks[fromId].item = null;
+        stacks[fromId].size = null;
+        //array[indexFrom] = stacks[fromId];
+        result.push(stacks[fromId]);
+
+      }else{
+        stacks[toId].size = stacks[toId].item.stackSize;
+        stacks[fromId].size = Math.abs(quantity);
+        // array[indexTo] = stacks[toId];
+        // array[indexFrom] = stacks[fromId];
+        result.push(stacks[toId]);
+        result.push(stacks[fromId]);
+      }
+    } else if (stacks[toId].item.typeId!==typeId){
+      let tmpItem = stacks[toId].item;
+      let tmpSize = stacks[toId].size;
+      stacks[toId].item = stacks[fromId].item;
+      stacks[toId].size = stacks[fromId].size;
+      stacks[fromId].item = tmpItem;
+      stacks[fromId].size = tmpSize;
+      result.push(stacks[toId]);
+      result.push(stacks[fromId]);
     }
   }
   return result;

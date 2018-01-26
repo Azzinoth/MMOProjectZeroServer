@@ -61,53 +61,52 @@ function moveCharacters(data) {
       let changedCell = data.characters[key].getNewCoord();
       let toColumn = Math.floor(changedCell[0] / 64);
       let toRow = Math.floor(changedCell[1] / 64);
-      if (column !== toColumn || row !== toRow) {
-        if (cellUtils.isMovableCell(data.getMap(), row, toRow, column, toColumn)) {
-          let surrAnimals = visibleObjects.surroundAnimals(data.characters[key].column, data.characters[key].row, data.characters[key].viewDistance, data.animals);
-          request = new Request({type: MSG_TYPES.NPC_DATA, request: surrAnimals});
+      let isMove = data.characters[key].move(data.getMap(), changedCell[0], changedCell[1], toColumn, toRow);
+      if ((column !== toColumn || row !== toRow)&&isMove) {
+        let surrAnimals = visibleObjects.surroundAnimals(data.characters[key].column, data.characters[key].row, data.characters[key].viewDistance, data.animals);
+        request = new Request({type: MSG_TYPES.NPC_DATA, request: surrAnimals});
+        sender.sendToClient(data.characters[key].accountId, request);
+
+        let founderCharacters = visibleObjects.findCharacters(data.characters, data.characters[key].viewDistance, key);
+        let resultChatacter = null;
+        for (let i = 0; i < founderCharacters.length; i++) {
+          resultChatacter = new Array(founderCharacters[i].id, founderCharacters[i].column, founderCharacters[i].row, founderCharacters[i].left, founderCharacters[i].top, founderCharacters[i].direction);
+          sender.sendToClient(data.characters[key].accountId, new Request({
+            type: MSG_TYPES.HUMAN_MOVE,
+            request: resultChatacter
+          }));
+          resultChatacter = new Array(data.characters[key].id, data.characters[key].column, data.characters[key].row, data.characters[key].left, data.characters[key].top, data.characters[key].direction);
+          sender.sendToClient(data.characters[founderCharacters[i].id].accountId, new Request({
+            type: MSG_TYPES.HUMAN_MOVE,
+            request: resultChatacter
+          }));
+        }
+
+        let surroundObjects = visibleObjects.surroundObjects(data.characters[key].column, data.characters[key].row, data.characters[key].viewDistance, data);
+        if (surroundObjects[0].length>0){
+          request = new Request({
+            type: MSG_TYPES.MAP_OBJECT,
+            request: surroundObjects[0]
+          });
           sender.sendToClient(data.characters[key].accountId, request);
-
-          let founderCharacters = visibleObjects.findCharacters(data.characters, data.characters[key].viewDistance, key);
-          let resultChatacter = null;
-          for (let i = 0; i < founderCharacters.length; i++) {
-            resultChatacter = new Array(founderCharacters[i].id, founderCharacters[i].column, founderCharacters[i].row, founderCharacters[i].left, founderCharacters[i].top, founderCharacters[i].direction);
-            sender.sendToClient(data.characters[key].accountId, new Request({
-              type: MSG_TYPES.HUMAN_MOVE,
-              request: resultChatacter
-            }));
-            resultChatacter = new Array(data.characters[key].id, data.characters[key].column, data.characters[key].row, data.characters[key].left, data.characters[key].top, data.characters[key].direction);
-            sender.sendToClient(data.characters[founderCharacters[i].id].accountId, new Request({
-              type: MSG_TYPES.HUMAN_MOVE,
-              request: resultChatacter
-            }));
-          }
-
-          let surroundObjects = visibleObjects.surroundObjects(data.characters[key].column, data.characters[key].row, data.characters[key].viewDistance, data);
-          if (surroundObjects[0].length>0){
-            request = new Request({
-              type: MSG_TYPES.MAP_OBJECT,
-              request: surroundObjects[0]
-            });
-            sender.sendToClient(data.characters[key].accountId, request);
-          }
-          if (surroundObjects[1].length>0){
-            request = new Request({
-              type: MSG_TYPES.BUILDING_OBJECT,
-              request: surroundObjects[1]
-            });
-            sender.sendToClient(data.characters[key].accountId, request);
-          }
-          if (surroundObjects[2].length>0){
-            request = new Request({
-              type: MSG_TYPES.MAP_LOOT,
-              request: surroundObjects[2]
-            });
-            sender.sendToClient(data.characters[key].accountId, request);
-          }
-        } else continue;
+        }
+        if (surroundObjects[1].length>0){
+          request = new Request({
+            type: MSG_TYPES.BUILDING_OBJECT,
+            request: surroundObjects[1]
+          });
+          sender.sendToClient(data.characters[key].accountId, request);
+        }
+        if (surroundObjects[2].length>0){
+          request = new Request({
+            type: MSG_TYPES.MAP_LOOT,
+            request: surroundObjects[2]
+          });
+          sender.sendToClient(data.characters[key].accountId, request);
+        }
       }
       //data.characters[key].lastTick = getTime.getTimeInMs();
-      data.characters[key].move(changedCell[0], changedCell[1], toColumn, toRow);
+      //data.characters[key].move(changedCell[0], changedCell[1], toColumn, toRow);
 
     }
 
@@ -214,21 +213,22 @@ function fire(data) {
             if (data.characters[key].health <= 0) {
               let size = data.inventories[data.characters[key].inventoryId].size + data.inventories[data.characters[key].hotBarId].size;
               let inventoryId = data.createInventory(size);
-              data.inventories[inventoryId].addAllFromInventory(data.inventories[data.characters[key].inventoryId]);
-              data.inventories[inventoryId].addAllFromInventory(data.inventories[data.characters[key].hotBarId]);
+              data.inventories[inventoryId].addAllFromInventory(data.inventories[data.characters[key].inventoryId], data.stacks);
+              data.inventories[inventoryId].addAllFromInventory(data.inventories[data.characters[key].hotBarId], data.stacks);
               let mapLoot = new MapLoot(data.getId('mapItem'), new Location(data.characters[key].column, data.characters[key].row, data.characters[key].left - 32, data.characters[key].top - 64), inventoryId);
               data.mapLoots[mapLoot.mapItemId] = mapLoot;
-              data.characters[key].dead(data.inventories, data.stacks);
-              sender.sendByViewDistance(data.characters, new Request({type: MSG_TYPES.DIE, request: new Array(0, data.characters[key].id)}));
+
+              sender.sendByViewDistance(data.characters, new Request({type: MSG_TYPES.DIE, request: new Array(0, data.characters[key].id)}), toColumn, toRow);
               sender.sendByViewDistance(data.characters, new Request({
                 type: MSG_TYPES.MAP_LOOT,
                 request: [new Array(mapLoot.mapItemId, mapLoot.inventoryId, mapLoot.location.left, mapLoot.location.top)]
               }), toColumn, toRow);
+              data.characters[key].dead(data.inventories, data.stacks);
               // sender.sendByViewDistance(data.characters, new Request({
               //   type: INVENTORY_DATA,
               //   request: data.inventories[inventoryId]
               // }), toColumn, toRow);
-              initialize(data, data.characters[key].accountId);
+              //initialize(data, data.characters[key].accountId);
             }
             data.firedAmmos[i].active = false;
             break;

@@ -1,4 +1,6 @@
 const getTime = require('../../utils/getTime');
+const cellUtils = require('../map/cellUtils');
+const initialize = require('../../network/initialize')
 function Character (id, accountId, inventoryId, armorInventoryId, hotBarId, activeHotBarCell, isOnline, column, row, top, left, level, health, strength, viewDistance){
 		this.id = id;
 		this.accountId = accountId;
@@ -80,11 +82,14 @@ Character.prototype.getNewCoord = function(){
 	return new Array(newLeft, newTop);
 
 }
-Character.prototype.move = function(left, top, column, row){
-	this.left = left;
-	this.top = top;
-	this.column = column;
-	this.row = row;
+Character.prototype.move = function(cellsMap, left, top, column, row){
+	if ((column===this.column&&row===this.row)||cellUtils.isMovableCell(cellsMap, this.row, row, this.column, column, this.id)){
+    this.left = left;
+    this.top = top;
+    this.column = column;
+    this.row = row;
+    return true;
+	} else return false;
 }
 Character.prototype.dead = function(inventories, stacks){
 	this.column = 10;
@@ -99,4 +104,9 @@ Character.prototype.dead = function(inventories, stacks){
   inventories[this.armorInventoryId].clear(stacks);
   inventories[this.hotBarId].clear(stacks);
 }
+Character.prototype.respawn = function(data){
+  this.isAlive=true;
+  initialize(data, this.id);
+}
+
 module.exports = Character;
