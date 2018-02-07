@@ -1,15 +1,18 @@
-const Animal = require('../Animal');
+const Passive = require('../Passive');
 
 function BullSheep(id, location, zoneId) {
-  Animal.apply(this, arguments);
+  Passive.apply(this, arguments);
   this.zoneId = zoneId;
-  this.speed = 400;
-  this.health = 340;
+  this.speed = 32;
+  this.normalSpeed = 32;
+  this.health = 50;
+  this.currentHealth = 340;
   this.strength = 180;
   this.lootChance = new Array(new Array(8, 8, 100), new Array(10, 3, 50));
+  this.type = 2;
 }
 
-BullSheep.prototype = Object.create(Animal.prototype);
+BullSheep.prototype = Object.create(Passive.prototype);
 
 BullSheep.prototype.randZone = function () {
   let rand;

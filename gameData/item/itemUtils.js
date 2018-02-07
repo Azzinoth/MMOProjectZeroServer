@@ -7,8 +7,6 @@ const data = require('../data');
 
 
 function createItem(typeId) {
-  console.log(data.items[typeId] instanceof (UniqueItem));
-  console.log(data.items[typeId] instanceof (Instruments));
   if (data.items[typeId] instanceof (UniqueItem)){
     let itemId = data.getId('item');
     return data.items[typeId].create(itemId);

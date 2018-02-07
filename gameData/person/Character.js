@@ -103,10 +103,10 @@ Character.prototype.dead = function(inventories, stacks){
   inventories[this.inventoryId].clear(stacks);
   inventories[this.armorInventoryId].clear(stacks);
   inventories[this.hotBarId].clear(stacks);
-}
+};
 Character.prototype.respawn = function(data){
   this.isAlive=true;
   initialize(data, this.id);
-}
+};
 
 module.exports = Character;

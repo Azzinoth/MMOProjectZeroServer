@@ -228,7 +228,7 @@ function wipe() {
     // let recipeId = craftRecipes();
     characterRecipes();
     let characterId = characters();
-    let zoneId = zones();
+    zones();
     let animalId = animals();
     let mapItemId = null;
     mapCells().then(
@@ -258,21 +258,21 @@ function identificators() {
   sqlUtils.insert('identificators', '0, 0, 0, 0, 0, 0, 0, 0, 0');
 }
 
-function items() {
-  sqlUtils.drop('items');
-  sqlUtils.createTable('items');
-  sqlUtils.insert('items', 1 + ', \'RESOURCE\', 20'); //wood
-  sqlUtils.insert('items', 2 + ', \'RESOURCE\', 20'); //stone
-  sqlUtils.insert('items', 3 + ', \'BUILDING_PART\', 1'); //wood wall
-  sqlUtils.insert('items', 4 + ', \'BUILDING_PART\', 1'); //stone wall
-  sqlUtils.insert('items', 5 + ', \'WEAPON\', 1'); //bow
-  sqlUtils.insert('items', 6 + ', \'AMMO\', 20'); //arrow
-  sqlUtils.insert('items', 7 + ', \'BUILDING_PART\', 1'); //campFire
-  sqlUtils.insert('items', 8 + ', \'RESOURCE\', 20'); //raw meat
-  sqlUtils.insert('items', 9 + ', \'RESOURCE\', 20'); //coocked meat
-  sqlUtils.insert('items', 10 + ', \'RESOURCE\', 20'); //leather
-  sqlUtils.insert('items', 11 + ', \'BUILDING_PART\', 1'); //wood chest
-}
+// function items() {
+//   sqlUtils.drop('items');
+//   sqlUtils.createTable('items');
+//   sqlUtils.insert('items', 1 + ', \'RESOURCE\', 20'); //wood
+//   sqlUtils.insert('items', 2 + ', \'RESOURCE\', 20'); //stone
+//   sqlUtils.insert('items', 3 + ', \'BUILDING_PART\', 1'); //wood wall
+//   sqlUtils.insert('items', 4 + ', \'BUILDING_PART\', 1'); //stone wall
+//   sqlUtils.insert('items', 5 + ', \'WEAPON\', 1'); //bow
+//   sqlUtils.insert('items', 6 + ', \'AMMO\', 20'); //arrow
+//   sqlUtils.insert('items', 7 + ', \'BUILDING_PART\', 1'); //campFire
+//   sqlUtils.insert('items', 8 + ', \'RESOURCE\', 20'); //raw meat
+//   sqlUtils.insert('items', 9 + ', \'RESOURCE\', 20'); //coocked meat
+//   sqlUtils.insert('items', 10 + ', \'RESOURCE\', 20'); //leather
+//   sqlUtils.insert('items', 11 + ', \'BUILDING_PART\', 1'); //wood chest
+// }
 
 function commonItems() {
   sqlUtils.drop('commonItems');
@@ -426,12 +426,12 @@ function animals() {
       id++;
       sqlUtils.insert('animals', id + ', ' + col + ', ' + row + ', ' + col * 64 + ', ' + row * 64 + ', ' + zoneId + ', ' + 1);
     }
-    // for (let j = 0; j < 10; j++) {
-    //   let col = Math.floor(Math.random() * (toC - fromC) + fromC);
-    //   let row = Math.floor(Math.random() * (toR - fromR) + fromR);
-    //   id++;
-    //   sqlUtils.insert('animals', id + ', ' + col + ', ' + row + ', ' + col * 64 + ', ' + row * 64 + ', ' + zoneId + ', ' + 2);
-    // }
+    for (let j = 0; j < 10; j++) {
+      let col = Math.floor(Math.random() * (toC - fromC) + fromC);
+      let row = Math.floor(Math.random() * (toR - fromR) + fromR);
+      id++;
+      sqlUtils.insert('animals', id + ', ' + col + ', ' + row + ', ' + col * 64 + ', ' + row * 64 + ', ' + zoneId + ', ' + 2);
+    }
   }
   return id
 }

@@ -2,6 +2,8 @@ const Request = require('../Request');
 const visibleObjects = require('../../gameData/visibleObjects');
 const craftItem = require('../../gameData/craft/craftItem');
 const Weapon = require('../../gameData/item/unique/Weapon');
+const Range = require('../../gameData/item/unique/weapon/Range');
+const Melee = require('../../gameData/item/unique/weapon/Melee');
 const Lootable = require('../../gameData/mapItem/buildingPart/Lootable');
 const Production = require('../../gameData/mapItem/buildingPart/lootable/Production');
 const cellUtils = require('../../gameData/map/cellUtils');
@@ -16,6 +18,7 @@ const Character = require('../../gameData/person/Character');
 const bubbleSort = require('../../utils/bubbleSort');
 const Instruments = require ('../../gameData/item/unique/Instruments');
 const initialize = require('../initialize');
+
 function messageHandler(data, message, personId) {
   let characters = data.characters;
   let inventories = data.inventories;
@@ -65,7 +68,7 @@ function messageHandler(data, message, personId) {
         let stackId = characters[personId].activeHotBarCell;
         let mapCatalogId = cellsMap[toColumn][toRow].objectId;
         let isUseInstrument = false;
-        if (stackId === null || !stacks[stackId].item instanceof (Instruments)) break;
+        if (stackId === null || !(stacks[stackId].item instanceof (Instruments))) break;
         for (let i = 0; i<stacks[stackId].item.usableObjId.length; i++){
           if (stacks[stackId].item.usableObjId[i] == mapCatalogId){
             isUseInstrument = true;
@@ -249,17 +252,12 @@ function messageHandler(data, message, personId) {
     case MSG_TYPES.SHOT: {
       let toX = json.request[0];
       let toY = json.request[1];
-      let firedAmmos = data.firedAmmos;
       if (characters[personId].activeHotBarCell === null || stacks[characters[personId].activeHotBarCell].item === null) break;
       let stackId = characters[personId].activeHotBarCell;
-      if (stacks[stackId].item.typeName !== 'WEAPON') break;
-
-      if (stacks[stackId].item.isReloaded && stacks[stackId].item.currentMagazine === 0) {
+      if (!(stacks[stackId].item instanceof (Weapon))) break;
+      if (stacks[stackId].item instanceof (Range)&&stacks[stackId].item.isReloaded && stacks[stackId].item.currentMagazine === 0) {
         let quantity = stacks[stackId].item.magazineSize - stacks[stackId].item.currentMagazine;
         let findAmmo = data.inventories[data.characters[personId].inventoryId].findItems(stacks[stackId].item.ammoId, stacks);
-        // let tmp = data.inventories[data.characters[personId].hotBarId].findItems(stacks[stackId].item.ammoId, stacks);
-        // findAmmo[0] += tmp[0];
-        // findAmmo[1] = findAmmo[1].concat(tmp[1]);
         let removeItems = null;
         if (findAmmo[0] === 0)break;
         if (findAmmo[0] < quantity)quantity = findAmmo[0];
@@ -271,7 +269,7 @@ function messageHandler(data, message, personId) {
         }));
         break;
       }
-      let firedAmmo = stacks[stackId].item.shot(firedAmmos, personId, characters[personId].left, characters[personId].top, toX, toY);
+      let firedAmmo  = stacks[stackId].item.shot(data.firedAmmos, personId, characters[personId].left, characters[personId].top, toX, toY);
 
       if (firedAmmo === null) break;
       let arr = [5];
@@ -382,6 +380,10 @@ function messageHandler(data, message, personId) {
       break;
     case MSG_TYPES.RESPAWN: {
       data.characters[personId].respawn(data);
+    }
+    case MSG_TYPES.CHAT_ALL: {
+      request = new Request({type:MSG_TYPES.CHAT_ALL, request:json.request});
+      sender.sendToAll(data.characters, json.request);
     }
       break;
     case MSG_TYPES.SYSTEM_MESSAGE: {

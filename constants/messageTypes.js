@@ -32,6 +32,8 @@ MSG_TYPES = {
   	INVENTORY_ALL : 30,
   	ISLOGIN_EXIST : 31,
 		USE : 32,
-  	RESPAWN : 33
+  	RESPAWN : 33,
+		CHAT_ALL : 34,
+  	TEST_DATA : 35
 };
 module.exports = MSG_TYPES;

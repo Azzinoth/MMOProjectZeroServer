@@ -1,7 +1,7 @@
 const Melee = require('../Melee');
 
 function Spear(itemId) {
-  Melee.apply(this, new Array(16, 'WEAPON', itemId, 100, 5, 500, 1));
+  Melee.apply(this, new Array(16, 'WEAPON', itemId, 100, 5, 32, null));
 }
 
 Spear.prototype = Object.create(Melee.prototype);

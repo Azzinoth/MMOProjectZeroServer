@@ -2,99 +2,100 @@ const Npc = require('./Npc');
 const Location = require('../Location');
 const findPath = require('../../utils/findPath');
 const itemUtils = require('../item/itemUtils');
-
+const getFinalCoord = require ('../../utils/finalCoordByDist');
+const data = require ('../../gameData/data')
 function Animal(id, location) {
   Npc.apply(this, arguments);
   this.zoneId = null;
   this.destination = null;
   this.path = [];
-  this.currentTick = null;
   this.lastTick = null;
-  this.timePassed = null;
-  this.timeToFinal = null;
-  this.distToFinal = null;
-  this.targetX = null;
-  this.targetY = null;
-  this.fromX = -1;
-  this.fromY = -1;
-  this.isMovement = false;
   this.lootChance = null; ///lootChance array with itemId, quantity, chance
+  this.isAction = false;
 }
 
 Animal.prototype = Object.create(Npc.prototype);
 
-Animal.prototype.chooseNewDestination = function (map, zones) {
-  if (Math.random() < 0.98) return null;
+Animal.prototype.chooseNewDestination = function () {
+  this.destination = new Location();
+  this.destination.column = parseInt(Math.random() * (data.zones[this.zoneId].toColumn - data.zones[this.zoneId].fromColumn) + data.zones[this.zoneId].fromColumn);
+  this.destination.row = parseInt(Math.random() * (data.zones[this.zoneId].toRow - data.zones[this.zoneId].fromRow) + data.zones[this.zoneId].fromRow);
+  this.destination.top = parseInt(this.destination.column * 64+32);
+  this.destination.left = parseInt(this.destination.row * 64+32);
+  this.path = [];
+  if (this.destination.column === this.location.column && this.destination.row === this.location.row) this.destination = null;
+};
 
-  if (this.destination === null) this.destination = new Location();
-  this.destination.column = parseInt(Math.random() * (zones[this.zoneId].toColumn - zones[this.zoneId].fromColumn) + zones[this.zoneId].fromColumn);
-  this.destination.row = parseInt(Math.random() * (zones[this.zoneId].toRow - zones[this.zoneId].fromRow) + zones[this.zoneId].fromRow);
-  this.destination.top = parseInt(Math.random() * 64);
-  this.destination.left = parseInt(Math.random() * 64);
-  if (!map[this.destination.column][this.destination.row].movable || (this.destination.column === this.location.column && this.destination.row === this.location.row)) this.destination = null;
-}
-Animal.prototype.getCurrentTimeMS = function () {
-  return new Date().getTime();
-}
-Animal.prototype.initMovement = function () {
-  if (this.isMovement && this.path.length == 0) return;
+// Animal.prototype.getCurrentTimeMS = function () {
+//   return new Date().getTime();
+// };
 
-  this.fromX = this.location.left;
-  this.fromY = this.location.top;
-  this.targetX = Math.floor(this.path[0].column * 64);
-  this.targetY = Math.floor(this.path[0].row * 64);
+Animal.prototype.move = function (map) {
+  if (this.path.length===0)return;
+  if (this.lastTick===null){
+    this.lastTick = new Date().getTime();
+    return;
+  }
+  if (this.speed===null) this.speed=this.normalSpeed;
+  let timePassed = (new Date().getTime() - this.lastTick)/1000;
+  this.lastTick = new Date().getTime();
+  let dist = timePassed*this.speed;
+  let targetX = this.path[0].column*64+7;
+  let targetY = this.path[0].row*64+7;
+  let finalCoord = getFinalCoord(this.location.left, this.location.top, targetX, targetY, dist);
+  let isTPtoFinalX = false;
+  let isTPtoFinalY = false;
+  if (this.location.left>=targetX){
+    if (finalCoord[0]<=targetX){
+      isTPtoFinalX = true;
+    }
+  }else{
+    if (finalCoord[0]>targetX){
+      isTPtoFinalX = true;
+    }
+  }
+  if (this.location.top>=targetY){
+    if (finalCoord[1]<=targetY){
+      isTPtoFinalY = true;
+    }
+  }else{
+    if (finalCoord[1]>targetY){
+      isTPtoFinalY = true;
+    }
+  }
 
-  this.distToFinal = Math.sqrt(Math.pow((this.targetX - this.fromX), 2) + Math.pow((this.targetY - this.fromY), 2));
-  this.timeToFinal = this.distToFinal / this.speed * 1000;
-  this.timePassed = 0;
+  if (isTPtoFinalX&&isTPtoFinalY){
+    this.location.left = targetX;
+    this.location.top = targetY;
+    this.path.splice(0, 1);
+    if (this.path.length===0){
+      this.stop();
+    }else if (!map[this.path[0].column][this.path[0].row].movable) {
+      this.path=[];
+    }
+  }else{
+    this.location.column = Math.floor(finalCoord[0]/64);
+    this.location.row = Math.floor(finalCoord[1]/64);
+    this.location.left = finalCoord[0];
+    this.location.top = finalCoord[1];
+  }
+};
+Animal.prototype.stop = function () {
+  this.path=[];
+  this.destination = null;
+  this.lastTick = null;
+  //this.isAction = false;
+  this.speed = this.normalSpeed;
+};
 
-  this.currentTick = this.getCurrentTimeMS();
-  this.lastTick = this.getCurrentTimeMS();
-
-  this.isMovement = true;
-}
 Animal.prototype.findPath = function (map) {
   let from = {column: this.location.column, row: this.location.row};
   let to = {column: this.destination.column, row: this.destination.row};
   this.path = findPath.algoritmA(from, to, map);
   if (this.path.length === 0) {
-    this.destination = null;
+    this.stop();
   }
-}
-Animal.prototype.move = function () {
-
-
-  if (!this.isMovement) return 0;
-
-  this.currentTick = this.getCurrentTimeMS();
-  this.timePassed += this.currentTick - this.lastTick;
-  this.lastTick = this.getCurrentTimeMS();
-
-  this.location.left = parseInt(this.fromX + (this.targetX - this.fromX) * (this.timePassed / this.timeToFinal));
-  this.location.top = parseInt(this.fromY + (this.targetY - this.fromY) * (this.timePassed / this.timeToFinal));
-
-  if (this.timePassed > this.timeToFinal) {
-    // correction
-    this.location.left = parseInt(this.targetX);
-    this.location.top = parseInt(this.targetY);
-
-    this.location.column = Math.floor(this.location.left / 64);
-    this.location.row = Math.floor(this.location.top / 64);
-
-    this.path.splice(0, 1);
-    this.isMovement = false;
-
-    if (this.path.length !== 0) {
-      this.initMovement();
-    } else {
-      this.destination = null;
-    }
-    return 1;
-
-  } else {
-    return 2;
-  }
-}
+};
 Animal.prototype.dead = function () {
   this.isAlive = false;
   this.location.column = null;
@@ -104,39 +105,21 @@ Animal.prototype.dead = function () {
   this.timeToResurrection = 500;
   this.destination = null;
   this.path = [];
-  this.currentTick = null;
   this.lastTick = null;
-  this.timePassed = null;
-  this.timeToFinal = null;
-  this.distToFinal = null;
-  this.targetX = null;
-  this.targetY = null;
-  this.fromX = -1;
-  this.fromY = -1;
-  this.isMovement = false;
-}
+};
 
 Animal.prototype.resurrect = function (zones) {
   this.location.column = parseInt(Math.floor(Math.random() * (zones[this.zoneId].toColumn - zones[this.zoneId].fromColumn) + zones[this.zoneId].fromColumn));
   this.location.row = parseInt(Math.floor(Math.random() * (zones[this.zoneId].toRow - zones[this.zoneId].fromRow) + zones[this.zoneId].fromRow));
   this.location.top = parseInt(Math.random() * 64);
   this.location.left = parseInt(Math.random() * 64);
-  this.health = 3;
+  this.health = this.currentHealth;
   this.isAlive = true;
   this.timeToResurrection = null;
   this.destination = null;
   this.path = [];
-  this.currentTick = null;
   this.lastTick = null;
-  this.timePassed = null;
-  this.timeToFinal = null;
-  this.distToFinal = null;
-  this.targetX = null;
-  this.targetY = null;
-  this.fromX = -1;
-  this.fromY = -1;
-  this.isMovement = false;
-}
+};
 
 Animal.prototype.getLoot = function (data) {
   if (this.lootChance === null) return;
@@ -149,5 +132,6 @@ Animal.prototype.getLoot = function (data) {
     }
   }
   return inventoryId;
-}
+};
+
 module.exports = Animal;

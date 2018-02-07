@@ -1,9 +1,9 @@
-const utils = require('./bubbleSort');
 const distanceUtils = require('./distanceUtils');
-
+const constans = require('../constants/constans');
 function algoritmA(currentLoc, target, map){
     let result = [];
-    if (currentLoc.column===target.column&&currentLoc.row===target.row){
+    if (target.column<0||target.column>constans.mapWidth||target.row<0||target.row>constans.mapHeight) return result;
+    if ((currentLoc.column===target.column&&currentLoc.row===target.row)||!map[target.column][target.row].movable){
         return result;
     }
 

@@ -1,6 +1,6 @@
 const Range = require('../Range');
 function Bow(itemId) {
-    Range.apply(this, new Array(5, 'WEAPON', itemId, 6, 10, 2, 15, null, 500, 3000, 50, 50));//typeId, name, itemId, ammoId, durability, damage, accuracy(more better), fireRate, distance, reloadTime, magazineSize, currentMagazine
+    Range.apply(this, new Array(5, 'WEAPON', itemId, 10, 2, 640, null, 15, 6, 3000, 50, 50));//typeId, name, itemId, durability, damage, accuracy(more better), fireRate, distance, ammoId, reloadTime, magazineSize, currentMagazine
 }
 
 Bow.prototype = Object.create(Range.prototype);

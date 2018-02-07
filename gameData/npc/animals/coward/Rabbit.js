@@ -1,13 +1,16 @@
-const Animal = require('../Animal');
+const Coward = require('../Coward');
 function Rabbit (id, location, zoneId){
-    Animal.apply(this, arguments);
+  Coward.apply(this, arguments);
     this.zoneId = zoneId;
-    this.speed = 32;
+    this.normalSpeed = 64;
+    this.speed = 64;
     this.health = 3;
+    this.currentHealth = 3;
     this.lootChance = new Array(new Array(8, 2, 100), new Array(10, 1, 50));
+    this.type = 1;
 }
 
-Rabbit.prototype = Object.create(Animal.prototype);
+Rabbit.prototype = Object.create(Coward.prototype);
 
 
 Rabbit.prototype.randZone = function  (zones){

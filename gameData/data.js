@@ -1,6 +1,7 @@
 const MapItem = require('./mapItem/MapItem');
 const Tree = require('./mapItem/resource/Tree');
 const Rock = require('./mapItem/resource/Rock');
+const Bush = require('./mapItem/resource/Bush');
 const WoodWall = require('./mapItem/buildingPart/wall/WoodWall');
 const StoneWall = require('./mapItem/buildingPart/wall/StoneWall');
 const Item = require('./item/Item');
@@ -10,8 +11,8 @@ const Cell = require('./map/Cell');
 const Stack = require('./inventory/Stack');
 const Inventory = require('./inventory/Inventory');
 const FiredAmmo = require('./item/unique/weapon/FiredAmmo');
-const Rabbit = require('./npc/animals/Rabbit');
-const BullSheep = require('./npc/animals/BullSheep');
+const Rabbit = require('./npc/animals/coward/Rabbit');
+const BullSheep = require('./npc/animals/agressive/BullSheep');
 const Location = require('./Location');
 const Zone = require('./map/Zone');
 const Bow = require('./item/unique/weapon/range/Bow');
@@ -169,6 +170,12 @@ function callBackTable(tableRows, tableName){
                           new Location(tableRows[i].column, tableRows[i].row, tableRows[i].left, tableRows[i].top));
                     }
                         break;
+                  case 0:
+                  case 1:{
+                    resources[tableRows[i].mapItemId] = new Bush(tableRows[i].id, tableRows[i].mapItemId, tableRows[i].typeId,
+                      new Location(tableRows[i].column, tableRows[i].row, tableRows[i].left, tableRows[i].top));
+                  }
+                    break;
                 }
 
             }

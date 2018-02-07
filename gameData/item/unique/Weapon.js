@@ -1,10 +1,9 @@
 const UniqueItem = require('./UniqueItem');
-function Weapon(typeId, name, itemId, ammoId, durability, damage, accuracy, fireRate) {
+function Weapon(typeId, name, itemId, durability, damage, distance, fireRate) {
     UniqueItem.apply(this, new Array(typeId, name, itemId));
-    this.ammoId = ammoId;
     this.durability = durability;
     this.damage = damage;
-    this.accuracy = accuracy;
+    this.distance = distance;
     this.fireRate = fireRate;
 }
 Weapon.prototype = Object.create(UniqueItem.prototype);
