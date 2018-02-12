@@ -1,6 +1,6 @@
 const MapItem = require('./MapItem');
 const itemUtils = require('../item/itemUtils');
-function Resource(id, mapItemId, typeId, location) {
+function Resource(id, mapItemId, location) {
     MapItem.apply(this, arguments);
     this.isStartLooted = false;
     this.lootChance = null; ///lootChance array with itemId, quantity, chance

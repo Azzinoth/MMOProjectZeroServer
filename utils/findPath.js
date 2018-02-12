@@ -50,7 +50,11 @@ function algoritmA(currentLoc, target, map){
         let inOpen = false;
         for (let i=0; i<neibors.length; i++){
             inOpen = false;
-            let tmpG =g[currentNode.column.toString()+'/'+currentNode.row.toString()]+1;
+            let tmpG;
+            if (currentNode.column!==neibors[i].column&&currentNode.row!==neibors[i].row)
+              tmpG =g[currentNode.column.toString()+'/'+currentNode.row.toString()]+1.5;
+            else
+              tmpG =g[currentNode.column.toString()+'/'+currentNode.row.toString()]+1;
             for (let j=0; j<open.length; j++){
                 if (open[j].column==neibors[i].column&&open[j].row==neibors[i].row){
                     inOpen = true;

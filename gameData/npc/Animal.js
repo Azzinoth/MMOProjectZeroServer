@@ -11,10 +11,60 @@ function Animal(id, location) {
   this.path = [];
   this.lastTick = null;
   this.lootChance = null; ///lootChance array with itemId, quantity, chance
-  this.isAction = false;
+  // this.isAction = false;
+  // this.isStay = false;
+  this.tick = 0;
+  this.stage = 0; //0-decide ,1-stay, 2-walk, 3-fear, 4-chase, 5-attack
+  this.stayTick = null;
 }
 
 Animal.prototype = Object.create(Npc.prototype);
+
+Animal.prototype.animalTick = function () {
+  let result = null;//1 - npc data, 2 - npc move
+  this.tick++;
+  if (this.tick>100) this.tick=0;
+
+  if (!this.isAlive){
+    this.timeToResurrection--;
+    if (this.timeToResurrection <= 0) {
+      this.resurrect();
+      result = 1;
+    }
+    return result;
+  }
+
+  if (this.stage===0){
+    if (Math.random()>0.5){
+      this.chooseNewDestination();
+      this.move();
+      this.stage = 2;
+      result = 2;
+    }else{
+      this.stop();
+      this.stage=1;
+      this.stayTick=200;
+      result = 2;
+    }
+  }else if (this.stage===1){
+    this.stayTick--;
+    if (this.stayTick<=0){
+      this.stage = 0;
+    }
+  }else if (this.stage===2){
+    if (this.path.length>0){
+      this.move();
+    }else{
+      this.stage=0;
+    }
+  }
+
+  // if (this.destination !== null&&this.path.length===0){
+  //   this.findPath(map);
+  //   result = 2;
+  // }
+  return result;
+};
 
 Animal.prototype.chooseNewDestination = function () {
   this.destination = new Location();
@@ -30,12 +80,17 @@ Animal.prototype.chooseNewDestination = function () {
 //   return new Date().getTime();
 // };
 
-Animal.prototype.move = function (map) {
+Animal.prototype.move = function () {
+  if (this.path.length===0&&this.destination!==null){
+    this.findPath();
+    //return;
+  }
   if (this.path.length===0)return;
   if (this.lastTick===null){
     this.lastTick = new Date().getTime();
     return;
   }
+
   if (this.speed===null) this.speed=this.normalSpeed;
   let timePassed = (new Date().getTime() - this.lastTick)/1000;
   this.lastTick = new Date().getTime();
@@ -70,8 +125,8 @@ Animal.prototype.move = function (map) {
     this.path.splice(0, 1);
     if (this.path.length===0){
       this.stop();
-    }else if (!map[this.path[0].column][this.path[0].row].movable) {
-      this.path=[];
+    }else if (!data.getMap()[this.path[0].column][this.path[0].row].movable) {
+      this.findPath();
     }
   }else{
     this.location.column = Math.floor(finalCoord[0]/64);
@@ -84,16 +139,16 @@ Animal.prototype.stop = function () {
   this.path=[];
   this.destination = null;
   this.lastTick = null;
-  //this.isAction = false;
   this.speed = this.normalSpeed;
 };
 
-Animal.prototype.findPath = function (map) {
+Animal.prototype.findPath = function () {
   let from = {column: this.location.column, row: this.location.row};
   let to = {column: this.destination.column, row: this.destination.row};
-  this.path = findPath.algoritmA(from, to, map);
+  this.path = findPath.algoritmA(from, to, data.getMap());
   if (this.path.length === 0) {
     this.stop();
+    this.stage = 0;
   }
 };
 Animal.prototype.dead = function () {
@@ -108,9 +163,9 @@ Animal.prototype.dead = function () {
   this.lastTick = null;
 };
 
-Animal.prototype.resurrect = function (zones) {
-  this.location.column = parseInt(Math.floor(Math.random() * (zones[this.zoneId].toColumn - zones[this.zoneId].fromColumn) + zones[this.zoneId].fromColumn));
-  this.location.row = parseInt(Math.floor(Math.random() * (zones[this.zoneId].toRow - zones[this.zoneId].fromRow) + zones[this.zoneId].fromRow));
+Animal.prototype.resurrect = function () {
+  this.location.column = parseInt(Math.floor(Math.random() * (data.zones[this.zoneId].toColumn - data.zones[this.zoneId].fromColumn) + data.zones[this.zoneId].fromColumn));
+  this.location.row = parseInt(Math.floor(Math.random() * (data.zones[this.zoneId].toRow - data.zones[this.zoneId].fromRow) + data.zones[this.zoneId].fromRow));
   this.location.top = parseInt(Math.random() * 64);
   this.location.left = parseInt(Math.random() * 64);
   this.health = this.currentHealth;
@@ -121,7 +176,7 @@ Animal.prototype.resurrect = function (zones) {
   this.lastTick = null;
 };
 
-Animal.prototype.getLoot = function (data) {
+Animal.prototype.getLoot = function () {
   if (this.lootChance === null) return;
   let inventoryId = data.createInventory(this.lootChance.length);
   for (let i = 0; i < this.lootChance.length; i++) {

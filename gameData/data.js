@@ -159,20 +159,20 @@ function callBackTable(tableRows, tableName){
                     case 15:
                     case 16:
                     case 17:{
-                        resources[tableRows[i].mapItemId] = new Tree(tableRows[i].id, tableRows[i].mapItemId, tableRows[i].typeId,
+                        resources[tableRows[i].mapItemId] = new Tree(tableRows[i].id, tableRows[i].mapItemId,
                           new Location(tableRows[i].column, tableRows[i].row, tableRows[i].left, tableRows[i].top));
                     }
                     break;
                     case 8:
                     case 9:
                     case 10:{
-                        resources[tableRows[i].mapItemId] = new Rock(tableRows[i].id, tableRows[i].mapItemId, tableRows[i].typeId,
+                        resources[tableRows[i].mapItemId] = new Rock(tableRows[i].id, tableRows[i].mapItemId,
                           new Location(tableRows[i].column, tableRows[i].row, tableRows[i].left, tableRows[i].top));
                     }
                         break;
                   case 0:
                   case 1:{
-                    resources[tableRows[i].mapItemId] = new Bush(tableRows[i].id, tableRows[i].mapItemId, tableRows[i].typeId,
+                    resources[tableRows[i].mapItemId] = new Bush(tableRows[i].id, tableRows[i].mapItemId,
                       new Location(tableRows[i].column, tableRows[i].row, tableRows[i].left, tableRows[i].top));
                   }
                     break;

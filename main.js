@@ -4,6 +4,7 @@ const Cell = require('./gameData/map/Cell');
 const sqlUtils = require('./sql/utils');
 const toDataBase = require('./sql/gameDataToDataBase');
 const send = require('./network/sender');
+const constants = require('./constants/constans');
 const mainLoop = require('./loop');
 const Bow = require('./gameData/item/unique/weapon/range/Bow');
 const Spear = require('./gameData/item/unique/weapon/melee/Spear');
@@ -181,28 +182,12 @@ function craftRecipes(data) {
 }
 
 function fillMapItemsCatalog() {
-
   data.mapItemsCatalog[22]= new WoodWall(null, null, null);
   data.mapItemsCatalog[23]= new WoodChest(null, null, null);
   data.mapItemsCatalog[25]= new CampFire(null, null, null, null);
   data.mapItemsCatalog[26]= new StoneWall(null, null, null);
   data.mapItemsCatalog[27]= new WoodDoor(null, null, null);
   data.mapItemsCatalog[28]= new StoneDoor(null, null, null);
-  //sqlUtils.createTable('mapItemsCatalog');
-  // let fs = require('fs');
-  // fs.readFile('MapItemObjects.json', function (err, data) {
-  //   if (err) {
-  //     throw err;
-  //   }
-  //   let object = JSON.parse(data.toString());
-  //
-  //   for (let i = 0; i < object.length; i++) {
-  //     if (object[i].objectId !== -1) {
-  //       //data.mapItemsCatalog[object[i].id]= new
-  //       //sqlUtils.insert('mapItemsCatalog', object[i].id+', '+ object[i].objectId);
-  //     }
-  //   }
-  // });
 }
 
 function wipe() {
@@ -258,22 +243,6 @@ function identificators() {
   sqlUtils.insert('identificators', '0, 0, 0, 0, 0, 0, 0, 0, 0');
 }
 
-// function items() {
-//   sqlUtils.drop('items');
-//   sqlUtils.createTable('items');
-//   sqlUtils.insert('items', 1 + ', \'RESOURCE\', 20'); //wood
-//   sqlUtils.insert('items', 2 + ', \'RESOURCE\', 20'); //stone
-//   sqlUtils.insert('items', 3 + ', \'BUILDING_PART\', 1'); //wood wall
-//   sqlUtils.insert('items', 4 + ', \'BUILDING_PART\', 1'); //stone wall
-//   sqlUtils.insert('items', 5 + ', \'WEAPON\', 1'); //bow
-//   sqlUtils.insert('items', 6 + ', \'AMMO\', 20'); //arrow
-//   sqlUtils.insert('items', 7 + ', \'BUILDING_PART\', 1'); //campFire
-//   sqlUtils.insert('items', 8 + ', \'RESOURCE\', 20'); //raw meat
-//   sqlUtils.insert('items', 9 + ', \'RESOURCE\', 20'); //coocked meat
-//   sqlUtils.insert('items', 10 + ', \'RESOURCE\', 20'); //leather
-//   sqlUtils.insert('items', 11 + ', \'BUILDING_PART\', 1'); //wood chest
-// }
-
 function commonItems() {
   sqlUtils.drop('commonItems');
   sqlUtils.createTable('commonItems');
@@ -312,9 +281,9 @@ function mapCells() {
       }
 
       let map = JSON.parse(data.toString());
-      for (let i = 0; i < 48 * 3; i++) {
-        result.push(new Array(48 * 3));
-        for (let j = 0; j < 48 * 3; j++) {
+      for (let i = 0; i < constants.mapHeight; i++) {
+        result.push(new Array(constants.mapWidth));
+        for (let j = 0; j < constants.mapWidth; j++) {
           result[i][j] = new Cell(i, j, true, null, null)
           // isPush = true;
           //
@@ -324,12 +293,13 @@ function mapCells() {
         }
       }
       for (let i = 0; i < map.length; i++) {
-        if (map[i].type.objectId !== -1) {
+        //if (map[i].type.objectId !== -1) {
+        if (map[i].length <= 3) {
           mapItemId++;
-          result[map[i].cell.column][map[i].cell.row].movable = false;
-          result[map[i].cell.column][map[i].cell.row].objectId = map[i].type.id;
-          result[map[i].cell.column][map[i].cell.row].mapItemId = mapItemId;
-          resources[mapItemId] = {id:map[i].type.id, mapItemId:mapItemId, typeId:map[i].type.objectId, location:new Location(map[i].cell.column, map[i].cell.row, map[i].cell.column*64, map[i].cell.row*64)};
+          result[map[i][0]][map[i][1]].movable = false;
+          result[map[i][0]][map[i][1]].objectId = map[i][2];
+          result[map[i][0]][map[i][1]].mapItemId = mapItemId;
+          resources[mapItemId] = {id:map[i][2], mapItemId:mapItemId, location:new Location(map[i][0], map[i][1], map[i][0]*constants.cellSize+32, map[i][1]*constants.cellSize+32)};
         }
       }
       // for (let i = 0; i < result.length; i++) {

@@ -7,13 +7,13 @@ function Coward(id, location) {
   Animal.apply(this, arguments);
   this.distanceRunAway = 1280;
   this.fearDistance = 128;
-  this.fearTick = 64;
-  this.currentFearTick = 0;
+  this.fearTick = 0;
 }
 Coward.prototype = Object.create(Animal.prototype);
+
 Coward.prototype.fear = function (enemyCoordX, enemyCoordY) {
   this.stop();
-  this.isAction = true;
+  this.stage = 3;
   let finalCoord = getFinalCoord(enemyCoordX, enemyCoordY, this.location.left, this.location.top, this.distanceRunAway);
   let column = Math.floor(finalCoord[0]/64);
   let row = Math.floor(finalCoord[1]/64);
@@ -23,15 +23,21 @@ Coward.prototype.fear = function (enemyCoordX, enemyCoordY) {
     this.destination=new Location(column, row, finalCoord[0], finalCoord[1]);
   }
   this.speed = Math.floor(this.normalSpeed*2);
+  this.move();
 }
 Coward.prototype.checkActionTick = function (characters) {
-  if (this.isAction){
-    if (this.speed===this.normalSpeed){
-      this.isAction=false;
-    }else return null;
+  let result = null;
+  this.fearTick++;
+  if (this.fearTick>5)this.fearTick=0;
+  if (this.stage===3){
+    this.move();
+    // if (this.speed===this.normalSpeed){
+    //   this.stage=0;
+    // }else return null;
+    return result;
   }
-  this.currentFearTick++;
-  if (this.fearTick===this.currentFearTick){
+
+  if (this.fearTick===0){
     let whoNearly = null;
     for (let key in characters){
       if (characters[key].isAlive&&characters[key].isOnline){
@@ -45,10 +51,10 @@ Coward.prototype.checkActionTick = function (characters) {
     }
     if (whoNearly!==null){
       this.fear(whoNearly[1], whoNearly[2]);
+      result = 2;
     }
-    this.currentFearTick = 0;
   }
-  return null;
+  return result;
 };
 
 module.exports = Coward;

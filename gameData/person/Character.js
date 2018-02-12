@@ -5,16 +5,16 @@ function Character (id, accountId, inventoryId, armorInventoryId, hotBarId, acti
 		this.id = id;
 		this.accountId = accountId;
 		this.inventoryId = inventoryId;
-    	this.armorInventoryId = armorInventoryId;
+		this.armorInventoryId = armorInventoryId;
 		this.hotBarId = hotBarId;
-    	this.activeHotBarCell = activeHotBarCell;
+		this.activeHotBarCell = activeHotBarCell;
 		this.isOnline = isOnline;
 		this.size = 64;
 		this.column = column;
 		this.row = row;
 		this.top = top;
 		this.left = left;
-    	this.level = level;
+		this.level = level;
 		this.health = health;
 		this.strength = strength;
 		this.isAlive = true;
@@ -22,11 +22,11 @@ function Character (id, accountId, inventoryId, armorInventoryId, hotBarId, acti
 		this.craftRecipesId = [];
 		this.direction = -1;
 		this.timeToResurrection = null;
-    	this.normalSpeed = 64;
-    	this.currentSpeed = 64;
+		this.normalSpeed = 64;
+		this.currentSpeed = 64;
 		this.currentTick = null;
-    	this.lastTick = null;
-    	this.tmpDistanceWalked = 0;
+		this.lastTick = null;
+		this.tmpDistanceWalked = 0;
 }
 Character.prototype.getNewCoord = function(){
 	this.currentTick = getTime.getTimeInMs();

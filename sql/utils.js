@@ -178,7 +178,7 @@ function createTable(tableName, callBack) {
       break;
     case 'resources':
     case 'resourcesTmp':
-      addSql("run", tableName, "CREATE TABLE " + tableName + " (id INTEGER, mapItemId INTEGER primary key, typeId INTEGER, column INTEGER, row INTEGER, left INTEGER, top INTEGER);");
+      addSql("run", tableName, "CREATE TABLE " + tableName + " (id INTEGER, mapItemId INTEGER primary key, column INTEGER, row INTEGER, left INTEGER, top INTEGER);");
       break;
     case 'buildingParts':
     case 'buildingPartsTmp':
@@ -256,7 +256,7 @@ function insert(tableName, value, callBack) {
       break;
     case 'resources':
     case 'resourcesTmp':
-      addSql("run", tableName, "INSERT INTO " + tableName + " (id, mapItemId, typeId, column, row, left, top) VALUES" + " (" + value + ");");
+      addSql("run", tableName, "INSERT INTO " + tableName + " (id, mapItemId, column, row, left, top) VALUES" + " (" + value + ");");
       break;
     case 'buildingParts':
     case 'buildingPartsTmp':
@@ -387,18 +387,17 @@ function insertAll(tableName, array, callBack) {
       for (let key in array) {
         let id = array[key].id;
         let mapItemId = array[key].mapItemId;
-        let typeId = array[key].typeId;
         let column = array[key].location.column;
         let row = array[key].location.row;
         let left = array[key].location.left;
         let top = array[key].location.top;
         if (sqlQuery === null){
-          sqlQuery = "(" + id + ', ' + mapItemId + ', ' + typeId + ', ' +column+ ', ' +row+ ', ' +left+ ', ' +top +")";
+          sqlQuery = "(" + id + ', ' + mapItemId + ', ' +column+ ', ' +row+ ', ' +left+ ', ' +top +")";
         }else{
-          sqlQuery += ", (" + id + ', ' + mapItemId + ', ' + typeId + ', ' +column+ ', ' +row+ ', ' +left+ ', ' +top +")";
+          sqlQuery += ", (" + id + ', ' + mapItemId + ', ' +column+ ', ' +row+ ', ' +left+ ', ' +top +")";
         }
       }
-      addSql("run", tableName, "INSERT INTO " + tableName + " (id, mapItemId, typeId, column, row, left, top) VALUES " + sqlQuery);
+      addSql("run", tableName, "INSERT INTO " + tableName + " (id, mapItemId, column, row, left, top) VALUES " + sqlQuery);
     }
       break;
     case 'buildingParts':

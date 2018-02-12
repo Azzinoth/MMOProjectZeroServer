@@ -1,7 +1,6 @@
-function MapItem(id, mapItemId, typeId, location) {
+function MapItem(id, mapItemId, location) {
   this.id = id;
   this.mapItemId = mapItemId;
-  this.typeId = typeId;
   this.location = location;
 }
 

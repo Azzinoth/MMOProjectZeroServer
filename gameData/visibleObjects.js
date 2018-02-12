@@ -56,7 +56,7 @@ function surroundAnimals(startColumn, startRow, distance, animals) {
   let arrayObjects = [];
   for (let key in animals) {
     if (animals[key].isAlive && Math.abs(startColumn - animals[key].location.column) <= distance && (Math.abs(startRow - animals[key].location.row) <= distance)) {
-      arrayObjects.push(new Array(animals[key].id, animals[key].path, animals[key].location.column, animals[key].location.row, animals[key].location.left, animals[key].location.top, animals[key].type));
+      arrayObjects.push(new Array(animals[key].id, animals[key].path, animals[key].location.column, animals[key].location.row, animals[key].location.left, animals[key].location.top, animals[key].type, animals[key].speed));
     }
   }
   return arrayObjects;
@@ -66,7 +66,7 @@ function viewNewObjects(startColumn, startRow, toColumn, toRow, distance, animal
   let arrayObjects = [];
   for (let key in animals) {
     if (animals[key].isAlive && Math.abs(startColumn - animals[key].location.column) < distance && (Math.abs(startRow - animals[key].location.row) < distance)) {
-      arrayObjects.push(new Array(animals[key].id, animals[key].path, animals[key].location.column, animals[key].location.row, animals[key].location.left, animals[key].location.top));
+      arrayObjects.push(new Array(animals[key].id, animals[key].path, animals[key].location.column, animals[key].location.row, animals[key].location.left, animals[key].location.top, animals[key].type, animals[key].speed));
     }
   }
   return arrayObjects;

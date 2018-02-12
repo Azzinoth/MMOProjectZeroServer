@@ -68,14 +68,15 @@ function messageHandler(data, message, personId) {
         let stackId = characters[personId].activeHotBarCell;
         let mapCatalogId = cellsMap[toColumn][toRow].objectId;
         let isUseInstrument = false;
-        if (stackId === null || !(stacks[stackId].item instanceof (Instruments))) break;
-        for (let i = 0; i<stacks[stackId].item.usableObjId.length; i++){
-          if (stacks[stackId].item.usableObjId[i] == mapCatalogId){
-            isUseInstrument = true;
-            break;
+        if (stackId!==null && stacks[stackId].item instanceof (Instruments)){
+          for (let i = 0; i<stacks[stackId].item.usableObjId.length; i++){
+            if (stacks[stackId].item.usableObjId[i] === mapCatalogId){
+              isUseInstrument = true;
+              break;
+            }
           }
         }
-        if (!isUseInstrument)break;
+        if (!isUseInstrument&&stackId!==null)break;
         let mapItemId = cellsMap[toColumn][toRow].mapItemId;
         let items = resources[mapItemId].getLoot(data);
         let reqStacks = [];
@@ -382,8 +383,15 @@ function messageHandler(data, message, personId) {
       data.characters[personId].respawn(data);
     }
     case MSG_TYPES.CHAT_ALL: {
-      request = new Request({type:MSG_TYPES.CHAT_ALL, request:json.request});
-      sender.sendToAll(data.characters, json.request);
+      let nickName = null;
+      for(let key in data.accounts){
+        if (data.accounts[key].id === data.characters[personId].accountId){
+          nickName = data.accounts[key].email;
+          break;
+        }
+      }
+      request = new Request({type:MSG_TYPES.CHAT_ALL, request:new Array(nickName, json.request)});
+      sender.sendToAll(data.characters, request);
     }
       break;
     case MSG_TYPES.SYSTEM_MESSAGE: {

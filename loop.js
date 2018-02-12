@@ -1,6 +1,7 @@
 const Request = require('./network/Request');
 const sender = require('./network/sender');
 const collision = require('./utils/collision');
+const constants = require('./constants/constans');
 const getTime = require('./utils/getTime');
 const visibleObjects = require('./gameData/visibleObjects');
 const cellUtils = require('./gameData/map/cellUtils');
@@ -61,8 +62,8 @@ function moveCharacters(data) {
       let column = data.characters[key].column;
       let row = data.characters[key].row;
       let changedCell = data.characters[key].getNewCoord();
-      let toColumn = Math.floor(changedCell[0] / 64);
-      let toRow = Math.floor(changedCell[1] / 64);
+      let toColumn = Math.floor(changedCell[0] / constants.cellSize);
+      let toRow = Math.floor(changedCell[1] / constants.cellSize);
       let isMove = data.characters[key].move(data.getMap(), changedCell[0], changedCell[1], toColumn, toRow);
       if ((column !== toColumn || row !== toRow)&&isMove) {
         let surrAnimals = visibleObjects.surroundAnimals(data.characters[key].column, data.characters[key].row, data.characters[key].viewDistance, data.animals);
@@ -117,53 +118,70 @@ function moveCharacters(data) {
 
 function moveNpc(data) {
   let result = [];
+  let request = null;
   for (let key in data.animals) {
-    // if (key==2){
+    let fromColumn = data.animals[key].location.column;
+    let fromRow = data.animals[key].location.row;
+    // if (key==11){
     //   let request = new Request({type:MSG_TYPES.TEST_DATA, request:new Array(data.animals[key].location.left,data.animals[key].location.top)})
     //   sender.sendToAll(data.characters, request);
     // }
-    if (!data.animals[key].isAlive) {
-      data.animals[key].timeToResurrection--;
-      if (data.animals[key].timeToResurrection <= 0) {
-        data.animals[key].resurrect(data.zones);
-      }
-      continue;
-    }
+    // if (!data.animals[key].isAlive) {
+    //   data.animals[key].timeToResurrection--;
+    //   if (data.animals[key].timeToResurrection <= 0) {
+    //     data.animals[key].resurrect(data.zones);
+    //   }
+    //   continue;
+    // }
     //result.push(new Array(data.animals[key].location.left, data.animals[key].location.top));
-    if (data.animals[key].zoneId === null) {
-      data.animals[key].randZone();
-    }
+    // if (data.animals[key].zoneId === null) {
+    //   data.animals[key].randZone();
+    // }
     let actionResult = data.animals[key].checkActionTick(data.characters);
     if (actionResult === 1){
       characterHit(data, data.animals[key].targetId, data.animals[key].damage, null);
+    }else if (actionResult === 2){
+      result = new Array(data.animals[key].id, data.animals[key].path, data.animals[key].location.column, data.animals[key].location.row, data.animals[key].speed);
+      request = new Request({type: MSG_TYPES.NPC_MOVE, request: result});
+      sender.sendByViewDistance(data.characters, request, data.animals[key].location.column, data.animals[key].location.row);
     }
+    let tickResult = data.animals[key].animalTick(data.getMap(), data.zones);
+    if (tickResult===1){
+      result = [];
+      result.push(new Array(data.animals[key].id, data.animals[key].path, data.animals[key].location.column, data.animals[key].location.row, data.animals[key].location.left, data.animals[key].location.top, data.animals[key].type, data.animals[key].speed));
+      request = new Request({type: MSG_TYPES.NPC_DATA, request: result});
+      sender.sendByViewDistance(data.characters, request, data.animals[key].location.column, data.animals[key].location.row);
+    }else if (tickResult===2){
+      result = new Array(data.animals[key].id, data.animals[key].path, data.animals[key].location.column, data.animals[key].location.row, data.animals[key].speed);
+      request = new Request({type: MSG_TYPES.NPC_MOVE, request: result});
+      sender.sendByViewDistance(data.characters, request, data.animals[key].location.column, data.animals[key].location.row);
+    }
+    // if (data.animals[key].destination === null) {
+    //   data.animals[key].chooseNewDestination();
+    // }
+    // if (data.animals[key].destination !== null && data.animals[key].path.length === 0) {
+    //
+    //   data.animals[key].findPath(data.getMap());
+    //   if (data.animals[key].path.length > 0) {
+    //     result = new Array(data.animals[key].id, data.animals[key].path, data.animals[key].location.column, data.animals[key].location.row, data.animals[key].speed);
+    //     sender.sendByViewDistance(data.characters, new Request({
+    //       type: MSG_TYPES.NPC_MOVE,
+    //       request: result
+    //     }), data.animals[key].location.column, data.animals[key].location.row);
+    //   }
+    // }
 
-    if (data.animals[key].destination === null) {
-      data.animals[key].chooseNewDestination();
-    }
-    if (data.animals[key].destination !== null && data.animals[key].path.length === 0) {
-
-      data.animals[key].findPath(data.getMap());
-      if (data.animals[key].path.length > 0) {
-        result = new Array(data.animals[key].id, data.animals[key].path, data.animals[key].location.column, data.animals[key].location.row, data.animals[key].speed);
-        sender.sendByViewDistance(data.characters, new Request({
-          type: MSG_TYPES.NPC_MOVE,
-          request: result
-        }), data.animals[key].location.column, data.animals[key].location.row);
-      }
-    }
-    let fromColumn = data.animals[key].location.column;
-    let fromRow = data.animals[key].location.row;
-    data.animals[key].move(data.getMap());
+    //data.animals[key].move(data.getMap());
     let toColumn = data.animals[key].location.column;
     let tomRow = data.animals[key].location.row;
 
     if (fromColumn!==toColumn || fromRow!==tomRow) {
+      result = [];
       for (let key2 in data.characters) {
         if (data.characters[key2].isOnline&&data.characters[key2].isAlive) {
-          let isNewVisible = visibleObjects.isNewObjectInViewDistance(data.characters[key2].left, data.characters[key2].top, fromColumn * 64, fromRow * 64, data.animals[key].location.left, data.animals[key].location.top, data.characters[key2].viewDistance);
+          let isNewVisible = visibleObjects.isNewObjectInViewDistance(data.characters[key2].left, data.characters[key2].top, fromColumn * constants.cellSize+32, fromRow * constants.cellSize+32, data.animals[key].location.left, data.animals[key].location.top, data.characters[key2].viewDistance);
           if (isNewVisible) {
-            result.push(new Array(data.animals[key].id, data.animals[key].path, data.animals[key].location.column, data.animals[key].location.row, data.animals[key].location.left, data.animals[key].location.top));
+            result.push(new Array(data.animals[key].id, data.animals[key].path, data.animals[key].location.column, data.animals[key].location.row, data.animals[key].location.left, data.animals[key].location.top, data.animals[key].type, data.animals[key].speed));
             sender.sendToClient(data.characters[key2].accountId, new Request({
               type: MSG_TYPES.NPC_DATA,
               request: result
@@ -186,15 +204,15 @@ function fire(data) {
       firedAmmos[i].currentTick = time;
       firedAmmos[i].timePassed += firedAmmos[i].currentTick - firedAmmos[i].lastTick;
       firedAmmos[i].lastTick = time;
-      let fromColumn = Math.floor(firedAmmos[i].x / 64);
-      let fromRow = Math.floor(firedAmmos[i].y / 64);
+      let fromColumn = Math.floor(firedAmmos[i].x / constants.cellSize);
+      let fromRow = Math.floor(firedAmmos[i].y / constants.cellSize);
       firedAmmos[i].x = parseInt(firedAmmos[i].initialX + (firedAmmos[i].finalX - firedAmmos[i].initialX) * (firedAmmos[i].timePassed / firedAmmos[i].timeToFinal));
       firedAmmos[i].y = parseInt(firedAmmos[i].initialY + (firedAmmos[i].finalY - firedAmmos[i].initialY) * (firedAmmos[i].timePassed / firedAmmos[i].timeToFinal));
-      let toColumn = Math.floor(firedAmmos[i].x / 64);
-      let toRow = Math.floor(firedAmmos[i].y / 64);
+      let toColumn = Math.floor(firedAmmos[i].x / constants.cellSize);
+      let toRow = Math.floor(firedAmmos[i].y / constants.cellSize);
 
-      if (Math.floor(firedAmmos[i].x / 64) < 0 || Math.floor(firedAmmos[i].x / 64) >= 43*3 ||
-        Math.floor(firedAmmos[i].y / 64) < 0 || Math.floor(firedAmmos[i].y / 64) >= 43*3){
+      if (Math.floor(firedAmmos[i].x / constants.cellSize) < 0 || Math.floor(firedAmmos[i].x / constants.cellSize) >= constants.mapHeight ||
+        Math.floor(firedAmmos[i].y / constants.cellSize) < 0 || Math.floor(firedAmmos[i].y / constants.cellSize) >= constants.mapWidth){
         data.firedAmmos[i].active = false;
         return;
       }
@@ -213,7 +231,7 @@ function fire(data) {
 
       for (let key in data.characters) {
         if (data.characters[key].isOnline && data.characters[key].isAlive && key != data.firedAmmos[i].characterId) {
-          let isHit = collision.isCollision(data.firedAmmos[i].x, data.firedAmmos[i].y, 3, 3, data.characters[key].left - 32, data.characters[key].top - 64, 32, 64);//shoot from center
+          let isHit = collision.isCollision(data.firedAmmos[i].x, data.firedAmmos[i].y, 3, 3, data.characters[key].left - 32, data.characters[key].top - constants.cellSize, 32, constants.cellSize);//shoot from center
           if (isHit) {
             characterHit(data, key, firedAmmos[i].damage, firedAmmos[i].characterId);
             data.firedAmmos[i].active = false;
@@ -289,6 +307,9 @@ function animalHit(data, key, damage, attackerId){
       data.animals[key].fear(data.characters[attackerId].top, data.characters[attackerId].left);
     else if (data.animals[key] instanceof (Passive))
       data.animals[key].chase(data.characters[attackerId].top, data.characters[attackerId].left, attackerId);
+    let result = new Array(data.animals[key].id, data.animals[key].path, data.animals[key].location.column, data.animals[key].location.row, data.animals[key].speed);
+    let request = new Request({type: MSG_TYPES.NPC_MOVE, request: result});
+    sender.sendByViewDistance(data.characters, request, data.animals[key].location.column, data.animals[key].location.row);
   }
 }
 module.exports = mainLoop;
