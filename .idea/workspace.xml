@@ -7,24 +7,7 @@
     <list default="true" id="ed62a6e3-5542-496f-a173-1ecc7d08608d" name="Default" comment="">
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sql/tables/dataBase.db" afterPath="$PROJECT_DIR$/sql/tables/dataBase.db" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sql/tables/dataBase.db-journal" afterPath="$PROJECT_DIR$/sql/tables/dataBase.db-journal" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/gameData/data.js" afterPath="$PROJECT_DIR$/gameData/data.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/gameData/mapItem/MapItem.js" afterPath="$PROJECT_DIR$/gameData/mapItem/MapItem.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/gameData/mapItem/Resource.js" afterPath="$PROJECT_DIR$/gameData/mapItem/Resource.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/gameData/mapItem/resource/Bush.js" afterPath="$PROJECT_DIR$/gameData/mapItem/resource/Bush.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/gameData/mapItem/resource/Rock.js" afterPath="$PROJECT_DIR$/gameData/mapItem/resource/Rock.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/gameData/mapItem/resource/Tree.js" afterPath="$PROJECT_DIR$/gameData/mapItem/resource/Tree.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/gameData/npc/Animal.js" afterPath="$PROJECT_DIR$/gameData/npc/Animal.js" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/gameData/npc/animals/Coward.js" afterPath="$PROJECT_DIR$/gameData/npc/animals/Coward.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/gameData/npc/animals/Passive.js" afterPath="$PROJECT_DIR$/gameData/npc/animals/Passive.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/gameData/person/Character.js" afterPath="$PROJECT_DIR$/gameData/person/Character.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/gameData/visibleObjects.js" afterPath="$PROJECT_DIR$/gameData/visibleObjects.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/loop.js" afterPath="$PROJECT_DIR$/loop.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/main.js" afterPath="$PROJECT_DIR$/main.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/myMap.map" afterPath="$PROJECT_DIR$/myMap.map" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/network/handler/messageHandler.js" afterPath="$PROJECT_DIR$/network/handler/messageHandler.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sql/utils.js" afterPath="$PROJECT_DIR$/sql/utils.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/utils/findPath.js" afterPath="$PROJECT_DIR$/utils/findPath.js" />
     </list>
     <ignored path="$PROJECT_DIR$/.tmp/" />
     <ignored path="$PROJECT_DIR$/temp/" />
@@ -56,11 +39,11 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="loop.js" pinned="false" current-in-tab="true">
+      <file leaf-file-name="loop.js" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/loop.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="0">
-              <caret line="126" column="18" lean-forward="true" selection-start-line="126" selection-start-column="18" selection-end-line="126" selection-end-column="18" />
+            <state relative-caret-position="350">
+              <caret line="140" column="26" lean-forward="true" selection-start-line="140" selection-start-column="26" selection-end-line="140" selection-end-column="26" />
               <folding />
             </state>
           </provider>
@@ -86,11 +69,11 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="Coward.js" pinned="false" current-in-tab="false">
+      <file leaf-file-name="Coward.js" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/gameData/npc/animals/Coward.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="143">
-              <caret line="31" column="22" lean-forward="true" selection-start-line="31" selection-start-column="22" selection-end-line="31" selection-end-column="22" />
+            <state relative-caret-position="443">
+              <caret line="40" column="25" lean-forward="true" selection-start-line="40" selection-start-column="25" selection-end-line="40" selection-end-column="25" />
               <folding />
             </state>
           </provider>
@@ -228,10 +211,10 @@
         <option value="$PROJECT_DIR$/utils/findPath.js" />
         <option value="$PROJECT_DIR$/gameData/person/Character.js" />
         <option value="$PROJECT_DIR$/main.js" />
-        <option value="$PROJECT_DIR$/gameData/npc/animals/Coward.js" />
         <option value="$PROJECT_DIR$/gameData/npc/Animal.js" />
         <option value="$PROJECT_DIR$/gameData/npc/animals/Passive.js" />
         <option value="$PROJECT_DIR$/loop.js" />
+        <option value="$PROJECT_DIR$/gameData/npc/animals/Coward.js" />
       </list>
     </option>
   </component>
@@ -548,12 +531,12 @@
       <workItem from="1518084157260" duration="240000" />
       <workItem from="1518265738909" duration="23942000" />
       <workItem from="1518342608342" duration="3113000" />
-      <workItem from="1518442040794" duration="17368000" />
+      <workItem from="1518442040794" duration="17870000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="1038187000" />
+    <option name="totallyTimeSpent" value="1038689000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-8" y="-8" width="1936" height="1056" extended-state="6" />
@@ -567,7 +550,7 @@
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.24973656" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32934782" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.18018967" sideWeight="0.29673913" order="2" side_tool="true" content_ui="tabs" />
-      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.30108696" sideWeight="0.49789253" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Debug" active="true" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.30108696" sideWeight="0.49789253" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
@@ -938,14 +921,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/gameData/npc/animals/Coward.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="143">
-          <caret line="31" column="22" lean-forward="true" selection-start-line="31" selection-start-column="22" selection-end-line="31" selection-end-column="22" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/gameData/npc/animals/coward/Rabbit.js">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="225">
@@ -972,8 +947,16 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/loop.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="126" column="18" lean-forward="true" selection-start-line="126" selection-start-column="18" selection-end-line="126" selection-end-column="18" />
+        <state relative-caret-position="350">
+          <caret line="140" column="26" lean-forward="true" selection-start-line="140" selection-start-column="26" selection-end-line="140" selection-end-column="26" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/gameData/npc/animals/Coward.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="443">
+          <caret line="40" column="25" lean-forward="true" selection-start-line="40" selection-start-column="25" selection-end-line="40" selection-end-column="25" />
           <folding />
         </state>
       </provider>

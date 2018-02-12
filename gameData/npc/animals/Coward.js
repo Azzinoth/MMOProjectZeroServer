@@ -31,6 +31,7 @@ Coward.prototype.checkActionTick = function (characters) {
   if (this.fearTick>5)this.fearTick=0;
   if (this.stage===3){
     this.move();
+    if (this.path.length===0)this.stage=0;
     // if (this.speed===this.normalSpeed){
     //   this.stage=0;
     // }else return null;
